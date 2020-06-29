@@ -1,0 +1,20 @@
+.app {
+  display: grid;
+  grid-template-columns: 600px 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+    "pixel-grid empty";
+  grid-row-gap: 8px;
+  grid-column-gap: 8px;
+}
+
+#pixel-grid {
+  grid-area: pixel-grid;
+  background-color: chartreuse;
+  height: 90vh;
+}
+
+#empty {
+  grid-area: empty;
+  background-color: palevioletred;
+}

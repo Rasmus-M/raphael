@@ -20,9 +20,9 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
   @Input() foregroundColor: string;
   @Input() backgroundColor: string;
 
-  private gridCanvasContext: CanvasRenderingContext2D;
   private pixelCanvasContext: CanvasRenderingContext2D;
   private selectionCanvasContext: CanvasRenderingContext2D;
+  private gridCanvasContext: CanvasRenderingContext2D;
   private cursorCanvasContext: CanvasRenderingContext2D;
   private cursorCanvas: HTMLCanvasElement;
   private width: number;
@@ -43,12 +43,12 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const gridCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#grid-canvas');
-    this.gridCanvasContext = gridCanvas.getContext('2d');
     const pixelCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#pixel-canvas');
     this.pixelCanvasContext = pixelCanvas.getContext('2d');
     const selectionCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#selection-canvas');
     this.selectionCanvasContext = selectionCanvas.getContext('2d');
+    const gridCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#grid-canvas');
+    this.gridCanvasContext = gridCanvas.getContext('2d');
     const cursorCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#cursor-canvas');
     this.cursorCanvasContext = cursorCanvas.getContext('2d');
     this.cursorCanvas = cursorCanvas;
@@ -59,8 +59,8 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
   calculateSize(canvases: HTMLCanvasElement[]): void {
     const cellWidth = this.cellWidth = this.basePixelSize * this.pixelScaleX * this.zoom;
     const cellHeight = this.cellHeight = this.basePixelSize * this.pixelScaleY * this.zoom;
-    const width = this.width = this.pixelsX * cellWidth + (this.pixelsX + 1) * PixelGridComponent.GRID_LINE_WIDTH;
-    const height = this.height = this.pixelsY * cellHeight + (this.pixelsY + 1) * PixelGridComponent.GRID_LINE_WIDTH;
+    const width = this.width = this.pixelsX * cellWidth + PixelGridComponent.GRID_LINE_WIDTH;
+    const height = this.height = this.pixelsY * cellHeight + PixelGridComponent.GRID_LINE_WIDTH;
     for (const canvas of canvases) {
       canvas.width = width;
       canvas.height = height;
@@ -77,12 +77,12 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
     context.lineWidth = PixelGridComponent.GRID_LINE_WIDTH;
     context.beginPath();
     for (let i = 0; i <= this.pixelsX; i++) {
-      const x = i * (this.cellWidth + PixelGridComponent.GRID_LINE_WIDTH);
+      const x = i * this.cellWidth;
       context.moveTo(x, 0);
       context.lineTo(x, this.height);
     }
     for (let j = 0; j <= this.pixelsY; j++) {
-      const y = j * (this.cellHeight + PixelGridComponent.GRID_LINE_WIDTH);
+      const y = j * this.cellHeight;
       context.moveTo(0, y);
       context.lineTo(this.width, y);
     }
@@ -101,25 +101,23 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
 
   drawCursor(point: Point, color: string): void {
     const rect = this.getCellRect(point);
-    this.cursorCanvasContext.strokeStyle = color;
-    this.cursorCanvasContext.strokeRect(rect.x, rect.y, rect.width, rect.height);
+    const context = this.cursorCanvasContext;
+    context.strokeStyle = color;
+    context.lineWidth = 2;
+    context.strokeRect(rect.x, rect.y, rect.width, rect.height);
   }
 
   getCellRect(point: Point): Rect {
-    const x = PixelGridComponent.GRID_LINE_WIDTH + point.x * (this.cellWidth + PixelGridComponent.GRID_LINE_WIDTH);
-    const y = PixelGridComponent.GRID_LINE_WIDTH + point.y * (this.cellHeight + PixelGridComponent.GRID_LINE_WIDTH);
+    const x = point.x * this.cellWidth;
+    const y = point.y * this.cellHeight;
     return new Rect(x, y, this.cellWidth, this.cellHeight);
   }
 
   onMouseMove(evt: MouseEvent): void {
-    const rect = this.cursorCanvas.getBoundingClientRect();
-    const newCursorPosition = new Point(
-      Math.floor(this.pixelsX * (evt.clientX - rect.left) / this.cursorCanvas.clientWidth),
-      Math.floor(this.pixelsY * (evt.clientY - rect.top) / this.cursorCanvas.clientHeight)
-    );
+    const newCursorPosition = this.getMousePosition(evt);
     if (!newCursorPosition.equals(this.cursorPosition)) {
       this.cursorCanvasContext.clearRect(0, 0, this.width, this.height);
-      this.drawCursor(newCursorPosition, 'pink');
+      this.drawCursor(newCursorPosition, 'orange');
       this.cursorPosition = newCursorPosition;
     }
     if (this.drawing) {
@@ -130,9 +128,19 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
   onMouseDown(evt: MouseEvent): void {
     this.drawing = true;
     this.drawColor = this.foregroundColor;
+    this.cursorPosition = this.getMousePosition(evt);
+    this.drawPixel(this.cursorPosition, this.drawColor);
   }
 
   onMouseUp(evt: MouseEvent): void {
     this.drawing = false;
+  }
+
+  getMousePosition(evt: MouseEvent): Point {
+    const rect = this.cursorCanvas.getBoundingClientRect();
+    return new Point(
+      Math.floor(this.pixelsX * (evt.clientX - rect.left) / this.cursorCanvas.clientWidth),
+      Math.floor(this.pixelsY * (evt.clientY - rect.top) / this.cursorCanvas.clientHeight)
+    );
   }
 }

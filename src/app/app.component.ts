@@ -20,4 +20,12 @@ export class AppComponent {
     this.grid = new Grid(64, 64, this.backColorIndex);
     this.palette = new Palette();
   }
+
+  setBackColorIndex(backColorIndex: number): void {
+    this.backColorIndex = backColorIndex;
+  }
+
+  setForeColorIndex(foreColorIndex: number): void {
+    this.foreColorIndex = foreColorIndex;
+  }
 }

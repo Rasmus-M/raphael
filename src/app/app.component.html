@@ -10,7 +10,14 @@
         [foreColorIndex]="foreColorIndex"
       ></app-pixel-grid>
   </div>
+  <div id="toolbox">
+    <app-toolbox></app-toolbox>
+  </div>
   <div id="palette">
-    <app-palette></app-palette>
+    <app-palette
+      [palette]="palette"
+      (backColorChanged)="setBackColorIndex($event)"
+      (foreColorChanged)="setForeColorIndex($event)"
+    ></app-palette>
   </div>
 </div>

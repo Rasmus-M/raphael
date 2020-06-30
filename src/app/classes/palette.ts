@@ -21,11 +21,18 @@ export class Palette {
     new Color(255, 255, 255)
   ];
 
+  constructor() {
+  }
+
   getSize(): number {
     return this.colors.length;
   }
 
   getColor(index: number): Color {
     return this.colors[index];
+  }
+
+  getColors(): Color[] {
+    return this.colors;
   }
 }

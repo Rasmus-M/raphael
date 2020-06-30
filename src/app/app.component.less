@@ -1,9 +1,10 @@
 .app {
   display: grid;
   grid-template-columns: 600px 100px 1fr;
-  grid-template-rows: 600px 1fr;
+  grid-template-rows: 600px 80px 1fr;
   grid-template-areas:
-    "pixel-grid palette";
+    "pixel-grid toolbox"
+    "palette toolbox";
   grid-row-gap: 8px;
   grid-column-gap: 8px;
 }
@@ -13,7 +14,10 @@
   height: 100%;
 }
 
+#toolbox {
+  grid-area: toolbox;
+}
+
 #palette {
   grid-area: palette;
-  background-color: lightgrey;
 }

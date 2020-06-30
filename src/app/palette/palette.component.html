@@ -1,1 +1,7 @@
-<p>palette works!</p>
+<table>
+  <tr>
+    <td *ngFor="let color of palette.getColors(); let i=index;">
+      <app-color [color]="color" (selected)="colorSelected(i)"></app-color>
+    </td>
+  </tr>
+</table>

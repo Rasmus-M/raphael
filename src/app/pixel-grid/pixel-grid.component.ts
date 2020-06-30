@@ -1,25 +1,29 @@
 import {AfterViewInit, Component, ElementRef, Input, OnInit} from '@angular/core';
 import {Point} from '../classes/Point';
 import {Rect} from '../classes/rect';
+import {Grid} from '../classes/grid';
+import {Palette} from '../classes/palette';
 
 @Component({
   selector: 'app-pixel-grid',
   templateUrl: './pixel-grid.component.html',
   styleUrls: ['./pixel-grid.component.less']
 })
-export class PixelGridComponent implements OnInit, AfterViewInit {
+export class PixelGridComponent implements AfterViewInit {
 
   static GRID_LINE_WIDTH = 1;
 
-  @Input() pixelsX: number;
-  @Input() pixelsY: number;
+  @Input() grid: Grid;
   @Input() pixelScaleX: number;
   @Input() pixelScaleY: number;
   @Input() basePixelSize?: number;
   @Input() zoom?: number;
-  @Input() foregroundColor: string;
-  @Input() backgroundColor: string;
+  @Input() palette: Palette;
+  @Input() backColorIndex: number;
+  @Input() foreColorIndex: number;
 
+  private pixelsX: number;
+  private pixelsY: number;
   private pixelCanvasContext: CanvasRenderingContext2D;
   private selectionCanvasContext: CanvasRenderingContext2D;
   private gridCanvasContext: CanvasRenderingContext2D;
@@ -31,18 +35,17 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
   private cellHeight: number;
   private cursorPosition: Point;
   private drawing: boolean;
-  private drawColor: string;
+  private drawColorIndex: number;
 
-  constructor(
-    private element: ElementRef,
-  ) {
+  constructor(private element: ElementRef) {
     this.cursorPosition = new Point(-1, -1);
   }
 
-  ngOnInit(): void {
-  }
-
   ngAfterViewInit(): void {
+    this.basePixelSize = this.basePixelSize || 8;
+    this.zoom = this.zoom || 1;
+    this.pixelsX = this.grid.width;
+    this.pixelsY = this.grid.height;
     const pixelCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#pixel-canvas');
     this.pixelCanvasContext = pixelCanvas.getContext('2d');
     const selectionCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#selection-canvas');
@@ -68,7 +71,17 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
   }
 
   redraw(): void {
+    this.drawPixels();
     this.drawGrid();
+  }
+
+  drawPixels(): void {
+    for (let y = 0; y < this.pixelsY; y++) {
+      for (let x = 0; x < this.pixelsX; x++) {
+        const point = new Point(x, y);
+        this.drawPixel(point, this.grid.get(point));
+      }
+    }
   }
 
   drawGrid(): void {
@@ -89,13 +102,14 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
     context.stroke();
   }
 
-  drawPixel(point: Point, color: string): void {
-    this.drawCell(this.pixelCanvasContext, point, color);
+  drawPixel(point: Point, colorIndex: number): void {
+    this.drawCell(this.pixelCanvasContext, point, colorIndex);
+    this.setGridColorIndex(point, colorIndex);
   }
 
-  drawCell(context: CanvasRenderingContext2D, point: Point, color: string): void {
+  drawCell(context: CanvasRenderingContext2D, point: Point, colorIndex: number): void {
     const rect = this.getCellRect(point);
-    context.fillStyle = color;
+    context.fillStyle = this.palette.getColor(colorIndex).getHexString();
     context.fillRect(rect.x, rect.y, rect.width, rect.height);
   }
 
@@ -113,6 +127,14 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
     return new Rect(x, y, this.cellWidth, this.cellHeight);
   }
 
+  getGridColorIndex(point: Point): number {
+    return this.grid.get(point);
+  }
+
+  setGridColorIndex(point: Point, value: number): void {
+    this.grid.set(point, value);
+  }
+
   onMouseMove(evt: MouseEvent): void {
     const newCursorPosition = this.getMousePosition(evt);
     if (!newCursorPosition.equals(this.cursorPosition)) {
@@ -121,15 +143,15 @@ export class PixelGridComponent implements OnInit, AfterViewInit {
       this.cursorPosition = newCursorPosition;
     }
     if (this.drawing) {
-      this.drawPixel(this.cursorPosition, this.drawColor);
+      this.drawPixel(this.cursorPosition, this.drawColorIndex);
     }
   }
 
   onMouseDown(evt: MouseEvent): void {
     this.drawing = true;
-    this.drawColor = this.foregroundColor;
     this.cursorPosition = this.getMousePosition(evt);
-    this.drawPixel(this.cursorPosition, this.drawColor);
+    this.drawColorIndex = this.getGridColorIndex(this.cursorPosition) === this.foreColorIndex ? this.backColorIndex : this.foreColorIndex;
+    this.drawPixel(this.cursorPosition, this.drawColorIndex);
   }
 
   onMouseUp(evt: MouseEvent): void {

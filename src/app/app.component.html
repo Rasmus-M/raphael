@@ -1,15 +1,16 @@
 <div class="app">
   <div id="pixel-grid">
       <app-pixel-grid
-        [pixelsX]="16"
-        [pixelsY]="64"
-        [pixelScaleX]="4"
+        [grid]="grid"
+        [pixelScaleX]="1"
         [pixelScaleY]="1"
-        [basePixelSize]="8"
-        [zoom]="1"
-        [foregroundColor]="'red'"
-        [backgroundColor]="'white'"
+        [zoom]="2"
+        [palette]="palette"
+        [backColorIndex]="backColorIndex"
+        [foreColorIndex]="foreColorIndex"
       ></app-pixel-grid>
   </div>
-  <div id="empty"></div>
+  <div id="palette">
+    <app-palette></app-palette>
+  </div>
 </div>

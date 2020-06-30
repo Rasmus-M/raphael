@@ -4,11 +4,13 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PixelGridComponent } from './pixel-grid/pixel-grid.component';
+import { PaletteComponent } from './palette/palette.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PixelGridComponent
+    PixelGridComponent,
+    PaletteComponent
   ],
   imports: [
     BrowserModule,

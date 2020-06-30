@@ -1,9 +1,9 @@
 .app {
   display: grid;
-  grid-template-columns: 600px 1fr;
+  grid-template-columns: 600px 100px 1fr;
   grid-template-rows: 600px 1fr;
   grid-template-areas:
-    "pixel-grid empty";
+    "pixel-grid palette";
   grid-row-gap: 8px;
   grid-column-gap: 8px;
 }
@@ -13,7 +13,7 @@
   height: 100%;
 }
 
-#empty {
-  grid-area: empty;
+#palette {
+  grid-area: palette;
   background-color: lightgrey;
 }

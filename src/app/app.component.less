@@ -1,11 +1,11 @@
 .app {
   display: grid;
-  grid-template-columns: 600px 100px 1fr;
-  grid-template-rows: 600px 80px 1fr;
+  grid-template-columns: 100vh 120px 1fr;
+  grid-template-rows: calc(100vh - 130px) 130px;
   grid-template-areas:
     "pixel-grid toolbox"
-    "palette toolbox";
-  grid-row-gap: 8px;
+    "pixel-grid palette";
+  grid-row-gap: 0;
   grid-column-gap: 8px;
 }
 

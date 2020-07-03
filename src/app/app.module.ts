@@ -7,6 +7,9 @@ import { PixelGridComponent } from './pixel-grid/pixel-grid.component';
 import { PaletteComponent } from './palette/palette.component';
 import { ToolboxComponent } from './toolbox/toolbox.component';
 import { ColorComponent } from './color/color.component';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,10 @@ import { ColorComponent } from './color/color.component';
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatGridListModule,
+    MatIconModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

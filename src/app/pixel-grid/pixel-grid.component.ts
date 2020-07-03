@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit} from '@angular/core';
-import {Point} from '../classes/Point';
+import {AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Point} from '../classes/point';
 import {Rect} from '../classes/rect';
 import {Grid} from '../classes/grid';
 import {Palette} from '../classes/palette';
@@ -9,7 +9,7 @@ import {Palette} from '../classes/palette';
   templateUrl: './pixel-grid.component.html',
   styleUrls: ['./pixel-grid.component.less']
 })
-export class PixelGridComponent implements AfterViewInit {
+export class PixelGridComponent implements AfterViewInit, OnChanges {
 
   static GRID_LINE_WIDTH = 1;
 
@@ -17,18 +17,21 @@ export class PixelGridComponent implements AfterViewInit {
   @Input() pixelScaleX: number;
   @Input() pixelScaleY: number;
   @Input() basePixelSize?: number;
-  @Input() zoom?: number;
+  @Input() zoom: number;
   @Input() palette: Palette;
   @Input() backColorIndex: number;
   @Input() foreColorIndex: number;
 
   private pixelsX: number;
   private pixelsY: number;
+  private pixelCanvas: HTMLCanvasElement;
+  private selectionCanvas: HTMLCanvasElement;
+  private gridCanvas: HTMLCanvasElement;
+  private cursorCanvas: HTMLCanvasElement;
   private pixelCanvasContext: CanvasRenderingContext2D;
   private selectionCanvasContext: CanvasRenderingContext2D;
   private gridCanvasContext: CanvasRenderingContext2D;
   private cursorCanvasContext: CanvasRenderingContext2D;
-  private cursorCanvas: HTMLCanvasElement;
   private width: number;
   private height: number;
   private cellWidth: number;
@@ -36,6 +39,7 @@ export class PixelGridComponent implements AfterViewInit {
   private cursorPosition: Point;
   private drawing: boolean;
   private drawColorIndex: number;
+  private initialized = false;
 
   constructor(private element: ElementRef) {
     this.cursorPosition = new Point(-1, -1);
@@ -46,17 +50,23 @@ export class PixelGridComponent implements AfterViewInit {
     this.zoom = this.zoom || 1;
     this.pixelsX = this.grid.width;
     this.pixelsY = this.grid.height;
-    const pixelCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#pixel-canvas');
-    this.pixelCanvasContext = pixelCanvas.getContext('2d');
-    const selectionCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#selection-canvas');
-    this.selectionCanvasContext = selectionCanvas.getContext('2d');
-    const gridCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#grid-canvas');
-    this.gridCanvasContext = gridCanvas.getContext('2d');
-    const cursorCanvas: HTMLCanvasElement = this.element.nativeElement.querySelector('#cursor-canvas');
-    this.cursorCanvasContext = cursorCanvas.getContext('2d');
-    this.cursorCanvas = cursorCanvas;
-    this.calculateSize([gridCanvas, pixelCanvas, selectionCanvas, cursorCanvas]);
+    this.pixelCanvas = this.element.nativeElement.querySelector('#pixel-canvas');
+    this.pixelCanvasContext = this.pixelCanvas.getContext('2d');
+    this.selectionCanvas = this.element.nativeElement.querySelector('#selection-canvas');
+    this.selectionCanvasContext = this.selectionCanvas.getContext('2d');
+    this.gridCanvas = this.element.nativeElement.querySelector('#grid-canvas');
+    this.gridCanvasContext = this.gridCanvas.getContext('2d');
+    this.cursorCanvas = this.element.nativeElement.querySelector('#cursor-canvas');
+    this.cursorCanvasContext = this.cursorCanvas.getContext('2d');
     this.redraw();
+    this.initialized = true;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+    if (this.initialized) {
+      this.redraw();
+    }
   }
 
   calculateSize(canvases: HTMLCanvasElement[]): void {
@@ -71,11 +81,13 @@ export class PixelGridComponent implements AfterViewInit {
   }
 
   redraw(): void {
+    this.calculateSize([this.pixelCanvas, this.selectionCanvas, this.gridCanvas, this.cursorCanvas]);
     this.drawPixels();
     this.drawGrid();
   }
 
   drawPixels(): void {
+    this.pixelCanvasContext.clearRect(0, 0, this.width, this.height);
     for (let y = 0; y < this.pixelsY; y++) {
       for (let x = 0; x < this.pixelsX; x++) {
         const point = new Point(x, y);
@@ -86,6 +98,7 @@ export class PixelGridComponent implements AfterViewInit {
 
   drawGrid(): void {
     const context = this.gridCanvasContext;
+    context.clearRect(0, 0, this.width, this.height);
     context.strokeStyle = 'grey';
     context.lineWidth = PixelGridComponent.GRID_LINE_WIDTH;
     context.beginPath();
@@ -155,6 +168,10 @@ export class PixelGridComponent implements AfterViewInit {
   }
 
   onMouseUp(evt: MouseEvent): void {
+    this.drawing = false;
+  }
+
+  onMouseLeave(evt: MouseEvent): void {
     this.drawing = false;
   }
 

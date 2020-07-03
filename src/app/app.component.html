@@ -23,6 +23,8 @@
   <div id="palette">
     <app-palette
       [palette]="palette"
+      [backColorIndex]="backColorIndex"
+      [foreColorIndex]="foreColorIndex"
       (backColorChanged)="setBackColorIndex($event)"
       (foreColorChanged)="setForeColorIndex($event)"
     ></app-palette>

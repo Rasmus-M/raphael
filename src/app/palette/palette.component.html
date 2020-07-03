@@ -1,5 +1,10 @@
 <mat-grid-list class="palette" cols="4" rowHeight="28">
   <mat-grid-tile *ngFor="let color of palette.getColors(); let i=index;">
-    <app-color [color]="color" (selected)="colorSelected(i)"></app-color>
+    <app-color
+      [color]="color"
+      [label]="labels[i]"
+      (clicked)="setForeColor(i)"
+      (rightClicked)="setBackColor(i)"
+    ></app-color>
   </mat-grid-tile>
 </mat-grid-list>

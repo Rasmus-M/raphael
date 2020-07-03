@@ -1,1 +1,5 @@
-<div class="color-box" (click)="clicked()"></div>
+<div class="color-box"
+     (click)="click()"
+     (contextmenu)="context($event)">
+  {{label}}
+</div>

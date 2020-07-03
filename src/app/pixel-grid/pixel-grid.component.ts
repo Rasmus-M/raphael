@@ -99,7 +99,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   drawGrid(): void {
     const context = this.gridCanvasContext;
     context.clearRect(0, 0, this.width, this.height);
-    context.strokeStyle = 'grey';
+    context.strokeStyle = 'gray';
     context.lineWidth = PixelGridComponent.GRID_LINE_WIDTH;
     context.beginPath();
     for (let i = 0; i <= this.pixelsX; i++) {
@@ -163,7 +163,11 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   onMouseDown(evt: MouseEvent): void {
     this.drawing = true;
     this.cursorPosition = this.getMousePosition(evt);
-    this.drawColorIndex = this.getGridColorIndex(this.cursorPosition) === this.foreColorIndex ? this.backColorIndex : this.foreColorIndex;
+    if (evt.button === 0) {
+      this.drawColorIndex = this.getGridColorIndex(this.cursorPosition) === this.foreColorIndex ? this.backColorIndex : this.foreColorIndex;
+    } else {
+      this.drawColorIndex = this.getGridColorIndex(this.cursorPosition) === this.backColorIndex ? this.foreColorIndex : this.backColorIndex;
+    }
     this.drawPixel(this.cursorPosition, this.drawColorIndex);
   }
 
@@ -173,6 +177,10 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
 
   onMouseLeave(evt: MouseEvent): void {
     this.drawing = false;
+  }
+
+  onContextMenu(evt: MouseEvent): void {
+    evt.preventDefault();
   }
 
   getMousePosition(evt: MouseEvent): Point {

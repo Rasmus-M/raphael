@@ -9,7 +9,9 @@ import {Color} from '../classes/color';
 export class ColorComponent implements AfterViewInit {
 
   @Input() color: Color;
-  @Output() selected = new EventEmitter<void>();
+  @Input() label: string;
+  @Output() clicked = new EventEmitter<void>();
+  @Output() rightClicked = new EventEmitter<void>();
 
   constructor(private element: ElementRef) {
   }
@@ -19,7 +21,12 @@ export class ColorComponent implements AfterViewInit {
     colorBox.style.backgroundColor = this.color.getHexString();
   }
 
-  clicked(): void {
-    this.selected.emit();
+  click(): void {
+    this.clicked.emit();
+  }
+
+  context(evt: MouseEvent): void {
+    this.rightClicked.emit();
+    evt.preventDefault();
   }
 }

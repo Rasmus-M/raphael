@@ -18,6 +18,7 @@ export class ColorComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const colorBox: HTMLDivElement = this.element.nativeElement.querySelector('.color-box');
+    colorBox.style.color = this.color.isBlack() ? '#ffffff' : '#000000';
     colorBox.style.backgroundColor = this.color.getHexString();
   }
 

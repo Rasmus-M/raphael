@@ -15,4 +15,8 @@ export class Color {
   getHexString(): string {
     return '#' + Util.hexByte(this.red) + Util.hexByte(this.green) + Util.hexByte(this.blue);
   }
+
+  isBlack(): boolean {
+    return this.red === 0 && this.green === 0 && this.blue === 0;
+  }
 }

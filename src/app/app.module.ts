@@ -10,6 +10,7 @@ import { ColorComponent } from './color/color.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -19,13 +20,14 @@ import {MatButtonModule} from '@angular/material/button';
     ToolboxComponent,
     ColorComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatGridListModule,
-    MatIconModule,
-    MatButtonModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatGridListModule,
+        MatIconModule,
+        MatButtonModule,
+        FontAwesomeModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

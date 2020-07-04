@@ -1,32 +1,42 @@
-<mat-grid-list class="toolbox" cols="2" rowHeight="64">
+<mat-grid-list class="toolbox" cols="4" rowHeight="64">
   <mat-grid-tile>
-    <button mat-icon-button aria-label="Zoom in" (click)="zoomIn()">
+    <button mat-icon-button title="Zoom in" (click)="zoomIn()">
       <mat-icon>zoom_in</mat-icon>
     </button>
   </mat-grid-tile>
   <mat-grid-tile>
-    <button mat-icon-button aria-label="Zoom out" (click)="zoomOut()">
+    <button mat-icon-button title="Zoom out" (click)="zoomOut()">
       <mat-icon>zoom_out</mat-icon>
     </button>
   </mat-grid-tile>
   <mat-grid-tile>
-    <button mat-icon-button aria-label="Shift left" (click)="shiftLeft()">
+    <button mat-icon-button title="Shift left" (click)="shiftLeft()">
       <mat-icon>arrow_back</mat-icon>
     </button>
   </mat-grid-tile>
   <mat-grid-tile>
-    <button mat-icon-button aria-label="Shift right" (click)="shiftRight()">
+    <button mat-icon-button title="Shift right" (click)="shiftRight()">
       <mat-icon>arrow_forward</mat-icon>
     </button>
   </mat-grid-tile>
   <mat-grid-tile>
-    <button mat-icon-button aria-label="Shift up" (click)="shiftUp()">
+    <button mat-icon-button title="Shift up" (click)="shiftUp()">
       <mat-icon>arrow_upward</mat-icon>
     </button>
   </mat-grid-tile>
   <mat-grid-tile>
-    <button mat-icon-button aria-label="Shift down" (click)="shiftDown()">
+    <button mat-icon-button title="Shift down" (click)="shiftDown()">
       <mat-icon>arrow_downward</mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button title="Fill all" (click)="fill()">
+      <fa-icon [icon]="fillIcon"></fa-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button title="Clear all" (click)="clear()">
+      <fa-icon [icon]="clearIcon"></fa-icon>
     </button>
   </mat-grid-tile>
 </mat-grid-list>

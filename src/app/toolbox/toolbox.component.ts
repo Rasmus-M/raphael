@@ -1,4 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {faFill, faEraser} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-toolbox',
@@ -13,6 +14,11 @@ export class ToolboxComponent implements OnInit {
   @Output() shiftedRight = new EventEmitter();
   @Output() shiftedUp = new EventEmitter();
   @Output() shiftedDown = new EventEmitter();
+  @Output() filled = new EventEmitter();
+  @Output() cleared = new EventEmitter();
+
+  fillIcon = faFill;
+  clearIcon = faEraser;
 
   constructor() { }
 
@@ -41,5 +47,13 @@ export class ToolboxComponent implements OnInit {
 
   shiftDown(): void {
     this.shiftedDown.emit();
+  }
+
+  clear(): void {
+    this.cleared.emit();
+  }
+
+  fill(): void {
+    this.filled.emit();
   }
 }

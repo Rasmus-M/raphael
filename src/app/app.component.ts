@@ -11,6 +11,8 @@ import {PixelGridComponent} from './pixel-grid/pixel-grid.component';
 export class AppComponent {
 
   grid: Grid;
+  gridWidth: number;
+  gridHeight: number;
   pixelScaleX: number;
   pixelScaleY: number;
   zoom: number;
@@ -24,10 +26,12 @@ export class AppComponent {
   constructor() {
     this.backColorIndex = 0;
     this.foreColorIndex = 4;
-    this.grid = new Grid(16, 64, this.backColorIndex);
-    this.pixelScaleX = 4;
+    this.gridWidth = 64;
+    this.gridHeight = 64;
+    this.grid = new Grid(this.gridWidth, this.gridHeight, this.backColorIndex);
+    this.pixelScaleX = this.gridHeight / this.gridWidth;
     this.pixelScaleY = 1;
-    this.zoom = 1;
+    this.zoom = 2;
     this.palette = new Palette();
   }
 
@@ -44,27 +48,27 @@ export class AppComponent {
   }
 
   shiftLeft(): void {
-    const clone = this.grid.clone();
-    clone.shiftLeft();
-    this.grid = clone;
+    this.grid.shiftLeft();
   }
 
   shiftRight(): void {
-    const clone = this.grid.clone();
-    clone.shiftRight();
-    this.grid = clone;
+    this.grid.shiftRight();
   }
 
   shiftUp(): void {
-    const clone = this.grid.clone();
-    clone.shiftUp();
-    this.grid = clone;
+    this.grid.shiftUp();
   }
 
   shiftDown(): void {
-    const clone = this.grid.clone();
-    clone.shiftDown();
-    this.grid = clone;
+    this.grid.shiftDown();
+  }
+
+  fill(): void {
+    this.grid.clear(this.foreColorIndex);
+  }
+
+  clear(): void {
+    this.grid.clear(this.backColorIndex);
   }
 
   setBackColorIndex(backColorIndex: number): void {

@@ -1,10 +1,16 @@
 import {Point} from './point';
+import {Rect} from './rect';
+import {Observable, Subject, Subscription} from 'rxjs';
 
 export class Grid {
 
   private _width: number;
   private _height: number;
   private data: number[][];
+
+  private changeSubject: Subject<Rect> = new Subject<Rect>();
+  private changeObservable: Observable<Rect> = this.changeSubject.asObservable();
+
 
   constructor(width: number, height: number, value: number) {
     this._width = width;
@@ -20,12 +26,17 @@ export class Grid {
     return this._height;
   }
 
+  getSize(): Rect {
+    return new Rect(0, 0, this.width, this.height);
+  }
+
   get(point: Point): number {
     return this.data[point.y][point.x];
   }
 
   set(point: Point, value: number): void {
     this.data[point.y][point.x] = value;
+    this.notifyChanges(new Rect(point.x, point.y, 1, 1));
   }
 
   clear(value: number): void {
@@ -37,6 +48,7 @@ export class Grid {
       }
       this.data.push(row);
     }
+    this.notifyChanges(this.getSize());
   }
 
   clone(): Grid {
@@ -55,6 +67,7 @@ export class Grid {
       const firstCell = row.shift();
       row.push(firstCell);
     }
+    this.notifyChanges(this.getSize());
   }
 
   shiftRight(): void {
@@ -63,15 +76,26 @@ export class Grid {
       const lastCell = row.pop();
       row.unshift(lastCell);
     }
+    this.notifyChanges(this.getSize());
   }
 
   shiftUp(): void {
     const firstRow = this.data.shift();
     this.data.push(firstRow);
+    this.notifyChanges(this.getSize());
   }
 
   shiftDown(): void {
     const lastRow = this.data.pop();
     this.data.unshift(lastRow);
+    this.notifyChanges(this.getSize());
+  }
+
+  subscribeToChanges(handler: (Rect) => void): Subscription {
+    return this.changeObservable.subscribe(handler);
+  }
+
+  private notifyChanges(rect: Rect): void {
+    this.changeSubject.next(rect);
   }
 }

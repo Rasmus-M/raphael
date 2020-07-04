@@ -1,42 +1,42 @@
 <mat-grid-list class="toolbox" cols="4" rowHeight="64">
   <mat-grid-tile>
-    <button mat-icon-button title="Zoom in" (click)="zoomIn()">
+    <button mat-icon-button aria-label="Zoom in" matTooltip="Zoom in" matTooltipShowDelay="1000" (click)="zoomIn()">
       <mat-icon>zoom_in</mat-icon>
     </button>
   </mat-grid-tile>
   <mat-grid-tile>
-    <button mat-icon-button title="Zoom out" (click)="zoomOut()">
+    <button mat-icon-button aria-label="Zoom out" matTooltip="Zoom out" matTooltipShowDelay="1000" (click)="zoomOut()">
       <mat-icon>zoom_out</mat-icon>
     </button>
   </mat-grid-tile>
   <mat-grid-tile>
-    <button mat-icon-button title="Shift left" (click)="shiftLeft()">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button title="Shift right" (click)="shiftRight()">
-      <mat-icon>arrow_forward</mat-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button title="Shift up" (click)="shiftUp()">
-      <mat-icon>arrow_upward</mat-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button title="Shift down" (click)="shiftDown()">
-      <mat-icon>arrow_downward</mat-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button title="Fill all" (click)="fill()">
+    <button mat-icon-button aria-label="Fill all" matTooltip="Fill all" matTooltipShowDelay="1000" (click)="fill()">
       <fa-icon [icon]="fillIcon"></fa-icon>
     </button>
   </mat-grid-tile>
   <mat-grid-tile>
-    <button mat-icon-button title="Clear all" (click)="clear()">
+    <button mat-icon-button aria-label="Clear all" matTooltip="Clear all" matTooltipShowDelay="1000" (click)="clear()">
       <fa-icon [icon]="clearIcon"></fa-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button aria-label="Shift left" matTooltip="Shift left" matTooltipShowDelay="1000" (click)="shiftLeft()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button aria-label="Shift right" matTooltip="Shift right" matTooltipShowDelay="1000" (click)="shiftRight()">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button aria-label="Shift up" matTooltip="Shift up" matTooltipShowDelay="1000" (click)="shiftUp()">
+      <mat-icon>arrow_upward</mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button aria-label="Shift down" matTooltip="Shift down" matTooltipShowDelay="1000" (click)="shiftDown()">
+      <mat-icon>arrow_downward</mat-icon>
     </button>
   </mat-grid-tile>
 </mat-grid-list>

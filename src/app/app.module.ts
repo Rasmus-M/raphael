@@ -11,6 +11,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -20,14 +21,15 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
     ToolboxComponent,
     ColorComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatGridListModule,
-        MatIconModule,
-        MatButtonModule,
-        FontAwesomeModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatGridListModule,
+    MatIconModule,
+    MatButtonModule,
+    FontAwesomeModule,
+    MatTooltipModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

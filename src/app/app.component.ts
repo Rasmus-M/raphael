@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {Grid} from './classes/grid';
+import {AttributeMode, Grid} from './classes/grid';
 import {Palette} from './classes/palette';
 import {PixelGridComponent} from './pixel-grid/pixel-grid.component';
 
@@ -28,7 +28,7 @@ export class AppComponent {
     this.foreColorIndex = 4;
     this.gridWidth = 64;
     this.gridHeight = 64;
-    this.grid = new Grid(this.gridWidth, this.gridHeight, this.backColorIndex);
+    this.grid = new Grid(this.gridWidth, this.gridHeight, AttributeMode.EIGHT_X_ONE, this.backColorIndex);
     this.pixelScaleX = this.gridHeight / this.gridWidth;
     this.pixelScaleY = 1;
     this.zoom = 2;
@@ -64,11 +64,11 @@ export class AppComponent {
   }
 
   fill(): void {
-    this.grid.clear(this.foreColorIndex);
+    this.grid.fill(this.foreColorIndex);
   }
 
   clear(): void {
-    this.grid.clear(this.backColorIndex);
+    this.grid.fill(this.backColorIndex);
   }
 
   setBackColorIndex(backColorIndex: number): void {

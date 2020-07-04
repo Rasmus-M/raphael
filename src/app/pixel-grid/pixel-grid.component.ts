@@ -15,6 +15,8 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   static GRID_COLOR = 'gray';
   static CURSOR_LINE_WIDTH = 2;
   static CURSOR_COLOR = 'orange';
+  static TRANS_COLOR_1 = '#202020';
+  static TRANS_COLOR_2 = '#404040';
 
   @Input() grid: Grid;
   @Input() pixelScaleX: number;
@@ -101,19 +103,24 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     const context = this.gridCanvasContext;
     context.clearRect(0, 0, this.width, this.height);
     context.strokeStyle = PixelGridComponent.GRID_COLOR;
-    context.lineWidth = PixelGridComponent.GRID_LINE_WIDTH;
-    context.beginPath();
     for (let i = 0; i <= this.pixelsX; i++) {
       const x = i * this.cellWidth;
+      const majorGridLine = (i * this.pixelScaleX) % 8 === 0;
+      context.beginPath();
+      context.lineWidth = majorGridLine ? PixelGridComponent.GRID_LINE_WIDTH * 2 : PixelGridComponent.GRID_LINE_WIDTH;
       context.moveTo(x, 0);
       context.lineTo(x, this.height);
+      context.stroke();
     }
     for (let j = 0; j <= this.pixelsY; j++) {
       const y = j * this.cellHeight;
+      const majorGridLine = (j * this.pixelScaleY) % 8 === 0;
+      context.beginPath();
+      context.lineWidth = majorGridLine ? PixelGridComponent.GRID_LINE_WIDTH * 2 : PixelGridComponent.GRID_LINE_WIDTH;
       context.moveTo(0, y);
       context.lineTo(this.width, y);
+      context.stroke();
     }
-    context.stroke();
   }
 
   drawPixels(): void {
@@ -124,13 +131,26 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     for (let y = rect.y; y < rect.y + rect.height; y++) {
       for (let x = rect.x; x < rect.x + rect.width; x++) {
         const point = new Point(x, y);
-        this.drawPixel(point, this.grid.get(point));
+        this.drawPixel(point, this.grid.getValue(point));
       }
     }
   }
 
   drawPixel(point: Point, colorIndex: number): void {
-    this.drawCell(this.pixelCanvasContext, point, colorIndex);
+    const context = this.pixelCanvasContext;
+    if (colorIndex > 0) {
+      this.drawCell(context, point, colorIndex);
+    } else {
+      const rect = this.getCellRect(point);
+      const halfWidth = rect.width / 2;
+      const halfHeight = rect.height / 2;
+      context.fillStyle = PixelGridComponent.TRANS_COLOR_1;
+      context.fillRect(rect.x, rect.y, halfWidth, halfHeight);
+      context.fillRect(rect.x + halfWidth, rect.y + halfHeight, halfWidth, halfHeight);
+      context.fillStyle = PixelGridComponent.TRANS_COLOR_2;
+      context.fillRect(rect.x + halfWidth, rect.y, halfWidth, halfHeight);
+      context.fillRect(rect.x, rect.y + halfHeight, halfWidth, halfHeight);
+    }
   }
 
   drawCell(context: CanvasRenderingContext2D, point: Point, colorIndex: number): void {
@@ -161,11 +181,11 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   }
 
   getGridColorIndex(point: Point): number {
-    return this.grid.get(point);
+    return this.grid.getValue(point);
   }
 
   setGridColorIndex(point: Point, value: number): void {
-    this.grid.set(point, value);
+    this.grid.setValue(point, value);
   }
 
   onMouseMove(evt: MouseEvent): void {

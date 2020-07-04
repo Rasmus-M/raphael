@@ -1,7 +1,7 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {AttributeMode, Grid} from './classes/grid';
 import {Palette} from './classes/palette';
-import {PixelGridComponent} from './pixel-grid/pixel-grid.component';
+import {UndoManagerService} from './services/undo-manager.service';
 
 @Component({
   selector: 'app-root',
@@ -20,10 +20,9 @@ export class AppComponent {
   backColorIndex: number;
   foreColorIndex: number;
 
-  @ViewChild(PixelGridComponent)
-  private pixelGridComponent: PixelGridComponent;
-
-  constructor() {
+  constructor(
+    private undoManagerService: UndoManagerService
+  ) {
     this.backColorIndex = 0;
     this.foreColorIndex = 4;
     this.gridWidth = 64;
@@ -48,27 +47,39 @@ export class AppComponent {
   }
 
   shiftLeft(): void {
-    this.grid.shiftLeft();
+    this.undoManagerService.addEdit(
+      this.grid.shiftLeft()
+    );
   }
 
   shiftRight(): void {
-    this.grid.shiftRight();
+    this.undoManagerService.addEdit(
+      this.grid.shiftRight()
+    );
   }
 
   shiftUp(): void {
-    this.grid.shiftUp();
+    this.undoManagerService.addEdit(
+      this.grid.shiftUp()
+    );
   }
 
   shiftDown(): void {
-    this.grid.shiftDown();
+    this.undoManagerService.addEdit(
+      this.grid.shiftDown()
+    );
   }
 
   fill(): void {
-    this.grid.fill(this.foreColorIndex);
+    this.undoManagerService.addEdit(
+      this.grid.fill(this.foreColorIndex)
+    );
   }
 
   clear(): void {
-    this.grid.fill(this.backColorIndex);
+    this.undoManagerService.addEdit(
+      this.grid.fill(this.backColorIndex)
+    );
   }
 
   setBackColorIndex(backColorIndex: number): void {

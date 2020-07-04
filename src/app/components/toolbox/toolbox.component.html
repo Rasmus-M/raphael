@@ -1,4 +1,4 @@
-<mat-grid-list class="toolbox" cols="4" rowHeight="64">
+<mat-grid-list class="toolbox" cols="2" rowHeight="64">
   <mat-grid-tile>
     <button mat-icon-button matTooltip="Zoom in" matTooltipShowDelay="1000" (click)="zoomIn()">
       <mat-icon>zoom_in</mat-icon>
@@ -7,16 +7,6 @@
   <mat-grid-tile>
     <button mat-icon-button matTooltip="Zoom out" matTooltipShowDelay="1000" (click)="zoomOut()">
       <mat-icon>zoom_out</mat-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Fill all" matTooltipShowDelay="1000" (click)="fill()">
-      <fa-icon [icon]="fillIcon"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Clear all" matTooltipShowDelay="1000" (click)="clear()">
-      <fa-icon [icon]="clearIcon"></fa-icon>
     </button>
   </mat-grid-tile>
   <mat-grid-tile>
@@ -37,6 +27,26 @@
   <mat-grid-tile>
     <button mat-icon-button matTooltip="Shift down" matTooltipShowDelay="1000" (click)="shiftDown()">
       <mat-icon>arrow_downward</mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button matTooltip="Fill all" matTooltipShowDelay="1000" (click)="fill()">
+      <fa-icon [icon]="fillIcon"></fa-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button matTooltip="Clear all" matTooltipShowDelay="1000" (click)="clear()">
+      <fa-icon [icon]="clearIcon"></fa-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button matTooltip="Undo" matTooltipShowDelay="1000" (click)="undo()" [disabled]="!canUndo">
+      <mat-icon>undo</mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button matTooltip="Redo" matTooltipShowDelay="1000" (click)="redo()" [disabled]="!canRedo">
+      <mat-icon>redo</mat-icon>
     </button>
   </mat-grid-tile>
 </mat-grid-list>

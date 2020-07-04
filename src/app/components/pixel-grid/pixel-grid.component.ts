@@ -1,8 +1,11 @@
 import {AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Point} from '../classes/point';
-import {Rect} from '../classes/rect';
-import {Grid} from '../classes/grid';
-import {Palette} from '../classes/palette';
+import {Point} from '../../classes/point';
+import {Rect} from '../../classes/rect';
+import {Grid} from '../../classes/grid';
+import {Palette} from '../../classes/palette';
+import {UndoManagerService} from '../../services/undo-manager.service';
+import {CompoundEdit} from '../../classes/CompoundEdit';
+import {UndoableEdit} from '../../interfaces/undoable-edit.js';
 
 @Component({
   selector: 'app-pixel-grid',
@@ -45,8 +48,12 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   private drawing: boolean;
   private drawColorIndex: number;
   private initialized = false;
+  private strokeEdit: CompoundEdit;
 
-  constructor(private element: ElementRef) {
+  constructor(
+    private element: ElementRef,
+    private undoManagerService: UndoManagerService
+  ) {
     this.cursorPosition = new Point(-1, -1);
   }
 
@@ -184,20 +191,11 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     return this.grid.getValue(point);
   }
 
-  setGridColorIndex(point: Point, value: number): void {
-    this.grid.setValue(point, value);
-  }
-
-  onMouseMove(evt: MouseEvent): void {
-    const newCursorPosition = this.getMousePosition(evt);
-    if (!newCursorPosition.equals(this.cursorPosition)) {
-      this.eraseCursor(this.cursorPosition);
-      this.drawCursor(newCursorPosition);
-      this.cursorPosition = newCursorPosition;
+  setGridColorIndex(point: Point, value: number): UndoableEdit {
+    if (this.getGridColorIndex(point) === value) {
+      return null;
     }
-    if (this.drawing) {
-      this.setGridColorIndex(newCursorPosition, this.drawColorIndex);
-    }
+    return this.grid.setValue(point, value);
   }
 
   onMouseDown(evt: MouseEvent): void {
@@ -208,14 +206,28 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     } else {
       this.drawColorIndex = this.getGridColorIndex(this.cursorPosition) === this.backColorIndex ? this.foreColorIndex : this.backColorIndex;
     }
-    this.setGridColorIndex(this.cursorPosition, this.drawColorIndex);
+    this.strokeEdit = new CompoundEdit();
+    this.strokeEdit.addEdit(this.setGridColorIndex(this.cursorPosition, this.drawColorIndex));
   }
 
-  onMouseUp(evt: MouseEvent): void {
+  onMouseMove(evt: MouseEvent): void {
+    const newCursorPosition = this.getMousePosition(evt);
+    if (!newCursorPosition.equals(this.cursorPosition)) {
+      this.eraseCursor(this.cursorPosition);
+      this.drawCursor(newCursorPosition);
+      this.cursorPosition = newCursorPosition;
+    }
+    if (this.drawing) {
+      this.strokeEdit.addEdit(this.setGridColorIndex(newCursorPosition, this.drawColorIndex));
+    }
+  }
+
+  onMouseUp(): void {
     this.drawing = false;
+    this.undoManagerService.addEdit(this.strokeEdit);
   }
 
-  onMouseLeave(evt: MouseEvent): void {
+  onMouseLeave(): void {
     this.drawing = false;
   }
 

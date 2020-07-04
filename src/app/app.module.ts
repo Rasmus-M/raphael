@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PixelGridComponent } from './pixel-grid/pixel-grid.component';
-import { PaletteComponent } from './palette/palette.component';
-import { ToolboxComponent } from './toolbox/toolbox.component';
-import { ColorComponent } from './color/color.component';
+import { PixelGridComponent } from './components/pixel-grid/pixel-grid.component';
+import { PaletteComponent } from './components/palette/palette.component';
+import { ToolboxComponent } from './components/toolbox/toolbox.component';
+import { ColorComponent } from './components/color/color.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';

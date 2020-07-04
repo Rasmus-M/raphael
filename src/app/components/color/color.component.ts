@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
-import {Color} from '../classes/color';
+import {Color} from '../../classes/color';
 
 @Component({
   selector: 'app-color',

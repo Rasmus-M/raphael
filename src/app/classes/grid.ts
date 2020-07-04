@@ -1,6 +1,8 @@
 import {Point} from './point';
 import {Rect} from './rect';
 import {Observable, Subject, Subscription} from 'rxjs';
+import {UndoableEdit} from '../interfaces/undoable-edit.js';
+import {GridUndoableEdit} from './gridUndoableEdit';
 
 export enum AttributeMode {
   NONE,         // All values can be set independently
@@ -60,54 +62,88 @@ export class Grid {
     return this.get(point.x, point.y);
   }
 
-  setValue(point: Point, value: number): void {
+  getArea(rect: Rect): number[][] {
+    const data: number[][] = [];
+    for (let y = 0; y < rect.height; y++) {
+      const row = [];
+      for (let x = 0; x < rect.width; x++) {
+        row[x] = this.get(rect.x + x, rect.y + y);
+      }
+      data.push(row);
+    }
+    return data;
+  }
+
+  setValue(point: Point, value: number): UndoableEdit {
+    let undoableEdit: UndoableEdit;
+    const oldValue = this.getValue(point);
+    const pixelRect = new Rect(point.x, point.y, 1, 1);
     switch (this.attributeMode) {
       case AttributeMode.NONE: {
+        const oldData = this.getArea(pixelRect);
         this.set(point.x, point.y, value);
         this.notifyChanges(new Rect(point.x, point.y, 1, 1));
+        undoableEdit = new GridUndoableEdit(this, pixelRect, oldData);
         break;
       }
       case AttributeMode.EIGHT_X_ONE: {
-        const oldValue = this.getValue(point);
-        this.set(point.x, point.y, value);
         const x0 = point.x - (point.x % 8);
         const y0 = point.y;
         const rect = new Rect(x0, y0, 8, 1);
+        const oldData = this.getArea(rect);
+        this.set(point.x, point.y, value);
         if (this.countValues(rect) <= 2) {
           this.notifyChanges(new Rect(point.x, point.y, 1, 1));
         } else {
           this.change(rect, oldValue, value);
           this.notifyChanges(rect);
         }
+        undoableEdit = new GridUndoableEdit(this, rect, oldData);
         break;
       }
       case AttributeMode.EIGHT_X_EIGHT: {
-        const oldValue = this.getValue(point);
-        this.set(point.x, point.y, value);
         const x0 = point.x - (point.x % 8);
         const y0 = point.y - (point.y % 8);
         const rect = new Rect(x0, y0, 8, 8);
+        const oldData = this.getArea(rect);
+        this.set(point.x, point.y, value);
         if (this.countValues(rect) <= 2) {
           this.notifyChanges(new Rect(point.x, point.y, 1, 1));
         } else {
           this.change(rect, oldValue, value);
           this.notifyChanges(rect);
         }
+        undoableEdit = new GridUndoableEdit(this, rect, oldData);
         break;
       }
     }
+    return undoableEdit;
   }
 
-  fill(value: number): void {
+  // To be called from UndoableEdits. Does not generate a new UndoableEdit.
+  setArea(rect: Rect, data: number[][]): void {
+    for (let y = 0; y < rect.height; y++) {
+      const row = data[y];
+      for (let x = 0; x < rect.width; x++) {
+        this.set(rect.x + x, rect.y + y, row[x]);
+      }
+    }
+    this.notifyChanges(rect);
+  }
+
+  fill(value: number): UndoableEdit {
+    const oldData = this.getArea(this.getSize());
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
         this.set(x, y, value);
       }
     }
     this.notifyChanges(this.getSize());
+    return new GridUndoableEdit(this, this.getSize(), oldData);
   }
 
-  shiftLeft(): void {
+  shiftLeft(): UndoableEdit {
+    const oldData = this.getArea(this.getSize());
     for (let y = 0; y < this.height; y++) {
       const row = this.data[y];
       const firstCell = row.shift();
@@ -117,9 +153,11 @@ export class Grid {
       this.applyAttributeMode();
     }
     this.notifyChanges(this.getSize());
+    return new GridUndoableEdit(this, this.getSize(), oldData);
   }
 
-  shiftRight(): void {
+  shiftRight(): UndoableEdit {
+    const oldData = this.getArea(this.getSize());
     for (let y = 0; y < this.height; y++) {
       const row = this.data[y];
       const lastCell = row.pop();
@@ -129,24 +167,29 @@ export class Grid {
       this.applyAttributeMode();
     }
     this.notifyChanges(this.getSize());
+    return new GridUndoableEdit(this, this.getSize(), oldData);
   }
 
-  shiftUp(): void {
+  shiftUp(): UndoableEdit {
+    const oldData = this.getArea(this.getSize());
     const firstRow = this.data.shift();
     this.data.push(firstRow);
     this.notifyChanges(this.getSize());
     if (this.attributeMode === AttributeMode.EIGHT_X_EIGHT) {
       this.applyAttributeMode();
     }
+    return new GridUndoableEdit(this, this.getSize(), oldData);
   }
 
-  shiftDown(): void {
+  shiftDown(): UndoableEdit {
+    const oldData = this.getArea(this.getSize());
     const lastRow = this.data.pop();
     this.data.unshift(lastRow);
     this.notifyChanges(this.getSize());
     if (this.attributeMode === AttributeMode.EIGHT_X_EIGHT) {
       this.applyAttributeMode();
     }
+    return new GridUndoableEdit(this, this.getSize(), oldData);
   }
 
   subscribeToChanges(handler: (Rect) => void): Subscription {
@@ -218,6 +261,5 @@ export class Grid {
     for (let i = 2; i < sortedEntries.length; i++) {
       this.change(rect, sortedEntries[i][0], sortedEntries[0][0]);
     }
-
   }
 }

@@ -1,5 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {faFill, faEraser} from '@fortawesome/free-solid-svg-icons';
+import {UndoManagerService, UndoManagerStatus} from '../../services/undo-manager.service';
 
 @Component({
   selector: 'app-toolbox',
@@ -19,11 +20,33 @@ export class ToolboxComponent implements OnInit {
 
   fillIcon = faFill;
   clearIcon = faEraser;
+  canUndo = false;
+  canRedo = false;
 
-  constructor() { }
+  constructor(
+    private undoManagerService: UndoManagerService
+  ) {
+    undoManagerService.subscribe(this.undoStatusChanged.bind(this));
+  }
 
   ngOnInit(): void {
+    this.canUndo = this.undoManagerService.canUndo();
+    this.canRedo = this.undoManagerService.canRedo();
   }
+
+  undoStatusChanged(undoManagerStatus: UndoManagerStatus): void {
+    this.canUndo = undoManagerStatus.canUndo;
+    this.canRedo = undoManagerStatus.canRedo;
+  }
+
+  undo(): void {
+    this.undoManagerService.undo();
+  }
+
+  redo(): void {
+    this.undoManagerService.redo();
+  }
+
 
   zoomIn(): void {
     this.zoomedIn.emit();

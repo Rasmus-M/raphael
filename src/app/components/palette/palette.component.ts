@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
-import {Palette} from '../classes/palette';
+import {Palette} from '../../classes/palette';
 
 @Component({
   selector: 'app-palette',

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {faFill, faEraser, faFillDrip, faPencilAlt, faClone, faFont} from '@fortawesome/free-solid-svg-icons';
 import {UndoManagerService, UndoManagerStatus} from '../../services/undo-manager.service';
 
@@ -16,6 +16,7 @@ export enum Tool {
 })
 export class ToolboxComponent implements OnInit {
 
+  @Input() tool: Tool;
   @Output() zoomedIn = new EventEmitter();
   @Output() zoomedOut = new EventEmitter();
   @Output() shiftedLeft = new EventEmitter();
@@ -35,8 +36,7 @@ export class ToolboxComponent implements OnInit {
 
   canUndo = false;
   canRedo = false;
-  tool = Tool;
-  toolType: Tool;
+  toolEnum = Tool;
 
   constructor(
     private undoManagerService: UndoManagerService
@@ -96,8 +96,8 @@ export class ToolboxComponent implements OnInit {
   }
 
   changedTool(evt): void {
-    this.toolType = evt.value;
+    this.tool = evt.value;
     console.log('Type is now', evt.value);
-    this.toolChanged.emit(this.toolType);
+    this.toolChanged.emit(this.tool);
   }
 }

@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {AttributeMode, Grid} from './classes/grid';
 import {Palette} from './classes/palette';
 import {UndoManagerService} from './services/undo-manager.service';
+import {Tool} from './components/toolbox/toolbox.component';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent {
   pixelScaleX: number;
   pixelScaleY: number;
   zoom: number;
+  tool: Tool;
   palette: Palette;
   backColorIndex: number;
   foreColorIndex: number;
@@ -31,6 +33,7 @@ export class AppComponent {
     this.pixelScaleX = this.gridHeight / this.gridWidth;
     this.pixelScaleY = 1;
     this.zoom = 2;
+    this.tool = Tool.DRAW;
     this.palette = new Palette();
   }
 

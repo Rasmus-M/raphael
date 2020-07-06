@@ -12,6 +12,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { MenuComponent } from './components/menu/menu.component';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -19,7 +22,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     PixelGridComponent,
     PaletteComponent,
     ToolboxComponent,
-    ColorComponent
+    ColorComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +32,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatIconModule,
     MatButtonModule,
     FontAwesomeModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatMenuModule,
+    MatButtonToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

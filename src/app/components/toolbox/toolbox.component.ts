@@ -1,6 +1,13 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {faFill, faEraser} from '@fortawesome/free-solid-svg-icons';
+import {faFill, faEraser, faFillDrip, faPencilAlt, faClone, faFont} from '@fortawesome/free-solid-svg-icons';
 import {UndoManagerService, UndoManagerStatus} from '../../services/undo-manager.service';
+
+export enum Tool {
+  DRAW,
+  FLOOD_FILL,
+  CLONE,
+  TEXT
+}
 
 @Component({
   selector: 'app-toolbox',
@@ -17,11 +24,19 @@ export class ToolboxComponent implements OnInit {
   @Output() shiftedDown = new EventEmitter();
   @Output() filled = new EventEmitter();
   @Output() cleared = new EventEmitter();
+  @Output() toolChanged = new EventEmitter<Tool>();
 
   fillIcon = faFill;
   clearIcon = faEraser;
+  drawIcon = faPencilAlt;
+  floodFillIcon = faFillDrip;
+  cloneIcon = faClone;
+  textIcon = faFont;
+
   canUndo = false;
   canRedo = false;
+  tool = Tool;
+  toolType: Tool;
 
   constructor(
     private undoManagerService: UndoManagerService
@@ -78,5 +93,11 @@ export class ToolboxComponent implements OnInit {
 
   fill(): void {
     this.filled.emit();
+  }
+
+  changedTool(evt): void {
+    this.toolType = evt.value;
+    console.log('Type is now', evt.value);
+    this.toolChanged.emit(this.toolType);
   }
 }

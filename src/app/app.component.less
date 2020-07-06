@@ -1,12 +1,20 @@
 .app {
   display: grid;
-  grid-template-columns: 100vh 108px 1fr;
-  grid-template-rows: calc(100vh - 130px) 130px;
+  --menuHeight: 36px;
+  --paletteHeight: 120px;
+  --pixelGridHeight: calc(100vh - var(--menuHeight) - 8px);
+  grid-template-columns: var(--pixelGridHeight) 160px 1fr;
+  grid-template-rows: var(--menuHeight) calc(var(--pixelGridHeight) - var(--paletteHeight)) var(--paletteHeight) 1fr;
   grid-template-areas:
+    "menu menu"
     "pixel-grid toolbox"
     "pixel-grid palette";
   grid-row-gap: 0;
   grid-column-gap: 8px;
+}
+
+#menu {
+  grid-area: menu;
 }
 
 #pixel-grid {

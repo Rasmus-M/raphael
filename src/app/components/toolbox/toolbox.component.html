@@ -1,4 +1,14 @@
-<mat-grid-list class="toolbox" cols="2" rowHeight="64">
+<mat-grid-list class="toolbox" cols="4" rowHeight="64">
+  <mat-grid-tile>
+    <button mat-icon-button matTooltip="Undo" matTooltipShowDelay="1000" (click)="undo()" [disabled]="!canUndo">
+      <mat-icon>undo</mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button matTooltip="Redo" matTooltipShowDelay="1000" (click)="redo()" [disabled]="!canRedo">
+      <mat-icon>redo</mat-icon>
+    </button>
+  </mat-grid-tile>
   <mat-grid-tile>
     <button mat-icon-button matTooltip="Zoom in" matTooltipShowDelay="1000" (click)="zoomIn()">
       <mat-icon>zoom_in</mat-icon>
@@ -39,15 +49,15 @@
       <fa-icon [icon]="clearIcon"></fa-icon>
     </button>
   </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Undo" matTooltipShowDelay="1000" (click)="undo()" [disabled]="!canUndo">
-      <mat-icon>undo</mat-icon>
-    </button>
+  <mat-grid-tile [colspan]="2">
   </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Redo" matTooltipShowDelay="1000" (click)="redo()" [disabled]="!canRedo">
-      <mat-icon>redo</mat-icon>
-    </button>
+  <mat-grid-tile [colspan]="4">
+    <mat-button-toggle-group name="fontStyle" aria-label="Tool" [value]="tool" (change)="changedTool($event)">
+      <mat-button-toggle [value]="tool.DRAW" matTooltip="Draw" matTooltipShowDelay="1000"><fa-icon [icon]="drawIcon"></fa-icon></mat-button-toggle>
+      <mat-button-toggle [value]="tool.FLOOD_FILL" matTooltip="Flood fill" matTooltipShowDelay="1000"><fa-icon [icon]="floodFillIcon"></fa-icon></mat-button-toggle>
+      <mat-button-toggle [value]="tool.CLONE" matTooltip="Clone area" matTooltipShowDelay="1000"><fa-icon [icon]="cloneIcon"></fa-icon></mat-button-toggle>
+      <mat-button-toggle [value]="tool.TEXT" matTooltip="Text" matTooltipShowDelay="1000"><fa-icon [icon]="textIcon"></fa-icon></mat-button-toggle>
+    </mat-button-toggle-group>
   </mat-grid-tile>
 </mat-grid-list>
 

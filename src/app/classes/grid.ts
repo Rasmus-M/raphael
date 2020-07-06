@@ -142,6 +142,12 @@ export class Grid {
     return new GridUndoableEdit(this, this.getSize(), oldData);
   }
 
+  floodFill(): UndoableEdit {
+    const oldData = this.getArea(this.getSize());
+
+    return new GridUndoableEdit(this, this.getSize(), oldData);
+  }
+
   shiftLeft(): UndoableEdit {
     const oldData = this.getArea(this.getSize());
     for (let y = 0; y < this.height; y++) {
@@ -206,6 +212,22 @@ export class Grid {
 
   private set(x: number, y: number, value: number): void {
     this.data[y][x] = value;
+  }
+
+  private floodFillValue(point: Point, newValue: number, stopValue: number): void {
+    const value = this.getValue(point);
+    if (this.get(point.x + 1, point.y) === stopValue) {
+      this.set(point.x + 1, point.y, newValue);
+    }
+    if (this.get(point.x - 1, point.y) === stopValue) {
+      this.set(point.x - 1, point.y, newValue);
+    }
+    if (this.get(point.x, point.y + 1) === stopValue) {
+      this.set(point.x, point.y + 1, newValue);
+    }
+    if (this.get(point.x, point.y - 1) === stopValue) {
+      this.set(point.x, point.y - 1, newValue);
+    }
   }
 
   private countValues(rect: Rect): number {

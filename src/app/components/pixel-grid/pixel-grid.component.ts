@@ -6,6 +6,7 @@ import {Palette} from '../../classes/palette';
 import {UndoManagerService} from '../../services/undo-manager.service';
 import {CompoundEdit} from '../../classes/CompoundEdit';
 import {UndoableEdit} from '../../interfaces/undoable-edit.js';
+import {Tool} from '../toolbox/toolbox.component';
 
 @Component({
   selector: 'app-pixel-grid',
@@ -29,6 +30,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   @Input() palette: Palette;
   @Input() backColorIndex: number;
   @Input() foreColorIndex: number;
+  @Input() tool: Tool;
 
   private pixelsX: number;
   private pixelsY: number;
@@ -199,15 +201,27 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   }
 
   onMouseDown(evt: MouseEvent): void {
-    this.drawing = true;
     this.cursorPosition = this.getMousePosition(evt);
-    if (evt.button === 0) {
-      this.drawColorIndex = this.getGridColorIndex(this.cursorPosition) === this.foreColorIndex ? this.backColorIndex : this.foreColorIndex;
-    } else {
-      this.drawColorIndex = this.getGridColorIndex(this.cursorPosition) === this.backColorIndex ? this.foreColorIndex : this.backColorIndex;
+    switch (this.tool) {
+      case Tool.DRAW:
+        this.drawing = true;
+        if (evt.button === 0) {
+          this.drawColorIndex = this.getGridColorIndex(this.cursorPosition) === this.foreColorIndex ?
+            this.backColorIndex : this.foreColorIndex;
+        } else {
+          this.drawColorIndex = this.getGridColorIndex(this.cursorPosition) === this.backColorIndex ?
+            this.foreColorIndex : this.backColorIndex;
+        }
+        this.strokeEdit = new CompoundEdit();
+        this.strokeEdit.addEdit(this.setGridColorIndex(this.cursorPosition, this.drawColorIndex));
+        break;
+      case Tool.FLOOD_FILL:
+        break;
+      case Tool.CLONE:
+        break;
+      case Tool.TEXT:
+        break;
     }
-    this.strokeEdit = new CompoundEdit();
-    this.strokeEdit.addEdit(this.setGridColorIndex(this.cursorPosition, this.drawColorIndex));
   }
 
   onMouseMove(evt: MouseEvent): void {
@@ -217,14 +231,34 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
       this.drawCursor(newCursorPosition);
       this.cursorPosition = newCursorPosition;
     }
-    if (this.drawing) {
-      this.strokeEdit.addEdit(this.setGridColorIndex(newCursorPosition, this.drawColorIndex));
+    switch (this.tool) {
+      case Tool.DRAW:
+        if (this.drawing) {
+          this.strokeEdit.addEdit(this.setGridColorIndex(newCursorPosition, this.drawColorIndex));
+        }
+        break;
+      case Tool.FLOOD_FILL:
+        break;
+      case Tool.CLONE:
+        break;
+      case Tool.TEXT:
+        break;
     }
   }
 
   onMouseUp(): void {
-    this.drawing = false;
-    this.undoManagerService.addEdit(this.strokeEdit);
+    switch (this.tool) {
+      case Tool.DRAW:
+        this.drawing = false;
+        this.undoManagerService.addEdit(this.strokeEdit);
+        break;
+      case Tool.FLOOD_FILL:
+        break;
+      case Tool.CLONE:
+        break;
+      case Tool.TEXT:
+        break;
+    }
   }
 
   onMouseLeave(): void {

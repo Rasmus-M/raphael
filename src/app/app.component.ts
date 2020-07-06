@@ -85,6 +85,10 @@ export class AppComponent {
     );
   }
 
+  toolChanged(tool: Tool): void {
+    this.tool = tool;
+  }
+
   setBackColorIndex(backColorIndex: number): void {
     this.backColorIndex = backColorIndex;
   }

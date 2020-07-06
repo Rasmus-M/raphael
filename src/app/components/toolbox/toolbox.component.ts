@@ -97,7 +97,6 @@ export class ToolboxComponent implements OnInit {
 
   changedTool(evt): void {
     this.tool = evt.value;
-    console.log('Type is now', evt.value);
     this.toolChanged.emit(this.tool);
   }
 }

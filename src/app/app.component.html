@@ -9,6 +9,7 @@
         [pixelScaleY]="pixelScaleY"
         [zoom]="zoom"
         [palette]="palette"
+        [tool]="tool"
         [backColorIndex]="backColorIndex"
         [foreColorIndex]="foreColorIndex"
       ></app-pixel-grid>
@@ -24,6 +25,7 @@
       (shiftedDown)="shiftDown()"
       (filled)="fill()"
       (cleared)="clear()"
+      (toolChanged)="toolChanged($event)"
     ></app-toolbox>
   </div>
   <div id="palette">

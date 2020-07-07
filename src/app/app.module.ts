@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PixelGridComponent } from './components/pixel-grid/pixel-grid.component';
 import { PaletteComponent } from './components/palette/palette.component';
 import { ToolboxComponent } from './components/toolbox/toolbox.component';
-import { ColorComponent } from './components/color/color.component';
+import { ColorBoxComponent } from './components/color-box/color-box.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -15,6 +15,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { MenuComponent } from './components/menu/menu.component';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MiniViewComponent } from './components/mini-view/mini-view.component';
 
 @NgModule({
   declarations: [
@@ -22,8 +23,9 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     PixelGridComponent,
     PaletteComponent,
     ToolboxComponent,
-    ColorComponent,
-    MenuComponent
+    ColorBoxComponent,
+    MenuComponent,
+    MiniViewComponent
   ],
   imports: [
     BrowserModule,

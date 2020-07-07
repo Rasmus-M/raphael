@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ColorComponent } from './color.component';
+import { MiniViewComponent } from './mini-view.component';
 
-describe('ColorComponent', () => {
-  let component: ColorComponent;
-  let fixture: ComponentFixture<ColorComponent>;
+describe('MiniViewComponent', () => {
+  let component: MiniViewComponent;
+  let fixture: ComponentFixture<MiniViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ColorComponent ]
+      declarations: [ MiniViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ColorComponent);
+    fixture = TestBed.createComponent(MiniViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

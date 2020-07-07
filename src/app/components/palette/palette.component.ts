@@ -26,7 +26,6 @@ export class PaletteComponent implements OnInit {
     this.setLabels();
   }
 
-
   setLabels(): void {
     this.labels = [];
     for (let i = 0; i < this.palette.getSize(); i++) {

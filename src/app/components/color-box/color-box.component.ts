@@ -2,11 +2,11 @@ import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output} from 
 import {Color} from '../../classes/color';
 
 @Component({
-  selector: 'app-color',
-  templateUrl: './color.component.html',
-  styleUrls: ['./color.component.less']
+  selector: 'app-color-box',
+  templateUrl: './color-box.component.html',
+  styleUrls: ['./color-box.component.less']
 })
-export class ColorComponent implements AfterViewInit {
+export class ColorBoxComponent implements AfterViewInit {
 
   @Input() color: Color;
   @Input() label: string;

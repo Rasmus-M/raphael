@@ -14,7 +14,7 @@
         [foreColorIndex]="foreColorIndex"
       ></app-pixel-grid>
   </div>
-  <div id="toolbox">
+  <div id="side-panel">
     <app-toolbox
       [tool]="tool"
       [palette]="palette"
@@ -32,5 +32,11 @@
       (foreColorChanged)="setForeColorIndex($event)"
       (backColorChanged)="setBackColorIndex($event)"
     ></app-toolbox>
+    <div id="mini-view">
+      <app-mini-view
+        [grid]="grid"
+        [palette]="palette"
+      ></app-mini-view>
+    </div>
   </div>
 </div>

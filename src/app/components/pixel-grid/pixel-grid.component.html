@@ -3,8 +3,9 @@
   <canvas id="selection-canvas" class="pixel-grid-canvas layer1"></canvas>
     <canvas id="grid-canvas" class="pixel-grid-canvas layer2"></canvas>
     <canvas id="cursor-canvas" class="pixel-grid-canvas layer3"
-      (mousemove)="onMouseMove($event)"
+      (click)="onMouseClick()"
       (mousedown)="onMouseDown($event)"
+      (mousemove)="onMouseMove($event)"
       (mouseup)="onMouseUp()"
       (mouseleave)="onMouseLeave()"
       (contextmenu)="onContextMenu($event)"

@@ -200,6 +200,20 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     return this.grid.setValue(point, value);
   }
 
+  onMouseClick(): void {
+    switch (this.tool) {
+      case Tool.DRAW:
+        break;
+      case Tool.FLOOD_FILL:
+        this.grid.floodFill(this.cursorPosition, this.foreColorIndex);
+        break;
+      case Tool.CLONE:
+        break;
+      case Tool.TEXT:
+        break;
+    }
+  }
+
   onMouseDown(evt: MouseEvent): void {
     this.cursorPosition = this.getMousePosition(evt);
     switch (this.tool) {

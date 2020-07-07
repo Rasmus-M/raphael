@@ -29,7 +29,7 @@ export class AppComponent {
     this.foreColorIndex = 4;
     this.gridWidth = 64;
     this.gridHeight = 64;
-    this.grid = new Grid(this.gridWidth, this.gridHeight, AttributeMode.EIGHT_X_ONE, this.backColorIndex);
+    this.grid = new Grid(this.gridWidth, this.gridHeight, AttributeMode.NONE, this.backColorIndex);
     this.pixelScaleX = this.gridHeight / this.gridWidth;
     this.pixelScaleY = 1;
     this.zoom = 2;

@@ -142,9 +142,12 @@ export class Grid {
     return new GridUndoableEdit(this, this.getSize(), oldData);
   }
 
-  floodFill(): UndoableEdit {
+  floodFill(point: Point, newValue: number): UndoableEdit {
     const oldData = this.getArea(this.getSize());
-
+    const oldValue = this.getValue(point);
+    this.floodFillValue(point.x, point.y, newValue, oldValue);
+    this.applyAttributeMode();
+    this.notifyChanges(this.getSize());
     return new GridUndoableEdit(this, this.getSize(), oldData);
   }
 
@@ -214,19 +217,16 @@ export class Grid {
     this.data[y][x] = value;
   }
 
-  private floodFillValue(point: Point, newValue: number, stopValue: number): void {
-    const value = this.getValue(point);
-    if (this.get(point.x + 1, point.y) === stopValue) {
-      this.set(point.x + 1, point.y, newValue);
+  private floodFillValue(x: number, y: number, newValue: number, oldValue: number): void {
+    if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
+      return;
     }
-    if (this.get(point.x - 1, point.y) === stopValue) {
-      this.set(point.x - 1, point.y, newValue);
-    }
-    if (this.get(point.x, point.y + 1) === stopValue) {
-      this.set(point.x, point.y + 1, newValue);
-    }
-    if (this.get(point.x, point.y - 1) === stopValue) {
-      this.set(point.x, point.y - 1, newValue);
+    if (this.get(x, y) === oldValue) {
+      this.set(x, y, newValue);
+      this.floodFillValue(x - 1, y, newValue, oldValue);
+      this.floodFillValue(x + 1, y, newValue, oldValue);
+      this.floodFillValue(x, y - 1, newValue, oldValue);
+      this.floodFillValue(x, y + 1, newValue, oldValue);
     }
   }
 

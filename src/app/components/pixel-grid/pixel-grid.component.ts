@@ -205,7 +205,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
       case Tool.DRAW:
         break;
       case Tool.FLOOD_FILL:
-        this.grid.floodFill(this.cursorPosition, this.foreColorIndex);
+        this.undoManagerService.addEdit(
+          this.grid.floodFill(this.cursorPosition, this.foreColorIndex)
+        );
         break;
       case Tool.CLONE:
         break;

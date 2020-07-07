@@ -1,4 +1,4 @@
-<mat-grid-list class="toolbox" cols="4" rowHeight="64">
+<mat-grid-list class="toolbox" cols="4" rowHeight="48">
   <mat-grid-tile>
     <button mat-icon-button matTooltip="Undo" matTooltipShowDelay="1000" (click)="undo()" [disabled]="!canUndo">
       <mat-icon>undo</mat-icon>
@@ -51,7 +51,7 @@
   </mat-grid-tile>
   <mat-grid-tile [colspan]="2">
   </mat-grid-tile>
-  <mat-grid-tile [colspan]="4">
+  <mat-grid-tile [colspan]="4" [rowspan]="2">
     <mat-button-toggle-group name="tool" aria-label="Tool" [value]="tool" (change)="changedTool($event)">
       <mat-button-toggle [value]="toolEnum.DRAW" matTooltip="Draw" matTooltipShowDelay="1000"><fa-icon [icon]="drawIcon"></fa-icon></mat-button-toggle>
       <mat-button-toggle [value]="toolEnum.FLOOD_FILL" matTooltip="Flood fill" matTooltipShowDelay="1000"><fa-icon [icon]="floodFillIcon"></fa-icon></mat-button-toggle>

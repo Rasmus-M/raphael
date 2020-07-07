@@ -46,7 +46,6 @@ export class MiniViewComponent implements AfterViewInit {
         data[i++] = 255;
       }
     }
-    console.log(imageData);
     this.context.putImageData(imageData, rect.x, rect.y);
   }
 

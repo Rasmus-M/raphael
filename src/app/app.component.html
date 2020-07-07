@@ -17,9 +17,6 @@
   <div id="side-panel">
     <app-toolbox
       [tool]="tool"
-      [palette]="palette"
-      [foreColorIndex]="foreColorIndex"
-      [backColorIndex]="backColorIndex"
       (zoomInClicked)="zoomIn()"
       (zoomOutClicked)="zoomOut()"
       (shiftLeftClicked)="shiftLeft()"
@@ -29,9 +26,16 @@
       (fillClicked)="fill()"
       (clearClicked)="clear()"
       (toolChanged)="toolChanged($event)"
-      (foreColorChanged)="setForeColorIndex($event)"
-      (backColorChanged)="setBackColorIndex($event)"
     ></app-toolbox>
+    <div id="palette">
+      <app-palette
+        [palette]="palette"
+        [backColorIndex]="backColorIndex"
+        [foreColorIndex]="foreColorIndex"
+        (backColorChanged)="setBackColorIndex($event)"
+        (foreColorChanged)="setForeColorIndex($event)"
+      ></app-palette>
+    </div>
     <div id="mini-view">
       <app-mini-view
         [grid]="grid"

@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {faFill, faEraser, faFillDrip, faPencilAlt, faClone, faFont} from '@fortawesome/free-solid-svg-icons';
 import {UndoManagerService, UndoManagerStatus} from '../../services/undo-manager.service';
-import {Palette} from '../../classes/palette';
 
 export enum Tool {
   DRAW,
@@ -18,9 +17,6 @@ export enum Tool {
 export class ToolboxComponent implements OnInit {
 
   @Input() tool: Tool;
-  @Input() palette: Palette;
-  @Input() foreColorIndex: number;
-  @Input() backColorIndex: number;
   @Output() zoomInClicked = new EventEmitter();
   @Output() zoomOutClicked = new EventEmitter();
   @Output() shiftLeftClicked = new EventEmitter();
@@ -30,8 +26,6 @@ export class ToolboxComponent implements OnInit {
   @Output() fillClicked = new EventEmitter();
   @Output() clearClicked = new EventEmitter();
   @Output() toolChanged = new EventEmitter<Tool>();
-  @Output() backColorChanged = new EventEmitter<number>();
-  @Output() foreColorChanged = new EventEmitter<number>();
 
   fillIcon = faFill;
   clearIcon = faEraser;
@@ -103,13 +97,5 @@ export class ToolboxComponent implements OnInit {
   changeTool(evt): void {
     this.tool = evt.value;
     this.toolChanged.emit(this.tool);
-  }
-
-  setBackColorIndex(backColorIndex: number): void {
-    this.backColorChanged.emit(backColorIndex);
-  }
-
-  setForeColorIndex(foreColorIndex: number): void {
-    this.foreColorChanged.emit(foreColorIndex);
   }
 }

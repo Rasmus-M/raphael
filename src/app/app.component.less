@@ -1,14 +1,12 @@
 .app {
   display: grid;
   --menuHeight: 36px;
-  --paletteHeight: 160px;
   --pixelGridHeight: calc(100vh - var(--menuHeight) - 8px);
   grid-template-columns: var(--pixelGridHeight) 160px 1fr;
-  grid-template-rows: var(--menuHeight) calc(var(--pixelGridHeight) - var(--paletteHeight)) var(--paletteHeight) 1fr;
+  grid-template-rows: var(--menuHeight) calc(var(--pixelGridHeight)) 1fr;
   grid-template-areas:
     "menu menu"
-    "pixel-grid toolbox"
-    "pixel-grid palette";
+    "pixel-grid toolbox";
   grid-row-gap: 0;
   grid-column-gap: 8px;
 }
@@ -24,8 +22,4 @@
 
 #toolbox {
   grid-area: toolbox;
-}
-
-#palette {
-  grid-area: palette;
 }

@@ -17,24 +17,20 @@
   <div id="toolbox">
     <app-toolbox
       [tool]="tool"
-      (zoomedIn)="zoomIn()"
-      (zoomedOut)="zoomOut()"
-      (shiftedLeft)="shiftLeft()"
-      (shiftedRight)="shiftRight()"
-      (shiftedUp)="shiftUp()"
-      (shiftedDown)="shiftDown()"
-      (filled)="fill()"
-      (cleared)="clear()"
-      (toolChanged)="toolChanged($event)"
-    ></app-toolbox>
-  </div>
-  <div id="palette">
-    <app-palette
       [palette]="palette"
-      [backColorIndex]="backColorIndex"
       [foreColorIndex]="foreColorIndex"
-      (backColorChanged)="setBackColorIndex($event)"
+      [backColorIndex]="backColorIndex"
+      (zoomInClicked)="zoomIn()"
+      (zoomOutClicked)="zoomOut()"
+      (shiftLeftClicked)="shiftLeft()"
+      (shiftRightClicked)="shiftRight()"
+      (shiftUpClicked)="shiftUp()"
+      (shiftDownClicked)="shiftDown()"
+      (fillClicked)="fill()"
+      (clearClicked)="clear()"
+      (toolChanged)="toolChanged($event)"
       (foreColorChanged)="setForeColorIndex($event)"
-    ></app-palette>
+      (backColorChanged)="setBackColorIndex($event)"
+    ></app-toolbox>
   </div>
 </div>

@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {faFill, faEraser, faFillDrip, faPencilAlt, faClone, faFont} from '@fortawesome/free-solid-svg-icons';
 import {UndoManagerService, UndoManagerStatus} from '../../services/undo-manager.service';
+import {Palette} from '../../classes/palette';
 
 export enum Tool {
   DRAW,
@@ -17,15 +18,20 @@ export enum Tool {
 export class ToolboxComponent implements OnInit {
 
   @Input() tool: Tool;
-  @Output() zoomedIn = new EventEmitter();
-  @Output() zoomedOut = new EventEmitter();
-  @Output() shiftedLeft = new EventEmitter();
-  @Output() shiftedRight = new EventEmitter();
-  @Output() shiftedUp = new EventEmitter();
-  @Output() shiftedDown = new EventEmitter();
-  @Output() filled = new EventEmitter();
-  @Output() cleared = new EventEmitter();
+  @Input() palette: Palette;
+  @Input() foreColorIndex: number;
+  @Input() backColorIndex: number;
+  @Output() zoomInClicked = new EventEmitter();
+  @Output() zoomOutClicked = new EventEmitter();
+  @Output() shiftLeftClicked = new EventEmitter();
+  @Output() shiftRightClicked = new EventEmitter();
+  @Output() shiftUpClicked = new EventEmitter();
+  @Output() shiftDownClicked = new EventEmitter();
+  @Output() fillClicked = new EventEmitter();
+  @Output() clearClicked = new EventEmitter();
   @Output() toolChanged = new EventEmitter<Tool>();
+  @Output() backColorChanged = new EventEmitter<number>();
+  @Output() foreColorChanged = new EventEmitter<number>();
 
   fillIcon = faFill;
   clearIcon = faEraser;
@@ -62,41 +68,48 @@ export class ToolboxComponent implements OnInit {
     this.undoManagerService.redo();
   }
 
-
   zoomIn(): void {
-    this.zoomedIn.emit();
+    this.zoomInClicked.emit();
   }
 
   zoomOut(): void {
-    this.zoomedOut.emit();
+    this.zoomOutClicked.emit();
   }
 
   shiftLeft(): void {
-    this.shiftedLeft.emit();
+    this.shiftLeftClicked.emit();
   }
 
   shiftRight(): void {
-    this.shiftedRight.emit();
+    this.shiftRightClicked.emit();
   }
 
   shiftUp(): void {
-    this.shiftedUp.emit();
+    this.shiftUpClicked.emit();
   }
 
   shiftDown(): void {
-    this.shiftedDown.emit();
+    this.shiftDownClicked.emit();
   }
 
   clear(): void {
-    this.cleared.emit();
+    this.clearClicked.emit();
   }
 
   fill(): void {
-    this.filled.emit();
+    this.fillClicked.emit();
   }
 
-  changedTool(evt): void {
+  changeTool(evt): void {
     this.tool = evt.value;
     this.toolChanged.emit(this.tool);
+  }
+
+  setBackColorIndex(backColorIndex: number): void {
+    this.backColorChanged.emit(backColorIndex);
+  }
+
+  setForeColorIndex(foreColorIndex: number): void {
+    this.foreColorChanged.emit(foreColorIndex);
   }
 }

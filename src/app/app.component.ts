@@ -26,11 +26,11 @@ export class AppComponent {
     private undoManagerService: UndoManagerService
   ) {
     this.backColorIndex = 0;
-    this.foreColorIndex = 4;
+    this.foreColorIndex = 15;
     this.gridWidth = 64;
     this.gridHeight = 64;
     this.grid = new Grid(this.gridWidth, this.gridHeight, AttributeMode.NONE, this.backColorIndex);
-    this.pixelScaleX = this.gridHeight / this.gridWidth;
+    this.pixelScaleX = 1;
     this.pixelScaleY = 1;
     this.zoom = 2;
     this.tool = Tool.DRAW;

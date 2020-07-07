@@ -78,12 +78,10 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.initialized) {
-      console.log('Changes received before initialization', changes);
-      return;
-    }
-    if (changes.zoom) {
-      this.draw();
+    if (this.initialized) {
+      if (changes.zoom) {
+        this.draw();
+      }
     }
   }
 

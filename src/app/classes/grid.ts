@@ -4,6 +4,8 @@ import {Observable, Subject, Subscription} from 'rxjs';
 import {UndoableEdit} from '../interfaces/undoable-edit.js';
 import {GridUndoableEdit} from './gridUndoableEdit';
 import {AttributeMode} from '../enums/attribute-mode';
+import {Renderer} from '@angular/compiler-cli/ngcc/src/rendering/renderer';
+import {PixelRenderer} from './pixelRenderer';
 
 export class Grid {
 
@@ -224,6 +226,15 @@ export class Grid {
       this.floodFillValue(x, y - 1, newValue, oldValue);
       this.floodFillValue(x, y + 1, newValue, oldValue);
     }
+  }
+
+  drawLine(point1: Point, point2: Point, value: number): UndoableEdit {
+    const rect = new Rect(point1.x, point1.y, point2.x, point2.y);
+    const oldData = this.getArea(rect);
+    PixelRenderer.drawLine(point1, point2, (x, y) => {
+      this.setValue(new Point(x, y), value);
+    });
+    return new GridUndoableEdit(this, rect, oldData);
   }
 
   private countValues(rect: Rect): number {

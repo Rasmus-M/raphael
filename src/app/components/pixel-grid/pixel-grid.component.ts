@@ -7,6 +7,7 @@ import {UndoManagerService} from '../../services/undo-manager.service';
 import {CompoundEdit} from '../../classes/CompoundEdit';
 import {UndoableEdit} from '../../interfaces/undoable-edit.js';
 import {Tool} from '../../enums/tool';
+import {PixelRenderer} from '../../classes/pixelRenderer';
 
 @Component({
   selector: 'app-pixel-grid',
@@ -18,9 +19,10 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   static GRID_LINE_WIDTH = 1;
   static GRID_COLOR = 'gray';
   static CURSOR_LINE_WIDTH = 2;
-  static CURSOR_COLOR = 'orange';
+  static CURSOR_COLOR = '#ff8000';
   static TRANS_COLOR_1 = '#202020';
   static TRANS_COLOR_2 = '#404040';
+  static SELECTION_COLOR = '#ff800080';
 
   @Input() imageNumber: number;
   @Input() grid: Grid;
@@ -46,6 +48,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   private cellWidth: number;
   private cellHeight: number;
   private cursorPosition: Point;
+  private anchorPosition: Point;
   private drawing: boolean;
   private drawColorIndex: number;
   private initialized = false;
@@ -151,7 +154,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   drawPixel(point: Point, colorIndex: number): void {
     const context = this.pixelCanvasContext;
     if (colorIndex > 0) {
-      this.drawCell(context, point, colorIndex);
+      this.drawCell(context, point, this.palette.getColor(colorIndex).getHexString());
     } else {
       const rect = this.getCellRect(point);
       const halfWidth = rect.width / 2;
@@ -165,9 +168,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  drawCell(context: CanvasRenderingContext2D, point: Point, colorIndex: number): void {
+  drawCell(context: CanvasRenderingContext2D, point: Point, color: string): void {
     const rect = this.getCellRect(point);
-    context.fillStyle = this.palette.getColor(colorIndex).getHexString();
+    context.fillStyle = color;
     context.fillRect(rect.x, rect.y, rect.width, rect.height);
   }
 
@@ -184,6 +187,31 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     context.strokeStyle = PixelGridComponent.CURSOR_COLOR;
     context.lineWidth = PixelGridComponent.CURSOR_LINE_WIDTH;
     context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+  }
+
+  drawSelectionRect(point1: Point, point2: Point): void {
+    const context = this.selectionCanvasContext;
+    const x1 = Math.min(point1.x, point2.x);
+    const y1 = Math.min(point1.y, point2.y);
+    const x2 = Math.max(point1.x, point2.x);
+    const y2 = Math.max(point1.y, point2.y);
+    for (let y = y1; y <= y2; y++) {
+      for (let x = x1; x <= x2; x++) {
+        const point = new Point(x, y);
+        this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
+      }
+    }
+  }
+
+  drawSelectionLine(point1: Point, point2: Point): void {
+    const context = this.selectionCanvasContext;
+    PixelRenderer.drawLine(point1, point2, (x, y) => {
+      this.drawCell(context, new Point(x, y), PixelGridComponent.SELECTION_COLOR);
+    });
+  }
+
+  clearSelectionLayer(): void {
+    this.selectionCanvasContext.clearRect(0, 0, this.width, this.height);
   }
 
   getCellRect(point: Point): Rect {
@@ -237,8 +265,12 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
       case Tool.FLOOD_FILL:
         break;
       case Tool.LINE:
+        this.drawing = true;
+        this.anchorPosition = this.cursorPosition;
         break;
       case Tool.CLONE:
+        this.drawing = true;
+        this.anchorPosition = this.cursorPosition;
         break;
     }
   }
@@ -259,13 +291,22 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
       case Tool.FLOOD_FILL:
         break;
       case Tool.LINE:
+        if (this.drawing) {
+          this.clearSelectionLayer();
+          this.drawSelectionLine(this.anchorPosition, this.cursorPosition);
+        }
         break;
       case Tool.CLONE:
+        if (this.drawing) {
+          this.clearSelectionLayer();
+          this.drawSelectionRect(this.anchorPosition, this.cursorPosition);
+        }
         break;
     }
   }
 
-  onMouseUp(): void {
+  onMouseUp(evt: MouseEvent): void {
+    const newCursorPosition = this.getMousePosition(evt);
     switch (this.tool) {
       case Tool.DRAW:
         this.drawing = false;
@@ -274,14 +315,21 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
       case Tool.FLOOD_FILL:
         break;
       case Tool.LINE:
+        this.drawing = false;
+        this.clearSelectionLayer();
+        this.grid.drawLine(this.anchorPosition, newCursorPosition, this.foreColorIndex);
         break;
       case Tool.CLONE:
+        this.drawing = false;
+        this.clearSelectionLayer();
         break;
     }
   }
 
   onMouseLeave(): void {
-    this.drawing = false;
+    if (this.tool === Tool.DRAW) {
+      this.drawing = false;
+    }
   }
 
   onContextMenu(evt: MouseEvent): void {

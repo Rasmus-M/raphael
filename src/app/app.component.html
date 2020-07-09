@@ -1,9 +1,15 @@
 <div class="app">
   <div id="menu">
-    <app-menu></app-menu>
+    <app-menu
+      (newClicked)="new()"
+      (openClicked)="open()"
+      (saveClicked)="save()"
+      (saveAsClicked)="saveAs()"
+    ></app-menu>
   </div>
   <div id="pixel-grid">
       <app-pixel-grid
+        [imageNumber]="imageNumber"
         [grid]="grid"
         [pixelScaleX]="pixelScaleX"
         [pixelScaleY]="pixelScaleY"
@@ -38,7 +44,10 @@
     </div>
     <div id="mini-view">
       <app-mini-view
+        [imageNumber]="imageNumber"
         [grid]="grid"
+        [pixelScaleX]="pixelScaleX"
+        [pixelScaleY]="pixelScaleY"
         [palette]="palette"
       ></app-mini-view>
     </div>

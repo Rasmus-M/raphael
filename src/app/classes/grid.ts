@@ -3,12 +3,7 @@ import {Rect} from './rect';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {UndoableEdit} from '../interfaces/undoable-edit.js';
 import {GridUndoableEdit} from './gridUndoableEdit';
-
-export enum AttributeMode {
-  NONE,         // All values can be set independently
-  EIGHT_X_ONE,  // Only 2 values within an 8x1 area
-  EIGHT_X_EIGHT // Only 2 values within an 8x8 area
-}
+import {AttributeMode} from '../enums/attribute-mode';
 
 export class Grid {
 
@@ -22,24 +17,8 @@ export class Grid {
   private changeObservable: Observable<Rect> = this.changeSubject.asObservable();
 
   constructor(width: number, height: number, attributeMode: AttributeMode, initialValue: number) {
-    this._width = width;
-    this._height = height;
-    this._attributeMode = attributeMode;
-    this.data = [];
-    for (let y = 0; y < this.height; y++) {
-      this.data.push([]);
-    }
-    this.fill(initialValue);
-  }
-
-  clone(): Grid {
-    const clone = new Grid(this.width, this.height, this.attributeMode, 0);
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        clone.set(x, y, this.get(x, y));
-      }
-    }
-    return clone;
+    this.attributeMode = attributeMode;
+    this.setSize(width, height, initialValue);
   }
 
   get width(): number {
@@ -54,8 +33,25 @@ export class Grid {
     return this._attributeMode;
   }
 
+  set attributeMode(attributeMode: AttributeMode) {
+    this._attributeMode = attributeMode;
+  }
+
   getSize(): Rect {
     return new Rect(0, 0, this.width, this.height);
+  }
+
+  setSize(width: number, height: number, initialValue: number): void {
+    this._width = width;
+    this._height = height;
+    this.data = [];
+    for (let y = 0; y < this.height; y++) {
+      const row = [];
+      for (let x = 0; x < this.width; x++) {
+        row[x] = initialValue;
+      }
+      this.data[y] = row;
+    }
   }
 
   getValue(point: Point): number {

@@ -22,6 +22,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   static TRANS_COLOR_1 = '#202020';
   static TRANS_COLOR_2 = '#404040';
 
+  @Input() imageNumber: number;
   @Input() grid: Grid;
   @Input() pixelScaleX: number;
   @Input() pixelScaleY: number;
@@ -32,8 +33,6 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   @Input() foreColorIndex: number;
   @Input() tool: Tool;
 
-  private pixelsX: number;
-  private pixelsY: number;
   private pixelCanvas: HTMLCanvasElement;
   private selectionCanvas: HTMLCanvasElement;
   private gridCanvas: HTMLCanvasElement;
@@ -59,11 +58,17 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     this.cursorPosition = new Point(-1, -1);
   }
 
+  get pixelsX(): number {
+    return this.grid.width;
+  }
+
+  get pixelsY(): number {
+    return this.grid.height;
+  }
+
   ngAfterViewInit(): void {
     this.basePixelSize = this.basePixelSize || 8;
     this.zoom = this.zoom || 1;
-    this.pixelsX = this.grid.width;
-    this.pixelsY = this.grid.height;
     this.pixelCanvas = this.element.nativeElement.querySelector('#pixel-canvas');
     this.pixelCanvasContext = this.pixelCanvas.getContext('2d');
     this.selectionCanvas = this.element.nativeElement.querySelector('#selection-canvas');
@@ -79,7 +84,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.initialized) {
-      if (changes.zoom) {
+      if (changes.imageNumber || changes.pixelScaleX || changes.pixelScaleY || changes.basePixelSize || changes.zoom) {
         this.draw();
       }
     }
@@ -87,6 +92,12 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
 
   onGridChanges(changes: Rect): void {
     this.drawPixelRect(changes);
+  }
+
+  draw(): void {
+    this.calculateSize([this.pixelCanvas, this.selectionCanvas, this.gridCanvas, this.cursorCanvas]);
+    this.drawGrid();
+    this.drawPixels();
   }
 
   calculateSize(canvases: HTMLCanvasElement[]): void {
@@ -98,12 +109,6 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
       canvas.width = width;
       canvas.height = height;
     }
-  }
-
-  draw(): void {
-    this.calculateSize([this.pixelCanvas, this.selectionCanvas, this.gridCanvas, this.cursorCanvas]);
-    this.drawGrid();
-    this.drawPixels();
   }
 
   drawGrid(): void {
@@ -285,9 +290,8 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
 
   getMousePosition(evt: MouseEvent): Point {
     const rect = this.cursorCanvas.getBoundingClientRect();
-    return new Point(
-      Math.floor(this.pixelsX * (evt.clientX - rect.left) / this.cursorCanvas.clientWidth),
-      Math.floor(this.pixelsY * (evt.clientY - rect.top) / this.cursorCanvas.clientHeight)
-    );
+    const x = Math.floor(this.pixelsX * (evt.clientX - rect.left) / this.cursorCanvas.clientWidth);
+    const y = Math.floor(this.pixelsY * (evt.clientY - rect.top) / this.cursorCanvas.clientHeight);
+    return new Point(Math.max(x, 0), Math.max(y, 0));
   }
 }

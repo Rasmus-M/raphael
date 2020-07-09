@@ -16,6 +16,11 @@ import { MenuComponent } from './components/menu/menu.component';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MiniViewComponent } from './components/mini-view/mini-view.component';
+import { NewDialogComponent } from './components/new-dialog/new-dialog.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {FormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -25,7 +30,8 @@ import { MiniViewComponent } from './components/mini-view/mini-view.component';
     ToolboxComponent,
     ColorBoxComponent,
     MenuComponent,
-    MiniViewComponent
+    MiniViewComponent,
+    NewDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +42,11 @@ import { MiniViewComponent } from './components/mini-view/mini-view.component';
     FontAwesomeModule,
     MatTooltipModule,
     MatMenuModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

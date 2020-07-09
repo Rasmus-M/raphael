@@ -3,7 +3,7 @@ import {Grid} from './classes/grid';
 import {AttributeMode} from './enums/attribute-mode';
 import {Palette} from './classes/palette';
 import {UndoManagerService} from './services/undo-manager.service';
-import {Tool} from './components/toolbox/toolbox.component';
+import {Tool} from './enums/tool';
 import {MatDialog} from '@angular/material/dialog';
 import {NewDialogComponent, NewDialogData} from './components/new-dialog/new-dialog.component';
 

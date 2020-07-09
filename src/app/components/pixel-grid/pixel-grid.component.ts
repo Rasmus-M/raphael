@@ -6,7 +6,7 @@ import {Palette} from '../../classes/palette';
 import {UndoManagerService} from '../../services/undo-manager.service';
 import {CompoundEdit} from '../../classes/CompoundEdit';
 import {UndoableEdit} from '../../interfaces/undoable-edit.js';
-import {Tool} from '../toolbox/toolbox.component';
+import {Tool} from '../../enums/tool';
 
 @Component({
   selector: 'app-pixel-grid',
@@ -212,9 +212,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
           this.grid.floodFill(this.cursorPosition, this.foreColorIndex)
         );
         break;
-      case Tool.CLONE:
+      case Tool.LINE:
         break;
-      case Tool.TEXT:
+      case Tool.CLONE:
         break;
     }
   }
@@ -236,9 +236,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         break;
       case Tool.FLOOD_FILL:
         break;
-      case Tool.CLONE:
+      case Tool.LINE:
         break;
-      case Tool.TEXT:
+      case Tool.CLONE:
         break;
     }
   }
@@ -258,9 +258,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         break;
       case Tool.FLOOD_FILL:
         break;
-      case Tool.CLONE:
+      case Tool.LINE:
         break;
-      case Tool.TEXT:
+      case Tool.CLONE:
         break;
     }
   }
@@ -273,9 +273,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         break;
       case Tool.FLOOD_FILL:
         break;
-      case Tool.CLONE:
+      case Tool.LINE:
         break;
-      case Tool.TEXT:
+      case Tool.CLONE:
         break;
     }
   }

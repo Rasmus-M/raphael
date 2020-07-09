@@ -1,13 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {faFill, faEraser, faFillDrip, faPencilAlt, faClone, faFont} from '@fortawesome/free-solid-svg-icons';
+import {faFill, faEraser, faFillDrip, faPencilAlt, faClone, faRuler} from '@fortawesome/free-solid-svg-icons';
 import {UndoManagerService, UndoManagerStatus} from '../../services/undo-manager.service';
-
-export enum Tool {
-  DRAW,
-  FLOOD_FILL,
-  CLONE,
-  TEXT
-}
+import {Tool} from '../../enums/tool';
 
 @Component({
   selector: 'app-toolbox',
@@ -31,8 +25,8 @@ export class ToolboxComponent implements OnInit {
   clearIcon = faEraser;
   drawIcon = faPencilAlt;
   floodFillIcon = faFillDrip;
+  lineIcon = faRuler;
   cloneIcon = faClone;
-  textIcon = faFont;
 
   canUndo = false;
   canRedo = false;

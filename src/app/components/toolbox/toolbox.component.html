@@ -55,8 +55,8 @@
     <mat-button-toggle-group name="tool" aria-label="Tool" [value]="tool" (change)="changeTool($event)">
       <mat-button-toggle [value]="toolEnum.DRAW" matTooltip="Draw" matTooltipShowDelay="1000"><fa-icon [icon]="drawIcon"></fa-icon></mat-button-toggle>
       <mat-button-toggle [value]="toolEnum.FLOOD_FILL" matTooltip="Flood fill" matTooltipShowDelay="1000"><fa-icon [icon]="floodFillIcon"></fa-icon></mat-button-toggle>
+      <mat-button-toggle [value]="toolEnum.LINE" matTooltip="Line" matTooltipShowDelay="1000"><fa-icon [icon]="lineIcon"></fa-icon></mat-button-toggle>
       <mat-button-toggle [value]="toolEnum.CLONE" matTooltip="Clone area" matTooltipShowDelay="1000"><fa-icon [icon]="cloneIcon"></fa-icon></mat-button-toggle>
-      <mat-button-toggle [value]="toolEnum.TEXT" matTooltip="Text" matTooltipShowDelay="1000"><fa-icon [icon]="textIcon"></fa-icon></mat-button-toggle>
     </mat-button-toggle-group>
   </mat-grid-tile>
 </mat-grid-list>

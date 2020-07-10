@@ -51,6 +51,8 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   private anchorPosition: Point;
   private drawing: boolean;
   private drawColorIndex: number;
+  private cloning: boolean;
+  private cloneRect: Rect;
   private initialized = false;
   private strokeEdit: CompoundEdit;
 
@@ -89,6 +91,11 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     if (this.initialized) {
       if (changes.imageNumber || changes.pixelScaleX || changes.pixelScaleY || changes.basePixelSize || changes.zoom) {
         this.draw();
+      }
+      if (changes.tool) {
+        this.drawing = false;
+        this.cloning = false;
+        this.clearSelectionLayer();
       }
     }
   }
@@ -190,7 +197,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     const context = this.selectionCanvasContext;
     const rect = Rect.fromPoints(point1, point2);
     for (const point of rect) {
-      this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
+      if (point.x < this.pixelsX && point.y < this.pixelsY) {
+        this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
+      }
     }
   }
 
@@ -260,8 +269,20 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         this.anchorPosition = this.cursorPosition;
         break;
       case Tool.CLONE:
-        this.drawing = true;
-        this.anchorPosition = this.cursorPosition;
+        if (!this.drawing && !this.cloning) {
+          this.drawing = true;
+          this.anchorPosition = this.cursorPosition;
+        } else if (this.cloning) {
+          this.clearSelectionLayer();
+          const cloneData = this.grid.getArea(this.cloneRect);
+          this.grid.setArea(
+            new Rect(this.cursorPosition.x, this.cursorPosition.y, this.cloneRect.width, this.cloneRect.height),
+            cloneData
+          );
+          if (!evt.shiftKey) {
+            this.cloning = false;
+          }
+        }
         break;
     }
   }
@@ -288,9 +309,13 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         }
         break;
       case Tool.CLONE:
+        this.clearSelectionLayer();
         if (this.drawing) {
-          this.clearSelectionLayer();
           this.drawSelectionRect(this.anchorPosition, this.cursorPosition);
+        } else if (this.cloning) {
+          this.drawSelectionRect(this.cursorPosition,
+            new Point(this.cursorPosition.x + this.cloneRect.width, this.cursorPosition.y + this.cloneRect.height)
+          );
         }
         break;
     }
@@ -313,8 +338,11 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         );
         break;
       case Tool.CLONE:
-        this.drawing = false;
-        this.clearSelectionLayer();
+        if (this.drawing) {
+          this.drawing = false;
+          this.cloneRect = Rect.fromPoints(this.anchorPosition, this.cursorPosition);
+          this.cloning = true;
+        }
         break;
     }
   }

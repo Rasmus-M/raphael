@@ -56,18 +56,26 @@ export class Grid {
     }
   }
 
+  setArea(rect: Rect, data: number[][]): UndoableEdit {
+    const oldData = this.getArea(this.getSize());
+    for (const point of rect) {
+      this.set(point, data[point.y - rect.y][point.x - rect.x]);
+    }
+    this.notifyChanges(rect);
+    return new GridUndoableEdit(this, rect, oldData);
+  }
+
   getValue(point: Point): number {
     return this.get(point);
   }
 
   getArea(rect: Rect): number[][] {
     const data: number[][] = [];
-    for (let y = 0; y < rect.height; y++) {
-      const row = [];
-      for (let x = 0; x < rect.width; x++) {
-        row[x] = this.get(new Point(rect.x + x, rect.y + y));
-      }
-      data.push(row);
+    for (let i = 0; i < rect.height; i++) {
+      data.push([]);
+    }
+    for (const point of rect) {
+      data[point.y - rect.y][point.x - rect.x] = this.get(point);
     }
     return data;
   }
@@ -116,17 +124,6 @@ export class Grid {
       }
     }
     return undoableEdit;
-  }
-
-  // To be called from UndoableEdits. Does not generate a new UndoableEdit.
-  setArea(rect: Rect, data: number[][]): void {
-    for (let y = 0; y < rect.height; y++) {
-      const row = data[y];
-      for (let x = 0; x < rect.width; x++) {
-        this.set(new Point(rect.x + x, rect.y + y), row[x]);
-      }
-    }
-    this.notifyChanges(rect);
   }
 
   fill(value: number): UndoableEdit {

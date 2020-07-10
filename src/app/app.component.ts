@@ -132,4 +132,16 @@ export class AppComponent {
   saveAs(): void {
     console.log('Save as not implemented');
   }
+
+  import(): void {
+    console.log('Import not implemented');
+  }
+
+  export(): void {
+    console.log('Export not implemented');
+  }
+
+  about(): void {
+    console.log('About not implemented');
+  }
 }

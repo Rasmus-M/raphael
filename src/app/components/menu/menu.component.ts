@@ -11,6 +11,9 @@ export class MenuComponent implements OnInit {
   @Output() openClicked = new EventEmitter();
   @Output() saveClicked = new EventEmitter();
   @Output() saveAsClicked = new EventEmitter();
+  @Output() importClicked = new EventEmitter();
+  @Output() exportClicked = new EventEmitter();
+  @Output() aboutClicked = new EventEmitter();
 
   constructor() {
   }
@@ -35,14 +38,14 @@ export class MenuComponent implements OnInit {
   }
 
   import(): void {
-    this.saveAsClicked.emit();
+    this.importClicked.emit();
   }
 
   export(): void {
-    this.saveAsClicked.emit();
+    this.exportClicked.emit();
   }
 
   about(): void {
-    this.saveAsClicked.emit();
+    this.aboutClicked.emit();
   }
 }

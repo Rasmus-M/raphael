@@ -57,7 +57,7 @@ export class Grid {
   }
 
   getValue(point: Point): number {
-    return this.get(point.x, point.y);
+    return this.get(point);
   }
 
   getArea(rect: Rect): number[][] {
@@ -65,7 +65,7 @@ export class Grid {
     for (let y = 0; y < rect.height; y++) {
       const row = [];
       for (let x = 0; x < rect.width; x++) {
-        row[x] = this.get(rect.x + x, rect.y + y);
+        row[x] = this.get(new Point(rect.x + x, rect.y + y));
       }
       data.push(row);
     }
@@ -79,7 +79,7 @@ export class Grid {
     switch (this.attributeMode) {
       case AttributeMode.NONE: {
         const oldData = this.getArea(pixelRect);
-        this.set(point.x, point.y, value);
+        this.set(point, value);
         this.notifyChanges(new Rect(point.x, point.y, 1, 1));
         undoableEdit = new GridUndoableEdit(this, pixelRect, oldData);
         break;
@@ -89,7 +89,7 @@ export class Grid {
         const y0 = point.y;
         const rect = new Rect(x0, y0, 8, 1);
         const oldData = this.getArea(rect);
-        this.set(point.x, point.y, value);
+        this.set(point, value);
         if (this.countValues(rect) <= 2) {
           this.notifyChanges(new Rect(point.x, point.y, 1, 1));
         } else {
@@ -104,7 +104,7 @@ export class Grid {
         const y0 = point.y - (point.y % 8);
         const rect = new Rect(x0, y0, 8, 8);
         const oldData = this.getArea(rect);
-        this.set(point.x, point.y, value);
+        this.set(point, value);
         if (this.countValues(rect) <= 2) {
           this.notifyChanges(new Rect(point.x, point.y, 1, 1));
         } else {
@@ -123,7 +123,7 @@ export class Grid {
     for (let y = 0; y < rect.height; y++) {
       const row = data[y];
       for (let x = 0; x < rect.width; x++) {
-        this.set(rect.x + x, rect.y + y, row[x]);
+        this.set(new Point(rect.x + x, rect.y + y), row[x]);
       }
     }
     this.notifyChanges(rect);
@@ -131,10 +131,8 @@ export class Grid {
 
   fill(value: number): UndoableEdit {
     const oldData = this.getArea(this.getSize());
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        this.set(x, y, value);
-      }
+    for (const point of this.getSize()) {
+      this.set(point, value);
     }
     this.notifyChanges(this.getSize());
     return new GridUndoableEdit(this, this.getSize(), oldData);
@@ -207,20 +205,21 @@ export class Grid {
     this.changeSubject.next(rect);
   }
 
-  private get(x: number, y: number): number {
-    return this.data[y][x];
+  private get(point: Point): number {
+    return this.data[point.y][point.x];
   }
 
-  private set(x: number, y: number, value: number): void {
-    this.data[y][x] = value;
+  private set(point: Point, value: number): void {
+    this.data[point.y][point.x] = value;
   }
 
   private floodFillValue(x: number, y: number, newValue: number, oldValue: number): void {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
       return;
     }
-    if (this.get(x, y) === oldValue) {
-      this.set(x, y, newValue);
+    const point = new Point(x, y);
+    if (this.get(point) === oldValue) {
+      this.set(point, newValue);
       this.floodFillValue(x - 1, y, newValue, oldValue);
       this.floodFillValue(x + 1, y, newValue, oldValue);
       this.floodFillValue(x, y - 1, newValue, oldValue);
@@ -229,11 +228,13 @@ export class Grid {
   }
 
   drawLine(point1: Point, point2: Point, value: number): UndoableEdit {
-    const rect = new Rect(point1.x, point1.y, point2.x, point2.y);
+    const rect = Rect.fromPoints(point1, point2);
     const oldData = this.getArea(rect);
-    PixelRenderer.drawLine(point1, point2, (x, y) => {
-      this.setValue(new Point(x, y), value);
+    PixelRenderer.drawLine(point1, point2, (point: Point) => {
+      this.set(point, value);
     });
+    this.applyAttributeMode();
+    this.notifyChanges(rect);
     return new GridUndoableEdit(this, rect, oldData);
   }
 
@@ -243,21 +244,17 @@ export class Grid {
 
   private getValueMap(rect: Rect): Map<number, number> {
     const map = new Map<number, number>();
-    for (let y = rect.y; y < rect.y + rect.height; y++) {
-      for (let x = rect.x; x < rect.x + rect.width; x++) {
-        const value = this.get(x, y);
-        map.set(value, map.get(value) ? map.get(value) + 1 : 1);
-      }
+    for (const point of rect) {
+      const value = this.get(point);
+      map.set(value, map.get(value) ? map.get(value) + 1 : 1);
     }
     return map;
   }
 
   private change(rect: Rect, oldValue: number, newValue): void {
-    for (let y = rect.y; y < rect.y + rect.height; y++) {
-      for (let x = rect.x; x < rect.x + rect.width; x++) {
-        if (this.get(x, y) === oldValue) {
-          this.set(x, y, newValue);
-        }
+    for (const point of rect) {
+      if (this.get(point) === oldValue) {
+        this.set(point, newValue);
       }
     }
     this.notifyChanges(this.getSize());

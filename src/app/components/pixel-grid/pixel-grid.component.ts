@@ -143,11 +143,8 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   }
 
   drawPixelRect(rect: Rect): void {
-    for (let y = rect.y; y < rect.y + rect.height; y++) {
-      for (let x = rect.x; x < rect.x + rect.width; x++) {
-        const point = new Point(x, y);
-        this.drawPixel(point, this.grid.getValue(point));
-      }
+    for (const point of rect) {
+      this.drawPixel(point, this.grid.getValue(point));
     }
   }
 
@@ -191,22 +188,16 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
 
   drawSelectionRect(point1: Point, point2: Point): void {
     const context = this.selectionCanvasContext;
-    const x1 = Math.min(point1.x, point2.x);
-    const y1 = Math.min(point1.y, point2.y);
-    const x2 = Math.max(point1.x, point2.x);
-    const y2 = Math.max(point1.y, point2.y);
-    for (let y = y1; y <= y2; y++) {
-      for (let x = x1; x <= x2; x++) {
-        const point = new Point(x, y);
-        this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
-      }
+    const rect = Rect.fromPoints(point1, point2);
+    for (const point of rect) {
+      this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
     }
   }
 
   drawSelectionLine(point1: Point, point2: Point): void {
     const context = this.selectionCanvasContext;
-    PixelRenderer.drawLine(point1, point2, (x, y) => {
-      this.drawCell(context, new Point(x, y), PixelGridComponent.SELECTION_COLOR);
+    PixelRenderer.drawLine(point1, point2, (point: Point) => {
+      this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
     });
   }
 
@@ -317,7 +308,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
       case Tool.LINE:
         this.drawing = false;
         this.clearSelectionLayer();
-        this.grid.drawLine(this.anchorPosition, newCursorPosition, this.foreColorIndex);
+        this.undoManagerService.addEdit(
+          this.grid.drawLine(this.anchorPosition, newCursorPosition, this.foreColorIndex)
+        );
         break;
       case Tool.CLONE:
         this.drawing = false;

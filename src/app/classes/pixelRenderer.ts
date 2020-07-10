@@ -2,7 +2,7 @@ import {Point} from './point';
 
 export class PixelRenderer {
 
-  public static drawLine(point1: Point, point2: Point, drawPixel: (x: number, y: number) => void): void {
+  public static drawLine(point1: Point, point2: Point, drawPixel: (point: Point) => void): void {
     let x1 = point1.x;
     let y1 = point1.y;
     const x2 = point2.x;
@@ -14,7 +14,7 @@ export class PixelRenderer {
     let err = (dx > dy ? dx : -dy) / 2;
     let done = false;
     while (!done) {
-      drawPixel(x1, y1);
+      drawPixel(new Point(x1, y1));
       if (x1 === x2 && y1 === y2) {
         done = true;
       } else {

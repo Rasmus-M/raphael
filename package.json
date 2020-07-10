@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "~10.0.3",
     "@angular/router": "~10.0.3",
     "material-design-icons": "^3.0.1",
-    "@fortawesome/angular-fontawesome": "^0.6.1",
+    "@fortawesome/angular-fontawesome": "^0.7.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.29",
     "@fortawesome/free-solid-svg-icons": "^5.13.1",
     "rxjs": "~6.6.0",

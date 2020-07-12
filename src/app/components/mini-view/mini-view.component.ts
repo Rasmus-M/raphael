@@ -53,7 +53,6 @@ export class MiniViewComponent implements AfterViewInit, OnChanges {
   resize(): void {
     const aspectRatio = this.canvas.width / this.canvas.height;
     const relativeWidth = Math.floor(Math.min(aspectRatio, 1) * 100);
-    console.log('Width', relativeWidth + '%');
     this.canvas.style.width = relativeWidth + '%';
   }
 

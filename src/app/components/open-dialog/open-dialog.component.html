@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Open project</h1>
+<div mat-dialog-content>
+  <button mat-stroked-button color="primary" (click)="fileInputDisk.click()">
+    <fa-icon [icon]="openFileIcon" cdkFocusInitial></fa-icon> Open<input #fileInputDisk type="file" accept=".rap" (change)="openFile(fileInputDisk)" [hidden]="true"/>
+  </button>
+  <button mat-stroked-button id="fileName" disabled>{{getFileName()}}</button>
+</div>
+<div mat-dialog-actions>
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-stroked-button [mat-dialog-close]="data">Ok</button>
+</div>

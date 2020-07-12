@@ -5,7 +5,11 @@ import {Palette} from './classes/palette';
 import {UndoManagerService} from './services/undo-manager.service';
 import {Tool} from './enums/tool';
 import {MatDialog} from '@angular/material/dialog';
-import {NewDialogComponent, NewDialogData} from './components/new-dialog/new-dialog.component';
+import {NewDialogComponent} from './components/new-dialog/new-dialog.component';
+import {FileService} from './services/file.service';
+import {OpenDialogComponent, OpenDialogData} from './components/open-dialog/open-dialog.component';
+import {ProjectData} from './interfaces/project-data';
+import {NewProjectData} from './interfaces/new-project-data';
 
 @Component({
   selector: 'app-root',
@@ -14,36 +18,49 @@ import {NewDialogComponent, NewDialogData} from './components/new-dialog/new-dia
 })
 export class AppComponent {
 
-  imageNumber = 0;
-  grid: Grid;
-  gridWidth: number;
-  gridHeight: number;
-  pixelScaleX: number;
-  pixelScaleY: number;
-  zoom: number;
-  tool: Tool;
   palette: Palette;
+  grid: Grid;
+  pixelScaleX = 1;
+  pixelScaleY = 1;
   backColorIndex: number;
   foreColorIndex: number;
+  tool: Tool;
+  zoom: number;
+  imageNumber = 0;
 
   constructor(
     public dialog: MatDialog,
-    private undoManagerService: UndoManagerService
+    private undoManagerService: UndoManagerService,
+    private fileService: FileService
   ) {
-    this.grid = new Grid(this.gridWidth, this.gridHeight, AttributeMode.NONE, this.backColorIndex);
     this.palette = new Palette();
-    this.init({width: 64, height: 64, attributeMode: AttributeMode.NONE, pixelScaleX: 1, pixelScaleY: 1});
+    this.grid = new Grid();
+    this.init({
+      width: 64,
+      height: 64,
+      pixelScaleX: this.pixelScaleX,
+      pixelScaleY: this.pixelScaleY,
+      attributeMode: AttributeMode.NONE,
+      data: null,
+      backColorIndex: 0,
+      foreColorIndex: 15,
+      tool: Tool.DRAW,
+      zoom: 1
+    });
   }
 
-  init(initData: NewDialogData): void {
-    this.backColorIndex = 0;
-    this.foreColorIndex = 15;
-    this.pixelScaleX = initData.pixelScaleX;
-    this.pixelScaleY = initData.pixelScaleY;
-    this.grid.attributeMode = initData.attributeMode;
-    this.grid.setSize(initData.width, initData.height, this.backColorIndex);
-    this.zoom = 1;
-    this.tool = Tool.DRAW;
+  init(projectData: ProjectData): void {
+    this.pixelScaleX = projectData.pixelScaleX;
+    this.pixelScaleY = projectData.pixelScaleY;
+    this.grid.attributeMode = projectData.attributeMode;
+    this.grid.setSize(projectData.width, projectData.height, projectData.backColorIndex);
+    if (projectData.data) {
+      this.grid.setData(projectData.data);
+    }
+    this.backColorIndex = projectData.backColorIndex;
+    this.foreColorIndex = projectData.foreColorIndex;
+    this.tool = projectData.tool;
+    this.zoom = projectData.zoom;
     this.imageNumber++;
   }
 
@@ -111,18 +128,42 @@ export class AppComponent {
     const dialogRef = this.dialog.open(NewDialogComponent, {
       width: '600px'
     });
-
-    dialogRef.afterClosed().subscribe((result: NewDialogData) => {
-      if (result) {
-        console.log('New', result);
-        this.init(result);
+    dialogRef.afterClosed().subscribe((newProjectData: NewProjectData) => {
+      if (newProjectData) {
+        this.init({
+          width: newProjectData.width,
+          height: newProjectData.height,
+          pixelScaleX: newProjectData.pixelScaleX,
+          pixelScaleY: newProjectData.pixelScaleY,
+          attributeMode: newProjectData.attributeMode,
+          data: null,
+          backColorIndex: 0,
+          foreColorIndex: 15,
+          tool: Tool.DRAW,
+          zoom: 1
+        });
         this.undoManagerService.discardAllEdits();
       }
     });
   }
 
   open(): void {
-    console.log('Open not implemented');
+    const dialogRef = this.dialog.open(OpenDialogComponent, {
+      width: '600px'
+    });
+    dialogRef.afterClosed().subscribe((result: OpenDialogData) => {
+      if (result) {
+        console.log('Open', result);
+        this.fileService.openProject(result.file).subscribe(
+          (projectData: ProjectData) => {
+            this.init(projectData);
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+      }
+    });
   }
 
   save(): void {
@@ -130,7 +171,22 @@ export class AppComponent {
   }
 
   saveAs(): void {
-    console.log('Save as not implemented');
+    try {
+      this.fileService.saveProjectAs({
+        width: this.grid.width,
+        height: this.grid.height,
+        pixelScaleX: this.pixelScaleX,
+        pixelScaleY: this.pixelScaleY,
+        attributeMode: this.grid.attributeMode,
+        data: this.grid.getData(),
+        backColorIndex: this.backColorIndex,
+        foreColorIndex: this.foreColorIndex,
+        tool: this.tool,
+        zoom: this.zoom
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   import(): void {

@@ -1,14 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AttributeMode} from '../../enums/attribute-mode';
-
-export interface NewDialogData {
-  width: number;
-  height: number;
-  pixelScaleX: number;
-  pixelScaleY: number;
-  attributeMode: AttributeMode;
-}
+import {NewProjectData} from '../../interfaces/new-project-data';
 
 @Component({
   selector: 'app-new-dialog',
@@ -21,7 +14,7 @@ export class NewDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<NewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: NewDialogData) {
+    @Inject(MAT_DIALOG_DATA) public data: NewProjectData) {
     this.data = {
       width: 64,
       height: 64,

@@ -4,23 +4,21 @@ import {Observable, Subject, Subscription} from 'rxjs';
 import {UndoableEdit} from '../interfaces/undoable-edit.js';
 import {GridUndoableEdit} from './gridUndoableEdit';
 import {AttributeMode} from '../enums/attribute-mode';
-import {Renderer} from '@angular/compiler-cli/ngcc/src/rendering/renderer';
 import {PixelRenderer} from './pixelRenderer';
 
 export class Grid {
 
   private _width: number;
   private _height: number;
-  private _attributeMode: AttributeMode;
+  private _attributeMode = AttributeMode.NONE;
 
   private data: number[][];
 
   private changeSubject: Subject<Rect> = new Subject<Rect>();
   private changeObservable: Observable<Rect> = this.changeSubject.asObservable();
 
-  constructor(width: number, height: number, attributeMode: AttributeMode, initialValue: number) {
-    this.attributeMode = attributeMode;
-    this.setSize(width, height, initialValue);
+  constructor() {
+    this.setSize(1, 1, 0);
   }
 
   get width(): number {
@@ -39,6 +37,14 @@ export class Grid {
     this._attributeMode = attributeMode;
   }
 
+  getData(): number[][] {
+    return this.data;
+  }
+
+  setData(data: number[][]): void {
+    this.data = data;
+  }
+
   getSize(): Rect {
     return new Rect(0, 0, this.width, this.height);
   }
@@ -47,9 +53,9 @@ export class Grid {
     this._width = width;
     this._height = height;
     this.data = [];
-    for (let y = 0; y < this.height; y++) {
+    for (let y = 0; y < height; y++) {
       const row = [];
-      for (let x = 0; x < this.width; x++) {
+      for (let x = 0; x < width; x++) {
         row[x] = initialValue;
       }
       this.data[y] = row;

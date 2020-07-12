@@ -55,6 +55,6 @@
   </mat-grid-list>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-stroked-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
 </div>

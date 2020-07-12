@@ -10,10 +10,10 @@ export class FileService {
 
   constructor() { }
 
-  saveProjectAs(projectData: ProjectData): void {
+  saveProject(projectData: ProjectData, filename: string): void {
     const json = JSON.stringify(projectData);
     const blob = new Blob([json], { type: 'application/json;charset=utf-8' } );
-    FileSaver.saveAs(blob, 'project.rap');
+    FileSaver.saveAs(blob, filename);
   }
 
   openProject(file: File): Observable<ProjectData> {

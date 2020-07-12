@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { OpenDialogComponent } from './components/open-dialog/open-dialog.component';
+import { AboutDialogComponent } from './components/about-dialog/about-dialog.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { OpenDialogComponent } from './components/open-dialog/open-dialog.compon
     MenuComponent,
     MiniViewComponent,
     NewDialogComponent,
-    OpenDialogComponent
+    OpenDialogComponent,
+    AboutDialogComponent
   ],
     imports: [
         BrowserModule,

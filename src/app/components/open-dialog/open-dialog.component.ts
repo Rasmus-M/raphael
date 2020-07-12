@@ -18,9 +18,6 @@ export class OpenDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<OpenDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: OpenDialogData) {
-    this.data = {
-      file: null
-    };
   }
 
   ngOnInit(): void {

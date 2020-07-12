@@ -10,6 +10,7 @@ import {FileService} from './services/file.service';
 import {OpenDialogComponent, OpenDialogData} from './components/open-dialog/open-dialog.component';
 import {ProjectData} from './interfaces/project-data';
 import {NewProjectData} from './interfaces/new-project-data';
+import {AboutDialogComponent} from './components/about-dialog/about-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,9 @@ import {NewProjectData} from './interfaces/new-project-data';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent {
+
+  public static TITLE = 'Raphael';
+  public static VERSION_NO = '1.0.0';
 
   palette: Palette;
   grid: Grid;
@@ -27,6 +31,7 @@ export class AppComponent {
   tool: Tool;
   zoom: number;
   imageNumber = 0;
+  filename: string;
 
   constructor(
     public dialog: MatDialog,
@@ -124,9 +129,20 @@ export class AppComponent {
     this.foreColorIndex = foreColorIndex;
   }
 
+  updateTitle(): void {
+    document.querySelector('#app-title').innerHTML = AppComponent.TITLE + (this.filename ? ' - ' + this.filename : '');
+  }
+
   new(): void {
     const dialogRef = this.dialog.open(NewDialogComponent, {
-      width: '600px'
+      width: '600px',
+      data: {
+        width: 64,
+        height: 64,
+        pixelScaleX: 1,
+        pixelScaleY: 1,
+        attributeMode: AttributeMode.NONE
+      }
     });
     dialogRef.afterClosed().subscribe((newProjectData: NewProjectData) => {
       if (newProjectData) {
@@ -149,14 +165,18 @@ export class AppComponent {
 
   open(): void {
     const dialogRef = this.dialog.open(OpenDialogComponent, {
-      width: '600px'
+      width: '600px',
+      data: {
+        file: null
+      }
     });
     dialogRef.afterClosed().subscribe((result: OpenDialogData) => {
       if (result) {
-        console.log('Open', result);
         this.fileService.openProject(result.file).subscribe(
           (projectData: ProjectData) => {
             this.init(projectData);
+            this.filename = result.file.name;
+            this.updateTitle();
           },
           (error) => {
             console.error(error);
@@ -167,12 +187,8 @@ export class AppComponent {
   }
 
   save(): void {
-    console.log('Save not implemented');
-  }
-
-  saveAs(): void {
     try {
-      this.fileService.saveProjectAs({
+      this.fileService.saveProject({
         width: this.grid.width,
         height: this.grid.height,
         pixelScaleX: this.pixelScaleX,
@@ -183,7 +199,7 @@ export class AppComponent {
         foreColorIndex: this.foreColorIndex,
         tool: this.tool,
         zoom: this.zoom
-      });
+      }, this.filename || 'New project.rap');
     } catch (error) {
       console.error(error);
     }
@@ -198,6 +214,8 @@ export class AppComponent {
   }
 
   about(): void {
-    console.log('About not implemented');
+    const dialogRef = this.dialog.open(AboutDialogComponent, {
+      width: '600px'
+    });
   }
 }

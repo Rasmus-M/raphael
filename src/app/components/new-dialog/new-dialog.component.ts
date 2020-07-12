@@ -15,13 +15,6 @@ export class NewDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<NewDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: NewProjectData) {
-    this.data = {
-      width: 64,
-      height: 64,
-      pixelScaleX: 1,
-      pixelScaleY: 1,
-      attributeMode: AttributeMode.NONE
-    };
   }
 
   cancel(): void {

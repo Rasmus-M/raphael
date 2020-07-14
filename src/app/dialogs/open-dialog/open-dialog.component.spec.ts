@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { OpenDialogComponent } from './open-dialog.component';
+import {OpenDialogComponent} from './open-dialog.component';
 
 describe('OpenDialogComponent', () => {
   let component: OpenDialogComponent;

@@ -5,12 +5,13 @@ import {Palette} from './classes/palette';
 import {UndoManagerService} from './services/undo-manager.service';
 import {Tool} from './enums/tool';
 import {MatDialog} from '@angular/material/dialog';
-import {NewDialogComponent} from './components/new-dialog/new-dialog.component';
+import {NewDialogComponent} from './dialogs/new-dialog/new-dialog.component';
 import {FileService} from './services/file.service';
-import {OpenDialogComponent, OpenDialogData} from './components/open-dialog/open-dialog.component';
+import {OpenDialogComponent, OpenDialogData} from './dialogs/open-dialog/open-dialog.component';
 import {ProjectData} from './interfaces/project-data';
 import {NewProjectData} from './interfaces/new-project-data';
-import {AboutDialogComponent} from './components/about-dialog/about-dialog.component';
+import {AboutDialogComponent} from './dialogs/about-dialog/about-dialog.component';
+import {ExportService} from './services/export.service';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +37,8 @@ export class AppComponent {
   constructor(
     public dialog: MatDialog,
     private undoManagerService: UndoManagerService,
-    private fileService: FileService
+    private fileService: FileService,
+    private exportService: ExportService
   ) {
     this.palette = new Palette();
     this.grid = new Grid();
@@ -188,18 +190,7 @@ export class AppComponent {
 
   save(): void {
     try {
-      this.fileService.saveProject({
-        width: this.grid.width,
-        height: this.grid.height,
-        pixelScaleX: this.pixelScaleX,
-        pixelScaleY: this.pixelScaleY,
-        attributeMode: this.grid.attributeMode,
-        data: this.grid.getData(),
-        backColorIndex: this.backColorIndex,
-        foreColorIndex: this.foreColorIndex,
-        tool: this.tool,
-        zoom: this.zoom
-      }, this.filename || 'New project.rap');
+      this.fileService.saveProject(this.getProjectData(), this.filename || 'New project.rap');
     } catch (error) {
       console.error(error);
     }
@@ -209,13 +200,31 @@ export class AppComponent {
     console.log('Import not implemented');
   }
 
-  export(): void {
-    console.log('Export not implemented');
+  exportAssembly(): void {
+    this.fileService.saveTextFile(
+      this.exportService.getAssemblyFile(this.getProjectData()),
+      'export.a99'
+    );
   }
 
   about(): void {
     const dialogRef = this.dialog.open(AboutDialogComponent, {
       width: '600px'
     });
+  }
+
+  getProjectData(): ProjectData {
+    return {
+      width: this.grid.width,
+      height: this.grid.height,
+      pixelScaleX: this.pixelScaleX,
+      pixelScaleY: this.pixelScaleY,
+      attributeMode: this.grid.attributeMode,
+      data: this.grid.getData(),
+      backColorIndex: this.backColorIndex,
+      foreColorIndex: this.foreColorIndex,
+      tool: this.tool,
+      zoom: this.zoom
+    };
   }
 }

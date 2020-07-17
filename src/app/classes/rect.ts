@@ -63,4 +63,14 @@ export class Rect implements Iterable<Point> {
 
     return undefined;
   }
+
+  clipTo(rect: Rect): Rect {
+    if (this.x + this.width > rect.x + rect.width) {
+      this.width = rect.x + rect.width - this.x;
+    }
+    if (this.y + this.height > rect.y + rect.height) {
+      this.height = rect.y + rect.height - this.y;
+    }
+    return this;
+  }
 }

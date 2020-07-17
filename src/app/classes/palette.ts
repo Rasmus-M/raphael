@@ -35,4 +35,18 @@ export class Palette {
   getColors(): Color[] {
     return this.colors;
   }
+
+  getClosestColorIndex(otherColor: Color): number {
+    let closestIndex = -1;
+    let minDistance = Infinity;
+    for (let i = 1; i < this.colors.length; i++) {
+      const color = this.colors[i];
+      const d = color.colorDistance(otherColor);
+      if (d < minDistance) {
+        closestIndex = i;
+        minDistance = d;
+      }
+    }
+    return closestIndex;
+  }
 }

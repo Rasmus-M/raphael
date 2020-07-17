@@ -35,6 +35,20 @@ export class FileService {
     FileSaver.saveAs(blob, filename);
   }
 
+  openBinaryFile(file: File): Observable<ArrayBuffer> {
+    const subject = new Subject<ArrayBuffer>();
+    const reader = new FileReader();
+    reader.onload = () => {
+      const arrayBuffer = reader.result as ArrayBuffer;
+      subject.next(arrayBuffer);
+    };
+    reader.onerror = () => {
+      subject.error('Failed to load file: ' + file.name);
+    };
+    reader.readAsArrayBuffer(file);
+    return subject.asObservable();
+  }
+
   saveTextFile(text: string, filename: string): void {
     const blob = new Blob([text], { type: 'text/plain;charset=utf-8' } );
     FileSaver.saveAs(blob, filename);

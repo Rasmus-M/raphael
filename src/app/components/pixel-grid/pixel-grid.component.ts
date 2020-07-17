@@ -275,9 +275,11 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         } else if (this.cloning) {
           this.clearSelectionLayer();
           const cloneData = this.grid.getArea(this.cloneRect);
-          this.grid.setArea(
-            new Rect(this.cursorPosition.x, this.cursorPosition.y, this.cloneRect.width, this.cloneRect.height),
-            cloneData
+          this.undoManagerService.addEdit(
+            this.grid.setArea(
+              new Rect(this.cursorPosition.x, this.cursorPosition.y, this.cloneRect.width, this.cloneRect.height),
+              cloneData
+            )
           );
           if (!evt.shiftKey) {
             this.cloning = false;

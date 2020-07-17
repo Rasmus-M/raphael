@@ -62,19 +62,6 @@ export class Grid {
     }
   }
 
-  setArea(rect: Rect, data: number[][]): UndoableEdit {
-    const oldData = this.getArea(this.getSize());
-    for (const point of rect) {
-      this.set(point, data[point.y - rect.y][point.x - rect.x]);
-    }
-    this.notifyChanges(rect);
-    return new GridUndoableEdit(this, rect, oldData);
-  }
-
-  getValue(point: Point): number {
-    return this.get(point);
-  }
-
   getArea(rect: Rect): number[][] {
     const data: number[][] = [];
     for (let i = 0; i < rect.height; i++) {
@@ -84,6 +71,21 @@ export class Grid {
       data[point.y - rect.y][point.x - rect.x] = this.get(point);
     }
     return data;
+  }
+
+  setArea(rect: Rect, data: number[][]): UndoableEdit {
+    rect.clipTo(this.getSize());
+    const oldData = this.getArea(rect);
+    for (const point of rect) {
+      this.set(point, data[point.y - rect.y][point.x - rect.x]);
+    }
+    this.applyAttributeMode();
+    this.notifyChanges(rect);
+    return new GridUndoableEdit(this, rect, oldData);
+  }
+
+  getValue(point: Point): number {
+    return this.get(point);
   }
 
   setValue(point: Point, value: number): UndoableEdit {

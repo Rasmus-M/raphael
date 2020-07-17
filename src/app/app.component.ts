@@ -12,6 +12,8 @@ import {ProjectData} from './interfaces/project-data';
 import {NewProjectData} from './interfaces/new-project-data';
 import {AboutDialogComponent} from './dialogs/about-dialog/about-dialog.component';
 import {ExportService} from './services/export.service';
+import {ImportService} from './services/import.service';
+import {Rect} from './classes/rect';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +40,7 @@ export class AppComponent {
     public dialog: MatDialog,
     private undoManagerService: UndoManagerService,
     private fileService: FileService,
+    private importService: ImportService,
     private exportService: ExportService
   ) {
     this.palette = new Palette();
@@ -169,6 +172,8 @@ export class AppComponent {
     const dialogRef = this.dialog.open(OpenDialogComponent, {
       width: '600px',
       data: {
+        fileType: 'Project',
+        extension: '.rap',
         file: null
       }
     });
@@ -196,8 +201,32 @@ export class AppComponent {
     }
   }
 
-  import(): void {
-    console.log('Import not implemented');
+  importPNG(): void {
+    const dialogRef = this.dialog.open(OpenDialogComponent, {
+      width: '600px',
+      data: {
+        fileType: 'PNG file',
+        extension: '.png',
+        file: null
+      }
+    });
+    dialogRef.afterClosed().subscribe((result: OpenDialogData) => {
+      if (result) {
+        this.fileService.openBinaryFile(result.file).subscribe(
+          (arrayBuffer: ArrayBuffer) => {
+            const data: number[][] = this.importService.importPNGFile(arrayBuffer, this.palette);
+            const width = data[0].length;
+            const height = data.length;
+            this.undoManagerService.addEdit(
+              this.grid.setArea(new Rect(0, 0, width, height), data)
+            );
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+      }
+    });
   }
 
   exportAssembly(): void {

@@ -3,6 +3,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {faUpload} from '@fortawesome/free-solid-svg-icons';
 
 export interface OpenDialogData {
+  fileType: string;
+  extension: string;
   file: File;
 }
 

@@ -53,6 +53,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   private drawColorIndex: number;
   private cloning: boolean;
   private cloneRect: Rect;
+  private cloneData: number[][];
   private initialized = false;
   private strokeEdit: CompoundEdit;
 
@@ -274,13 +275,12 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
           this.anchorPosition = this.cursorPosition;
         } else if (this.cloning) {
           this.clearSelectionLayer();
-          const cloneData = this.grid.getArea(this.cloneRect);
-          this.undoManagerService.addEdit(
-            this.grid.setArea(
-              new Rect(this.cursorPosition.x, this.cursorPosition.y, this.cloneRect.width, this.cloneRect.height),
-              cloneData
-            )
-          );
+          if (evt.button === 0) {
+            const rect = new Rect(this.cursorPosition.x, this.cursorPosition.y, this.cloneRect.width, this.cloneRect.height);
+            this.undoManagerService.addEdit(
+              this.grid.setArea(rect, this.cloneData, true)
+            );
+          }
           if (!evt.shiftKey) {
             this.cloning = false;
           }
@@ -343,6 +343,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         if (this.drawing) {
           this.drawing = false;
           this.cloneRect = Rect.fromPoints(this.anchorPosition, this.cursorPosition);
+          this.cloneData = this.grid.getArea(this.cloneRect);
           this.cloning = true;
         }
         break;

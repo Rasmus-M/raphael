@@ -73,11 +73,14 @@ export class Grid {
     return data;
   }
 
-  setArea(rect: Rect, data: number[][]): UndoableEdit {
+  setArea(rect: Rect, data: number[][], transparentIndexZero?: boolean): UndoableEdit {
     rect.clipTo(this.getSize());
     const oldData = this.getArea(rect);
     for (const point of rect) {
-      this.set(point, data[point.y - rect.y][point.x - rect.x]);
+      const value = data[point.y - rect.y][point.x - rect.x];
+      if (!transparentIndexZero || value !== 0) {
+        this.set(point, value);
+      }
     }
     this.applyAttributeMode();
     this.notifyChanges(rect);

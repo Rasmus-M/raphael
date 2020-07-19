@@ -316,7 +316,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
           this.drawSelectionRect(this.anchorPosition, this.cursorPosition);
         } else if (this.cloning) {
           this.drawSelectionRect(this.cursorPosition,
-            new Point(this.cursorPosition.x + this.cloneRect.width, this.cursorPosition.y + this.cloneRect.height)
+            new Point(this.cursorPosition.x + this.cloneRect.width - 1, this.cursorPosition.y + this.cloneRect.height - 1)
           );
         }
         break;

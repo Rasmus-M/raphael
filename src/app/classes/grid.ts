@@ -109,8 +109,15 @@ export class Grid {
         const rect = new Rect(x0, y0, 8, 1);
         const oldData = this.getArea(rect);
         this.set(point, value);
-        if (this.countValues(rect) <= 2) {
+        const valueMap = this.getValueMap(rect);
+        if (valueMap.size <= 2) {
           this.notifyChanges(new Rect(point.x, point.y, 1, 1));
+        } else if (valueMap.get(oldValue) > 4) {
+          for (const key of valueMap.keys()) {
+            if (key !== value && key !== oldValue) {
+              this.change(rect, key, value);
+            }
+          }
         } else {
           this.change(rect, oldValue, value);
         }
@@ -123,8 +130,15 @@ export class Grid {
         const rect = new Rect(x0, y0, 8, 8);
         const oldData = this.getArea(rect);
         this.set(point, value);
-        if (this.countValues(rect) <= 2) {
+        const valueMap = this.getValueMap(rect);
+        if (valueMap.size <= 2) {
           this.notifyChanges(new Rect(point.x, point.y, 1, 1));
+        } else if (valueMap.get(oldValue) > 32) {
+          for (const key of valueMap.keys()) {
+            if (key !== value && key !== oldValue) {
+              this.change(rect, key, value);
+            }
+          }
         } else {
           this.change(rect, oldValue, value);
         }
@@ -242,10 +256,6 @@ export class Grid {
       this.floodFillValue(x, y - 1, newValue, oldValue);
       this.floodFillValue(x, y + 1, newValue, oldValue);
     }
-  }
-
-  private countValues(rect: Rect): number {
-    return this.getValueMap(rect).size;
   }
 
   private getValueMap(rect: Rect): Map<number, number> {

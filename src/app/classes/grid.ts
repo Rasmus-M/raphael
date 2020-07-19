@@ -113,7 +113,6 @@ export class Grid {
           this.notifyChanges(new Rect(point.x, point.y, 1, 1));
         } else {
           this.change(rect, oldValue, value);
-          this.notifyChanges(rect);
         }
         undoableEdit = new GridUndoableEdit(this, rect, oldData);
         break;
@@ -128,7 +127,6 @@ export class Grid {
           this.notifyChanges(new Rect(point.x, point.y, 1, 1));
         } else {
           this.change(rect, oldValue, value);
-          this.notifyChanges(rect);
         }
         undoableEdit = new GridUndoableEdit(this, rect, oldData);
         break;
@@ -153,6 +151,17 @@ export class Grid {
     this.applyAttributeMode();
     this.notifyChanges(this.getSize());
     return new GridUndoableEdit(this, this.getSize(), oldData);
+  }
+
+  drawLine(point1: Point, point2: Point, value: number): UndoableEdit {
+    const rect = Rect.fromPoints(point1, point2);
+    const oldData = this.getArea(rect);
+    PixelRenderer.drawLine(point1, point2, (point: Point) => {
+      this.set(point, value);
+    });
+    this.applyAttributeMode();
+    this.notifyChanges(rect);
+    return new GridUndoableEdit(this, rect, oldData);
   }
 
   shiftLeft(): UndoableEdit {
@@ -235,17 +244,6 @@ export class Grid {
     }
   }
 
-  drawLine(point1: Point, point2: Point, value: number): UndoableEdit {
-    const rect = Rect.fromPoints(point1, point2);
-    const oldData = this.getArea(rect);
-    PixelRenderer.drawLine(point1, point2, (point: Point) => {
-      this.set(point, value);
-    });
-    this.applyAttributeMode();
-    this.notifyChanges(rect);
-    return new GridUndoableEdit(this, rect, oldData);
-  }
-
   private countValues(rect: Rect): number {
     return this.getValueMap(rect).size;
   }
@@ -257,19 +255,6 @@ export class Grid {
       map.set(value, map.get(value) ? map.get(value) + 1 : 1);
     }
     return map;
-  }
-
-  private change(rect: Rect, oldValue: number, newValue): void {
-    let anyChanges = false;
-    for (const point of rect) {
-      if (this.get(point) === oldValue) {
-        this.set(point, newValue);
-        anyChanges = true;
-      }
-    }
-    if (anyChanges) {
-      this.notifyChanges(rect);
-    }
   }
 
   private applyAttributeMode(): void {
@@ -298,6 +283,19 @@ export class Grid {
     const sortedEntries = [...map.entries()].sort((e1, e2) => e2[1] - e1[1]);
     for (let i = 2; i < sortedEntries.length; i++) {
       this.change(rect, sortedEntries[i][0], sortedEntries[0][0]);
+    }
+  }
+
+  private change(rect: Rect, oldValue: number, newValue): void {
+    let anyChanges = false;
+    for (const point of rect) {
+      if (this.get(point) === oldValue) {
+        this.set(point, newValue);
+        anyChanges = true;
+      }
+    }
+    if (anyChanges) {
+      this.notifyChanges(rect);
     }
   }
 }

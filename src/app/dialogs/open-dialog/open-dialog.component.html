@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Open {{data.fileType}}</h1>
 <div mat-dialog-content>
-  <button mat-stroked-button color="primary" (click)="fileInputDisk.click()">
-    <fa-icon [icon]="openFileIcon" cdkFocusInitial></fa-icon> Open<input #fileInputDisk type="file" accept="{{data.extension}}" (change)="openFile(fileInputDisk)" [hidden]="true"/>
+  <button mat-stroked-button color="primary" (click)="fileInputDisk.click()" cdkFocusInitial>
+    <fa-icon [icon]="openFileIcon"></fa-icon> Open<input #fileInputDisk type="file" accept="{{data.extension}}" (change)="openFile(fileInputDisk)" [hidden]="true"/>
   </button>
   <button mat-stroked-button id="fileName" disabled>{{getFileName()}}</button>
 </div>

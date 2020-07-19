@@ -260,12 +260,16 @@ export class Grid {
   }
 
   private change(rect: Rect, oldValue: number, newValue): void {
+    let anyChanges = false;
     for (const point of rect) {
       if (this.get(point) === oldValue) {
         this.set(point, newValue);
+        anyChanges = true;
       }
     }
-    this.notifyChanges(this.getSize());
+    if (anyChanges) {
+      this.notifyChanges(rect);
+    }
   }
 
   private applyAttributeMode(): void {

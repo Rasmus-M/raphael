@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Palette} from '../../classes/palette';
 
 @Component({
@@ -6,7 +6,7 @@ import {Palette} from '../../classes/palette';
   templateUrl: './palette.component.html',
   styleUrls: ['./palette.component.less']
 })
-export class PaletteComponent implements OnInit {
+export class PaletteComponent implements OnInit, OnChanges {
 
   static FORE_COLOR_LABEL = 'F';
   static BACK_COLOR_LABEL = 'B';
@@ -24,6 +24,12 @@ export class PaletteComponent implements OnInit {
 
   ngOnInit(): void {
     this.setLabels();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.foreColorIndex || changes.backColorIndex) {
+      this.setLabels();
+    }
   }
 
   setLabels(): void {

@@ -23,6 +23,8 @@ import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {OpenDialogComponent} from './dialogs/open-dialog/open-dialog.component';
 import {AboutDialogComponent} from './dialogs/about-dialog/about-dialog.component';
+import {MatOptionModule} from '@angular/material/core';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -37,21 +39,23 @@ import {AboutDialogComponent} from './dialogs/about-dialog/about-dialog.componen
     OpenDialogComponent,
     AboutDialogComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatGridListModule,
-        MatIconModule,
-        MatButtonModule,
-        FontAwesomeModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatButtonToggleModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        FormsModule,
-        MatInputModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatGridListModule,
+    MatIconModule,
+    MatButtonModule,
+    FontAwesomeModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatButtonToggleModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

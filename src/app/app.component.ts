@@ -55,7 +55,7 @@ export class AppComponent {
       backColorIndex: 0,
       foreColorIndex: 15,
       tool: Tool.DRAW,
-      zoom: 1
+      zoom: 5
     });
   }
 
@@ -161,7 +161,7 @@ export class AppComponent {
           backColorIndex: 0,
           foreColorIndex: 15,
           tool: Tool.DRAW,
-          zoom: 1
+          zoom: 5
         });
         this.undoManagerService.discardAllEdits();
       }

@@ -7,5 +7,5 @@
 </div>
 <div mat-dialog-actions>
   <button mat-stroked-button (click)="cancel()">Cancel</button>
-  <button mat-stroked-button [mat-dialog-close]="data">Ok</button>
+  <button mat-stroked-button [mat-dialog-close]="data" [disabled]="!data.file">Ok</button>
 </div>

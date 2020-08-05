@@ -11,7 +11,8 @@
   <button mat-menu-item (click)="importPNG()">PNG</button>
 </mat-menu>
 <mat-menu #exportMenu="matMenu">
-  <button mat-menu-item (click)="exportAssembly()">Assembly data</button>
+  <button mat-menu-item (click)="exportAssembly(false)">Assembly data (rows)</button>
+  <button mat-menu-item (click)="exportAssembly(true)">Assembly data (columns)</button>
 </mat-menu>
 <mat-menu #helpMenu="matMenu">
   <button mat-menu-item (click)="about()">About</button>

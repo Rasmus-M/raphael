@@ -229,9 +229,9 @@ export class AppComponent {
     });
   }
 
-  exportAssembly(): void {
+  exportAssembly(columns: boolean): void {
     this.fileService.saveTextFile(
-      this.exportService.getAssemblyFile(this.getProjectData()),
+      this.exportService.getAssemblyFile(this.getProjectData(), columns),
       'export.a99'
     );
   }

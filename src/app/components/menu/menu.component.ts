@@ -11,7 +11,7 @@ export class MenuComponent implements OnInit {
   @Output() openClicked = new EventEmitter();
   @Output() saveClicked = new EventEmitter();
   @Output() importPNGClicked = new EventEmitter();
-  @Output() exportAssemblyClicked = new EventEmitter();
+  @Output() exportAssemblyClicked = new EventEmitter<boolean>();
   @Output() aboutClicked = new EventEmitter();
 
   constructor() {
@@ -36,8 +36,8 @@ export class MenuComponent implements OnInit {
     this.importPNGClicked.emit();
   }
 
-  exportAssembly(): void {
-    this.exportAssemblyClicked.emit();
+  exportAssembly(columns: boolean): void {
+    this.exportAssemblyClicked.emit(columns);
   }
 
   about(): void {

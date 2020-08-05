@@ -10,40 +10,40 @@ export class ExportService {
 
   constructor() { }
 
-  getAssemblyFile(projectData: ProjectData): string {
+  getAssemblyFile(projectData: ProjectData, columns: boolean): string {
     const assemblyFile = new AssemblyFile();
     switch (projectData.attributeMode) {
       case AttributeMode.NONE:
-        this.createLinearAssemblyFile(projectData, assemblyFile);
+        this.createLinearAssemblyFile(projectData, columns, assemblyFile);
         break;
       case AttributeMode.EIGHT_X_ONE:
-        this.createBitmapColorAssemblyFile(projectData, assemblyFile);
+        this.createBitmapColorAssemblyFile(projectData, columns, assemblyFile);
         break;
       case AttributeMode.EIGHT_X_EIGHT:
-        this.createCharacterBasedAssemblyFile(projectData, assemblyFile);
+        this.createCharacterBasedAssemblyFile(projectData, columns, assemblyFile);
         break;
     }
-
     return assemblyFile.toString();
   }
 
-  private createLinearAssemblyFile(projectData: ProjectData, assemblyFile: AssemblyFile): void {
+  private createLinearAssemblyFile(projectData: ProjectData, columns: boolean, assemblyFile: AssemblyFile): void {
     const section = assemblyFile.createSection('image');
-    let byte;
-    for (const row of projectData.data) {
-      for (const value of row) {
-        if (byte === undefined) {
-          byte = value;
-        } else {
-          byte = (byte << 4) || value;
-          section.write(byte);
-          byte = undefined;
+    if (columns) {
+      for (let x = 0; x < projectData.width; x += 2) {
+        for (let y = 0; y < projectData.height; y++) {
+          section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
+        }
+      }
+    } else {
+      for (let y = 0; y < projectData.height; y++) {
+        for (let x = 0; x < projectData.width; x += 2) {
+          section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
         }
       }
     }
   }
 
-  private createBitmapColorAssemblyFile(projectData: ProjectData, assemblyFile: AssemblyFile): void {
+  private createBitmapColorAssemblyFile(projectData: ProjectData, columns: boolean, assemblyFile: AssemblyFile): void {
     const patternSection = assemblyFile.createSection('patterns');
     const colorSection = assemblyFile.createSection('colors');
     const data = projectData.data;
@@ -64,7 +64,7 @@ export class ExportService {
     }
   }
 
-  private createCharacterBasedAssemblyFile(projectData: ProjectData, assemblyFile: AssemblyFile): void {
+  private createCharacterBasedAssemblyFile(projectData: ProjectData, columns: boolean, assemblyFile: AssemblyFile): void {
     const patternSection = assemblyFile.createSection('patterns');
     const colorSection = assemblyFile.createSection('colors');
     const data = projectData.data;

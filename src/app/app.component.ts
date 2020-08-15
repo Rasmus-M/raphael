@@ -11,7 +11,7 @@ import {OpenDialogComponent, OpenDialogData} from './dialogs/open-dialog/open-di
 import {ProjectData} from './interfaces/project-data';
 import {NewProjectData} from './interfaces/new-project-data';
 import {AboutDialogComponent} from './dialogs/about-dialog/about-dialog.component';
-import {ExportService} from './services/export.service';
+import {ExportOptions, ExportService} from './services/export.service';
 import {ImportService} from './services/import.service';
 import {Rect} from './classes/rect';
 
@@ -229,9 +229,9 @@ export class AppComponent {
     });
   }
 
-  exportAssembly(columns: boolean): void {
+  exportAssembly(options: ExportOptions): void {
     this.fileService.saveTextFile(
-      this.exportService.getAssemblyFile(this.getProjectData(), columns),
+      this.exportService.getAssemblyFile(this.getProjectData(), options),
       'export.a99'
     );
   }

@@ -38,7 +38,7 @@ export class AssemblyFileSection {
   }
 
   toString(): string {
-    let result = this.label + ':\n';
+    let result = this.label ? this.label + ':\n' : '';
     const items = this.itemsPerLine;
     for (let i = 0; i < this.buffer.length; i++) {
       if (i % items === 0) {

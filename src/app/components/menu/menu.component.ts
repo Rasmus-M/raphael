@@ -1,4 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {ExportOptions} from '../../services/export.service';
 
 @Component({
   selector: 'app-menu',
@@ -11,7 +12,7 @@ export class MenuComponent implements OnInit {
   @Output() openClicked = new EventEmitter();
   @Output() saveClicked = new EventEmitter();
   @Output() importPNGClicked = new EventEmitter();
-  @Output() exportAssemblyClicked = new EventEmitter<boolean>();
+  @Output() exportAssemblyClicked = new EventEmitter<ExportOptions>();
   @Output() aboutClicked = new EventEmitter();
 
   constructor() {
@@ -36,8 +37,8 @@ export class MenuComponent implements OnInit {
     this.importPNGClicked.emit();
   }
 
-  exportAssembly(columns: boolean): void {
-    this.exportAssemblyClicked.emit(columns);
+  exportAssembly(columns: boolean, unpack): void {
+    this.exportAssemblyClicked.emit({columns, unpack});
   }
 
   about(): void {

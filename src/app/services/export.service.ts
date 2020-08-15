@@ -3,6 +3,11 @@ import {ProjectData} from '../interfaces/project-data';
 import {AssemblyFile} from '../classes/assemblyFile';
 import {AttributeMode} from '../enums/attribute-mode';
 
+export interface ExportOptions {
+  columns: boolean;
+  unpack: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,40 +15,61 @@ export class ExportService {
 
   constructor() { }
 
-  getAssemblyFile(projectData: ProjectData, columns: boolean): string {
+  getAssemblyFile(projectData: ProjectData, options: ExportOptions): string {
     const assemblyFile = new AssemblyFile();
     switch (projectData.attributeMode) {
       case AttributeMode.NONE:
-        this.createLinearAssemblyFile(projectData, columns, assemblyFile);
+        this.createLinearAssemblyFile(projectData, options, assemblyFile);
         break;
       case AttributeMode.EIGHT_X_ONE:
-        this.createBitmapColorAssemblyFile(projectData, columns, assemblyFile);
+        this.createBitmapColorAssemblyFile(projectData, options, assemblyFile);
         break;
       case AttributeMode.EIGHT_X_EIGHT:
-        this.createCharacterBasedAssemblyFile(projectData, columns, assemblyFile);
+        this.createCharacterBasedAssemblyFile(projectData, options, assemblyFile);
         break;
     }
     return assemblyFile.toString();
   }
 
-  private createLinearAssemblyFile(projectData: ProjectData, columns: boolean, assemblyFile: AssemblyFile): void {
+  private createLinearAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
     const section = assemblyFile.createSection('image');
-    if (columns) {
-      for (let x = 0; x < projectData.width; x += 2) {
+    if (options.unpack) {
+      const section2 = assemblyFile.createSection('');
+      if (options.columns) {
+        for (let x = 0; x < projectData.width; x++) {
+          for (let y = 0; y < projectData.height; y++) {
+            const byte = projectData.data[y][x];
+            section.write(byte << 4);
+            section2.write(byte);
+          }
+        }
+      } else {
         for (let y = 0; y < projectData.height; y++) {
-          section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
+          for (let x = 0; x < projectData.width; x++) {
+            const byte = projectData.data[y][x];
+            section.write(byte << 4);
+            section2.write(byte);
+          }
         }
       }
     } else {
-      for (let y = 0; y < projectData.height; y++) {
+      if (options.columns) {
         for (let x = 0; x < projectData.width; x += 2) {
-          section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
+          for (let y = 0; y < projectData.height; y++) {
+            section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
+          }
+        }
+      } else {
+        for (let y = 0; y < projectData.height; y++) {
+          for (let x = 0; x < projectData.width; x += 2) {
+            section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
+          }
         }
       }
     }
   }
 
-  private createBitmapColorAssemblyFile(projectData: ProjectData, columns: boolean, assemblyFile: AssemblyFile): void {
+  private createBitmapColorAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
     const patternSection = assemblyFile.createSection('patterns');
     const colorSection = assemblyFile.createSection('colors');
     const data = projectData.data;
@@ -64,7 +90,7 @@ export class ExportService {
     }
   }
 
-  private createCharacterBasedAssemblyFile(projectData: ProjectData, columns: boolean, assemblyFile: AssemblyFile): void {
+  private createCharacterBasedAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
     const patternSection = assemblyFile.createSection('patterns');
     const colorSection = assemblyFile.createSection('colors');
     const data = projectData.data;

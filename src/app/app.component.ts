@@ -23,7 +23,7 @@ import {Rect} from './classes/rect';
 export class AppComponent {
 
   public static TITLE = 'Raphael';
-  public static VERSION_NO = '1.0.0';
+  public static VERSION_NO = '1.1.0';
 
   palette: Palette;
   grid: Grid;

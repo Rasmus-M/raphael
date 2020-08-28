@@ -229,11 +229,23 @@ export class AppComponent {
     });
   }
 
+  exportPNG(): void {
+    this.fileService.saveBinaryFile(
+      this.exportService.exportPNGFile(this.getProjectData(), this.palette),
+      (this.getBaseFilename() || 'export') + '.png',
+      'image/png'
+    );
+  }
+
   exportAssembly(options: ExportOptions): void {
     this.fileService.saveTextFile(
-      this.exportService.getAssemblyFile(this.getProjectData(), options),
-      'export.a99'
+      this.exportService.exportAssemblyFile(this.getProjectData(), options),
+      (this.getBaseFilename() || 'export') + '.a99',
     );
+  }
+
+  getBaseFilename(): string {
+    return this.filename ? this.filename.split('.')[0] : null;
   }
 
   about(): void {

@@ -53,4 +53,9 @@ export class FileService {
     const blob = new Blob([text], { type: 'text/plain;charset=utf-8' } );
     FileSaver.saveAs(blob, filename);
   }
+
+  saveBinaryFile(arrayBuffer: ArrayBuffer, filename: string, mimeType: string): void {
+    const blob = new Blob([arrayBuffer], { type: mimeType } );
+    FileSaver.saveAs(blob, filename);
+  }
 }

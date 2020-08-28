@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {ProjectData} from '../interfaces/project-data';
 import {AssemblyFile} from '../classes/assemblyFile';
 import {AttributeMode} from '../enums/attribute-mode';
+import {PNG} from 'pngjs/browser';
+import {Palette} from '../classes/palette';
 
 export interface ExportOptions {
   columns: boolean;
@@ -15,7 +17,28 @@ export class ExportService {
 
   constructor() { }
 
-  getAssemblyFile(projectData: ProjectData, options: ExportOptions): string {
+
+  exportPNGFile(projectData: ProjectData, palette: Palette): ArrayBuffer {
+    const png = new PNG({
+      width: projectData.width,
+      height: projectData.height,
+      colorType: 6
+    });
+    let i = 0;
+    for (let x = 0; x < projectData.width; x++) {
+      for (let y = 0; y < projectData.height; y++) {
+        const colorIndex = projectData.data[y][x];
+        const color = palette.getColor(colorIndex);
+        png.data[i++] = color.red;
+        png.data[i++] = color.green;
+        png.data[i++] = color.blue;
+        png.data[i++] = colorIndex === 0 ? 0 : 255;
+      }
+    }
+    return PNG.sync.write(png);
+  }
+
+  exportAssemblyFile(projectData: ProjectData, options: ExportOptions): string {
     const assemblyFile = new AssemblyFile();
     switch (projectData.attributeMode) {
       case AttributeMode.NONE:

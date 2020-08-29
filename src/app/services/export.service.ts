@@ -25,8 +25,8 @@ export class ExportService {
       colorType: 6
     });
     let i = 0;
-    for (let x = 0; x < projectData.width; x++) {
-      for (let y = 0; y < projectData.height; y++) {
+    for (let y = 0; y < projectData.height; y++) {
+      for (let x = 0; x < projectData.width; x++) {
         const colorIndex = projectData.data[y][x];
         const color = palette.getColor(colorIndex);
         png.data[i++] = color.red;

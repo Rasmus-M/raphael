@@ -34,7 +34,7 @@ export class AppComponent {
   tool: Tool;
   zoom: number;
   imageNumber = 0;
-  filename: string;
+  filename = 'New project.rap';
 
   constructor(
     public dialog: MatDialog,
@@ -164,6 +164,8 @@ export class AppComponent {
           zoom: 5
         });
         this.undoManagerService.discardAllEdits();
+        this.filename = 'New project.rap';
+        this.updateTitle();
       }
     });
   }
@@ -195,7 +197,7 @@ export class AppComponent {
 
   save(): void {
     try {
-      this.fileService.saveProject(this.getProjectData(), this.filename || 'New project.rap');
+      this.fileService.saveProject(this.getProjectData(), this.filename);
     } catch (error) {
       console.error(error);
     }

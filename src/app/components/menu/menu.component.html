@@ -12,6 +12,7 @@
 </mat-menu>
 <mat-menu #exportMenu="matMenu">
   <button mat-menu-item (click)="exportPNG()">PNG file</button>
+  <button mat-menu-item (click)="exportBinary()">Binary file</button>
   <button mat-menu-item [matMenuTriggerFor]="exportAssemblyMenu">Assembly data</button>
 </mat-menu>
 <mat-menu #helpMenu="matMenu">

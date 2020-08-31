@@ -13,6 +13,7 @@ export class MenuComponent implements OnInit {
   @Output() saveClicked = new EventEmitter();
   @Output() importPNGClicked = new EventEmitter();
   @Output() exportPNGClicked = new EventEmitter();
+  @Output() exportBinaryClicked = new EventEmitter();
   @Output() exportAssemblyClicked = new EventEmitter<ExportOptions>();
   @Output() aboutClicked = new EventEmitter();
 
@@ -40,6 +41,10 @@ export class MenuComponent implements OnInit {
 
   exportPNG(): void {
     this.exportPNGClicked.emit();
+  }
+
+  exportBinary(): void {
+    this.exportBinaryClicked.emit();
   }
 
   exportAssembly(columns: boolean, unpack): void {

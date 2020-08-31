@@ -38,6 +38,17 @@ export class ExportService {
     return PNG.sync.write(png);
   }
 
+  exportBinaryFile(projectData: ProjectData, palette: Palette): ArrayBuffer {
+    const arrayBuffer = new Uint8Array(projectData.width * projectData.height / 2);
+    let i = 0;
+    for (let y = 0; y < projectData.height; y++) {
+      for (let x = 0; x < projectData.width; x += 2) {
+        arrayBuffer[i++] = (projectData.data[y][x] << 4) | projectData.data[y][x + 1];
+      }
+    }
+    return arrayBuffer;
+  }
+
   exportAssemblyFile(projectData: ProjectData, options: ExportOptions): string {
     const assemblyFile = new AssemblyFile();
     switch (projectData.attributeMode) {

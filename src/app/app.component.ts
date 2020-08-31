@@ -239,6 +239,14 @@ export class AppComponent {
     );
   }
 
+  exportBinary(): void {
+    this.fileService.saveBinaryFile(
+      this.exportService.exportBinaryFile(this.getProjectData(), this.palette),
+      (this.getBaseFilename() || 'export') + '.bin',
+      'application/octet-stream'
+    );
+  }
+
   exportAssembly(options: ExportOptions): void {
     this.fileService.saveTextFile(
       this.exportService.exportAssemblyFile(this.getProjectData(), options),

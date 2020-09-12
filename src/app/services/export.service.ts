@@ -66,7 +66,7 @@ export class ExportService {
   }
 
   private createLinearAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
-    const section = assemblyFile.createSection('image');
+    const section = assemblyFile.createSection('');
     if (options.unpack) {
       const section2 = assemblyFile.createSection('');
       if (options.columns) {

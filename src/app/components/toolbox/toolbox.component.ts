@@ -1,16 +1,21 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {
-  faUndo,
-  faRedo,
-  faSearchPlus,
-  faSearchMinus,
-  faFill,
+  faArrowDown,
+  faArrowLeft,
+  faArrowRight,
+  faArrowsAltH,
+  faArrowsAltV,
+  faArrowUp,
+  faClone,
   faEraser,
+  faFill,
   faFillDrip,
   faPencilAlt,
-  faClone,
+  faRedo,
   faRuler,
-  faArrowLeft, faArrowUp, faArrowRight, faArrowDown
+  faSearchMinus,
+  faSearchPlus,
+  faUndo
 } from '@fortawesome/free-solid-svg-icons';
 import {UndoManagerService, UndoManagerStatus} from '../../services/undo-manager.service';
 import {Tool} from '../../enums/tool';
@@ -31,6 +36,8 @@ export class ToolboxComponent implements OnInit {
   @Output() shiftDownClicked = new EventEmitter();
   @Output() fillClicked = new EventEmitter();
   @Output() clearClicked = new EventEmitter();
+  @Output() flipHorizontalClicked = new EventEmitter();
+  @Output() flipVerticalClicked = new EventEmitter();
   @Output() toolChanged = new EventEmitter<Tool>();
 
   undoIcon = faUndo;
@@ -44,6 +51,8 @@ export class ToolboxComponent implements OnInit {
   fillIcon = faFill;
   clearIcon = faEraser;
   drawIcon = faPencilAlt;
+  flipHorizontalIcon = faArrowsAltH;
+  flipVerticalIcon = faArrowsAltV;
   floodFillIcon = faFillDrip;
   lineIcon = faRuler;
   cloneIcon = faClone;
@@ -106,6 +115,14 @@ export class ToolboxComponent implements OnInit {
 
   fill(): void {
     this.fillClicked.emit();
+  }
+
+  flipHorizontal(): void {
+    this.flipHorizontalClicked.emit();
+  }
+
+  flipVertical(): void {
+    this.flipVerticalClicked.emit();
   }
 
   changeTool(evt): void {

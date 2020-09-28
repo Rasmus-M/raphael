@@ -49,7 +49,15 @@
       <fa-icon [icon]="clearIcon" size="lg"></fa-icon>
     </button>
   </mat-grid-tile>
-  <mat-grid-tile [colspan]="2">
+  <mat-grid-tile>
+    <button mat-icon-button matTooltip="Flip horizontally" matTooltipShowDelay="1000" (click)="flipHorizontal()">
+      <fa-icon [icon]="flipHorizontalIcon" size="lg"></fa-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button matTooltip="Flip vertically" matTooltipShowDelay="1000" (click)="flipVertical()">
+      <fa-icon [icon]="flipVerticalIcon" size="lg"></fa-icon>
+    </button>
   </mat-grid-tile>
   <mat-grid-tile [colspan]="4" [rowspan]="2">
     <mat-button-toggle-group name="tool" aria-label="Tool" [value]="tool" (change)="changeTool($event)">

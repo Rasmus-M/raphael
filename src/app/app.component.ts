@@ -124,6 +124,18 @@ export class AppComponent {
     );
   }
 
+  flipHorizontal(): void {
+    this.undoManagerService.addEdit(
+      this.grid.flipHorizontal()
+    );
+  }
+
+  flipVertical(): void {
+    this.undoManagerService.addEdit(
+      this.grid.flipVertical()
+    );
+  }
+
   toolChanged(tool: Tool): void {
     this.tool = tool;
   }

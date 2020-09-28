@@ -178,6 +178,35 @@ export class Grid {
     return new GridUndoableEdit(this, rect, oldData);
   }
 
+  flipHorizontal(): UndoableEdit {
+    const oldData = this.getArea(this.getSize());
+    for (let y = 0; y < this.height; y++) {
+      const row = this.data[y];
+      for (let x = this.width - 2; x >= 0; x--) {
+        const value = row.splice(x, 1)[0];
+        row.push(value);
+      }
+    }
+    this.notifyChanges(this.getSize());
+    if (this.attributeMode === AttributeMode.EIGHT_X_EIGHT) {
+      this.applyAttributeMode();
+    }
+    return new GridUndoableEdit(this, this.getSize(), oldData);
+  }
+
+  flipVertical(): UndoableEdit {
+    const oldData = this.getArea(this.getSize());
+    for (let y = this.height - 2; y >= 0; y--) {
+      const row = this.data.splice(y, 1)[0];
+      this.data.push(row);
+    }
+    this.notifyChanges(this.getSize());
+    if (this.attributeMode === AttributeMode.EIGHT_X_EIGHT) {
+      this.applyAttributeMode();
+    }
+    return new GridUndoableEdit(this, this.getSize(), oldData);
+  }
+
   shiftLeft(): UndoableEdit {
     const oldData = this.getArea(this.getSize());
     for (let y = 0; y < this.height; y++) {

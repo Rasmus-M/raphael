@@ -25,6 +25,7 @@ export class AppComponent {
   public static TITLE = 'Raphael';
   public static VERSION_NO = '1.1.0';
 
+  filename: string;
   palette: Palette;
   grid: Grid;
   pixelScaleX = 1;
@@ -34,7 +35,6 @@ export class AppComponent {
   tool: Tool;
   zoom: number;
   imageNumber = 0;
-  filename = 'New project.rap';
 
   constructor(
     public dialog: MatDialog,
@@ -46,6 +46,7 @@ export class AppComponent {
     this.palette = new Palette();
     this.grid = new Grid();
     this.init({
+      filename: 'New project.rap',
       width: 64,
       height: 64,
       pixelScaleX: this.pixelScaleX,
@@ -60,6 +61,7 @@ export class AppComponent {
   }
 
   init(projectData: ProjectData): void {
+    this.filename = projectData.filename;
     this.pixelScaleX = projectData.pixelScaleX;
     this.pixelScaleY = projectData.pixelScaleY;
     this.grid.attributeMode = projectData.attributeMode;
@@ -142,6 +144,7 @@ export class AppComponent {
     const dialogRef = this.dialog.open(NewDialogComponent, {
       width: '600px',
       data: {
+        filename: 'New project.rap',
         width: 64,
         height: 64,
         pixelScaleX: 1,
@@ -152,6 +155,7 @@ export class AppComponent {
     dialogRef.afterClosed().subscribe((newProjectData: NewProjectData) => {
       if (newProjectData) {
         this.init({
+          filename: newProjectData.filename,
           width: newProjectData.width,
           height: newProjectData.height,
           pixelScaleX: newProjectData.pixelScaleX,
@@ -164,7 +168,6 @@ export class AppComponent {
           zoom: 5
         });
         this.undoManagerService.discardAllEdits();
-        this.filename = 'New project.rap';
         this.updateTitle();
       }
     });
@@ -266,6 +269,7 @@ export class AppComponent {
 
   getProjectData(): ProjectData {
     return {
+      filename: this.filename,
       width: this.grid.width,
       height: this.grid.height,
       pixelScaleX: this.pixelScaleX,

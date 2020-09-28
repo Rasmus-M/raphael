@@ -1,7 +1,15 @@
-<h1 mat-dialog-title>New Image</h1>
+<h1 mat-dialog-title>New Project</h1>
 <div mat-dialog-content>
-  <mat-grid-list cols="2" rowHeight="64">
+  <mat-grid-list cols="3" rowHeight="64">
+    <mat-grid-tile>
+      <p>Name</p>
+    </mat-grid-tile>
     <mat-grid-tile colspan="2">
+      <mat-form-field>
+        <input type="text" matInput [(ngModel)]="data.filename">
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
       <p>Image size</p>
     </mat-grid-tile>
     <mat-grid-tile>
@@ -16,11 +24,11 @@
         <input type="number" min="1" max="256" matInput [(ngModel)]="data.height">
       </mat-form-field>
     </mat-grid-tile>
-    <mat-grid-tile colspan="2">
+    <mat-grid-tile>
       <p>Pixel size</p>
     </mat-grid-tile>
     <mat-grid-tile>
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>Width</mat-label>
         <mat-select [(ngModel)]="data.pixelScaleX">
           <mat-option [value]="1">1</mat-option>
@@ -30,7 +38,7 @@
       </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile>
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>height</mat-label>
         <mat-select [(ngModel)]="data.pixelScaleY">
           <mat-option [value]="1">1</mat-option>
@@ -39,11 +47,11 @@
         </mat-select>
       </mat-form-field>
     </mat-grid-tile>
-    <mat-grid-tile colspan="2">
+    <mat-grid-tile>
       <p>Color attribute mode</p>
     </mat-grid-tile>
     <mat-grid-tile colspan="2">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>Attribute mode</mat-label>
         <mat-select [(ngModel)]="data.attributeMode">
           <mat-option [value]="attributeMode.NONE">No restrictions</mat-option>

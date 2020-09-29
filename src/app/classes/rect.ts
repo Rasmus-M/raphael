@@ -60,7 +60,6 @@ export class Rect implements Iterable<Point> {
         yield new Point(x, y);
       }
     }
-
     return undefined;
   }
 

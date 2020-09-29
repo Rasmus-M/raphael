@@ -57,7 +57,7 @@ export class ToolboxComponent implements OnInit {
   floodFillIcon = faFillDrip;
   lineIcon = faRuler;
   cloneIcon = faClone;
-  rectIcon = faSquare;
+  rectangleIcon = faSquare;
   circleIcon = faCircle;
 
   canUndo = false;

@@ -206,9 +206,23 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  drawSelectionRectangle(point1: Point, point2: Point): void {
+    const context = this.selectionCanvasContext;
+    PixelRenderer.drawRectangle(point1, point2, (point: Point) => {
+      this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
+    });
+  }
+
   drawSelectionLine(point1: Point, point2: Point): void {
     const context = this.selectionCanvasContext;
     PixelRenderer.drawLine(point1, point2, (point: Point) => {
+      this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
+    });
+  }
+
+  drawSelectionCircle(point1: Point, point2: Point): void {
+    const context = this.selectionCanvasContext;
+    PixelRenderer.drawEllipse(point1, point2, (point: Point) => {
       this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
     });
   }
@@ -238,12 +252,16 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     switch (this.tool) {
       case Tool.DRAW:
         break;
+      case Tool.LINE:
+        break;
+      case Tool.RECTANGLE:
+        break;
+      case Tool.CIRCLE:
+        break;
       case Tool.FLOOD_FILL:
         this.undoManagerService.addEdit(
           this.grid.floodFill(this.cursorPosition, this.foreColorIndex)
         );
-        break;
-      case Tool.LINE:
         break;
       case Tool.CLONE:
         break;
@@ -265,11 +283,19 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         this.strokeEdit = new CompoundEdit();
         this.strokeEdit.addEdit(this.setGridColorIndex(this.cursorPosition, this.drawColorIndex));
         break;
-      case Tool.FLOOD_FILL:
-        break;
       case Tool.LINE:
         this.drawing = true;
         this.anchorPosition = this.cursorPosition;
+        break;
+      case Tool.RECTANGLE:
+        this.drawing = true;
+        this.anchorPosition = this.cursorPosition;
+        break;
+      case Tool.CIRCLE:
+        this.drawing = true;
+        this.anchorPosition = this.cursorPosition;
+        break;
+      case Tool.FLOOD_FILL:
         break;
       case Tool.CLONE:
         if (!this.drawing && !this.cloning) {
@@ -304,13 +330,25 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
           this.strokeEdit.addEdit(this.setGridColorIndex(newCursorPosition, this.drawColorIndex));
         }
         break;
-      case Tool.FLOOD_FILL:
-        break;
       case Tool.LINE:
         if (this.drawing) {
           this.clearSelectionLayer();
           this.drawSelectionLine(this.anchorPosition, this.cursorPosition);
         }
+        break;
+      case Tool.RECTANGLE:
+        if (this.drawing) {
+          this.clearSelectionLayer();
+          this.drawSelectionRectangle(this.anchorPosition, this.cursorPosition);
+        }
+        break;
+      case Tool.CIRCLE:
+        if (this.drawing) {
+          this.clearSelectionLayer();
+          this.drawSelectionCircle(this.anchorPosition, this.cursorPosition);
+        }
+        break;
+      case Tool.FLOOD_FILL:
         break;
       case Tool.CLONE:
         this.clearSelectionLayer();
@@ -332,14 +370,28 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         this.drawing = false;
         this.undoManagerService.addEdit(this.strokeEdit);
         break;
-      case Tool.FLOOD_FILL:
-        break;
       case Tool.LINE:
         this.drawing = false;
         this.clearSelectionLayer();
         this.undoManagerService.addEdit(
           this.grid.drawLine(this.anchorPosition, newCursorPosition, this.foreColorIndex)
         );
+        break;
+      case Tool.RECTANGLE:
+        this.drawing = false;
+        this.clearSelectionLayer();
+        this.undoManagerService.addEdit(
+          this.grid.drawRectangle(this.anchorPosition, newCursorPosition, this.foreColorIndex)
+        );
+        break;
+      case Tool.CIRCLE:
+        this.drawing = false;
+        this.clearSelectionLayer();
+        this.undoManagerService.addEdit(
+          this.grid.drawCircle(this.anchorPosition, newCursorPosition, this.foreColorIndex)
+        );
+        break;
+      case Tool.FLOOD_FILL:
         break;
       case Tool.CLONE:
         if (this.drawing) {

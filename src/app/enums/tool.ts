@@ -1,10 +1,10 @@
 export enum Tool {
   DRAW,
-  FLOOD_FILL,
   LINE,
-  CLONE,
-  RECT,
+  RECTANGLE,
   CIRCLE,
-  NEW1,
-  NEW2
+  FLOOD_FILL,
+  CLONE,
+  UNUSED_1,
+  UNUSED_2
 }

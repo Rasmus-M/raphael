@@ -178,6 +178,28 @@ export class Grid {
     return new GridUndoableEdit(this, rect, oldData);
   }
 
+  drawRectangle(point1: Point, point2: Point, value: number): UndoableEdit {
+    const rect = Rect.fromPoints(point1, point2);
+    const oldData = this.getArea(rect);
+    PixelRenderer.drawRectangle(point1, point2, (point: Point) => {
+      this.set(point, value);
+    });
+    this.applyAttributeMode();
+    this.notifyChanges(rect);
+    return new GridUndoableEdit(this, rect, oldData);
+  }
+
+  drawCircle(point1: Point, point2: Point, value: number): UndoableEdit {
+    const rect = Rect.fromPoints(point1, point2);
+    const oldData = this.getArea(rect);
+    PixelRenderer.drawEllipse(point1, point2, (point: Point) => {
+      this.set(point, value);
+    });
+    this.applyAttributeMode();
+    this.notifyChanges(rect);
+    return new GridUndoableEdit(this, rect, oldData);
+  }
+
   flipHorizontal(): UndoableEdit {
     const oldData = this.getArea(this.getSize());
     for (let y = 0; y < this.height; y++) {

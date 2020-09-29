@@ -17,6 +17,7 @@ import {
   faSearchPlus,
   faUndo
 } from '@fortawesome/free-solid-svg-icons';
+import {faCircle, faSquare} from '@fortawesome/free-regular-svg-icons';
 import {UndoManagerService, UndoManagerStatus} from '../../services/undo-manager.service';
 import {Tool} from '../../enums/tool';
 
@@ -56,6 +57,8 @@ export class ToolboxComponent implements OnInit {
   floodFillIcon = faFillDrip;
   lineIcon = faRuler;
   cloneIcon = faClone;
+  rectIcon = faSquare;
+  circleIcon = faCircle;
 
   canUndo = false;
   canRedo = false;

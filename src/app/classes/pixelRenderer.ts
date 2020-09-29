@@ -82,8 +82,13 @@ export class PixelRenderer {
 
     const xc = Math.floor((point1.x + point2.x) / 2);
     const yc = Math.floor((point1.y + point2.y) / 2);
-    const rx = Math.floor(Math.abs(point2.x - point1.x) / 2);
-    const ry = Math.floor(Math.abs(point2.y - point1.y) / 2);
+    const rxf = Math.abs(point2.x - point1.x) / 2;
+    const ryf = Math.abs(point2.y - point1.y) / 2;
+    const rx = Math.floor(rxf);
+    const ry = Math.floor(ryf);
+    const xAdd = rx === rxf ? 0 : 1;
+    const yAdd = ry === ryf ? 0 : 1;
+
     let x = 0;
     let y = ry;
 
@@ -96,7 +101,7 @@ export class PixelRenderer {
     while (dx < dy) {
 
       // Print points based on 4-way symmetry
-      this.drawEllipsePoints(xc, yc, x, y, drawPixel);
+      this.drawEllipsePoints(xc, yc, x, y, xAdd, yAdd, drawPixel);
 
       // Checking and updating value of decision parameter based on algorithm
       if (d1 < 0) {
@@ -119,7 +124,7 @@ export class PixelRenderer {
     while (y >= 0) {
 
       // Print points based on 4-way symmetry
-      this.drawEllipsePoints(xc, yc, x, y, drawPixel);
+      this.drawEllipsePoints(xc, yc, x, y, xAdd, yAdd, drawPixel);
 
       // Checking and updating parameter value based on algorithm
       if (d2 > 0) {
@@ -136,10 +141,12 @@ export class PixelRenderer {
     }
   }
 
-  static drawEllipsePoints(xc: number, yc: number, x: number, y: number, drawPixel: (point: Point) => void): void {
-    drawPixel(new Point(xc + x, yc + y));
-    drawPixel(new Point(xc - x, yc + y));
-    drawPixel(new Point(xc + x, yc - y));
+  static drawEllipsePoints(
+    xc: number, yc: number, x: number, y: number, xAdd: number, yAdd: number, drawPixel: (point: Point) => void
+  ): void {
+    drawPixel(new Point(xc + x + xAdd, yc + y + yAdd));
+    drawPixel(new Point(xc - x, yc + y + yAdd));
+    drawPixel(new Point(xc + x + xAdd, yc - y));
     drawPixel(new Point(xc - x, yc - y));
   }
 }

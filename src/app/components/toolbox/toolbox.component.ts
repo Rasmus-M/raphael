@@ -12,9 +12,9 @@ import {
   faFillDrip,
   faPencilAlt,
   faRedo,
-  faRuler,
   faSearchMinus,
   faSearchPlus,
+  faSlash,
   faUndo
 } from '@fortawesome/free-solid-svg-icons';
 import {faCircle, faSquare} from '@fortawesome/free-regular-svg-icons';
@@ -55,7 +55,7 @@ export class ToolboxComponent implements OnInit {
   flipHorizontalIcon = faArrowsAltH;
   flipVerticalIcon = faArrowsAltV;
   floodFillIcon = faFillDrip;
-  lineIcon = faRuler;
+  lineIcon = faSlash;
   cloneIcon = faClone;
   rectangleIcon = faSquare;
   circleIcon = faCircle;

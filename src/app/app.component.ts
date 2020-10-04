@@ -161,16 +161,22 @@ export class AppComponent {
   }
 
   new(): void {
-    const dialogRef = this.dialog.open(NewDialogComponent, {
-      width: '600px',
-      data: {
+    let defaultNewProjectData = this.storageService.loadNewProjectData();
+    if (defaultNewProjectData) {
+      defaultNewProjectData.filename = 'New project.rap';
+    } else {
+      defaultNewProjectData = {
         filename: 'New project.rap',
         width: 64,
         height: 64,
         pixelScaleX: 1,
         pixelScaleY: 1,
         attributeMode: AttributeMode.NONE
-      }
+      };
+    }
+    const dialogRef = this.dialog.open(NewDialogComponent, {
+      width: '600px',
+      data: defaultNewProjectData
     });
     dialogRef.afterClosed().subscribe((newProjectData: NewProjectData) => {
       if (newProjectData) {
@@ -189,6 +195,7 @@ export class AppComponent {
           zoom: 5
         });
         this.updateTitle();
+        this.storageService.saveNewProjectProjectData(newProjectData);
       }
     });
   }

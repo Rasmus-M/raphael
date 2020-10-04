@@ -14,6 +14,7 @@ import {AboutDialogComponent} from './dialogs/about-dialog/about-dialog.componen
 import {ExportOptions, ExportService} from './services/export.service';
 import {ImportService} from './services/import.service';
 import {Rect} from './classes/rect';
+import {StorageService} from './services/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -41,23 +42,30 @@ export class AppComponent {
     private undoManagerService: UndoManagerService,
     private fileService: FileService,
     private importService: ImportService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private storageService: StorageService
   ) {
     this.palette = new Palette();
     this.grid = new Grid();
-    this.init({
-      filename: 'New project.rap',
-      width: 64,
-      height: 64,
-      pixelScaleX: this.pixelScaleX,
-      pixelScaleY: this.pixelScaleY,
-      attributeMode: AttributeMode.NONE,
-      data: null,
-      backColorIndex: 0,
-      foreColorIndex: 15,
-      tool: Tool.DRAW,
-      zoom: 5
-    });
+    let projectData = this.storageService.restoreProject();
+    if (!projectData) {
+      projectData = {
+        filename: 'New project.rap',
+        width: 64,
+        height: 64,
+        pixelScaleX: this.pixelScaleX,
+        pixelScaleY: this.pixelScaleY,
+        attributeMode: AttributeMode.NONE,
+        data: null,
+        backColorIndex: 0,
+        foreColorIndex: 15,
+        tool: Tool.DRAW,
+        zoom: 5
+      };
+    }
+    this.init(projectData);
+    this.updateTitle();
+    window.addEventListener('beforeunload', () => { this.beforeUnload() });
   }
 
   init(projectData: ProjectData): void {
@@ -166,6 +174,7 @@ export class AppComponent {
     });
     dialogRef.afterClosed().subscribe((newProjectData: NewProjectData) => {
       if (newProjectData) {
+        this.undoManagerService.discardAllEdits();
         this.init({
           filename: newProjectData.filename,
           width: newProjectData.width,
@@ -179,7 +188,6 @@ export class AppComponent {
           tool: Tool.DRAW,
           zoom: 5
         });
-        this.undoManagerService.discardAllEdits();
         this.updateTitle();
       }
     });
@@ -293,5 +301,9 @@ export class AppComponent {
       tool: this.tool,
       zoom: this.zoom
     };
+  }
+
+  beforeUnload(): void {
+    this.storageService.backupProject(this.getProjectData());
   }
 }

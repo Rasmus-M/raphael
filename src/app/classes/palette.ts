@@ -3,7 +3,7 @@ import {Color} from './color';
 export class Palette {
 
   private colors: Color[] = [
-    new Color(0, 0, 0),
+    new Color(48, 48, 48),
     new Color(0, 0, 0),
     new Color(33, 200, 66),
     new Color(94, 220, 120),

@@ -34,6 +34,6 @@ export class Color {
   }
 
   isBlack(): boolean {
-    return this._red === 0 && this._green === 0 && this._blue === 0;
+    return this._red <= 48 && this._green <= 48 && this._blue <= 48;
   }
 }

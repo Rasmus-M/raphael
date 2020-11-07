@@ -4,6 +4,7 @@ import {AssemblyFile} from '../classes/assemblyFile';
 import {AttributeMode} from '../enums/attribute-mode';
 import {PNG} from 'pngjs/browser';
 import {Palette} from '../classes/palette';
+import {AssemblyFileSection} from '../classes/assemblyFileSection';
 
 export interface ExportOptions {
   columns: boolean;
@@ -56,9 +57,15 @@ export class ExportService {
         this.createLinearAssemblyFile(projectData, options, assemblyFile);
         break;
       case AttributeMode.EIGHT_X_ONE:
+        if (options.unpack) {
+          return;
+        }
         this.createBitmapColorAssemblyFile(projectData, options, assemblyFile);
         break;
       case AttributeMode.EIGHT_X_EIGHT:
+        if (options.unpack) {
+          return;
+        }
         this.createCharacterBasedAssemblyFile(projectData, options, assemblyFile);
         break;
     }
@@ -104,29 +111,52 @@ export class ExportService {
   }
 
   private createBitmapColorAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
-    const patternSection = assemblyFile.createSection('patterns');
-    const colorSection = assemblyFile.createSection('colors');
+    const baseFilename = projectData.filename ? projectData.filename.split('.')[0] : '';
+    const patternSection = assemblyFile.createSection(baseFilename + '_patterns');
+    const colorSection = assemblyFile.createSection(baseFilename + '_colors');
     const data = projectData.data;
     const cols = Math.floor(projectData.width / 8);
     const rows = Math.floor(projectData.height / 8);
-    for (let row = 0; row < rows; row++) {
-      const y0 = row * 8;
+    if (options.columns) {
       for (let col = 0; col < cols; col++) {
         const x0 = col * 8;
-        for (let y = y0; y < y0 + 8; y++) {
-          const {foreColorIndex, backColorIndex, patternByte} =
-            this.getPatternByte(x0, y, data, undefined, undefined, projectData.backColorIndex);
-          patternSection.write(patternByte);
-          const colorByte = (foreColorIndex << 4) | backColorIndex;
-          colorSection.write(colorByte);
+        for (let row = 0; row < rows; row++) {
+          const y0 = row * 8;
+          this.writeBitmapCharacter(x0, y0, data, projectData.backColorIndex, patternSection, colorSection);
+        }
+      }
+    } else {
+      for (let row = 0; row < rows; row++) {
+        const y0 = row * 8;
+        for (let col = 0; col < cols; col++) {
+          const x0 = col * 8;
+          this.writeBitmapCharacter(x0, y0, data, projectData.backColorIndex, patternSection, colorSection);
         }
       }
     }
   }
 
+  private writeBitmapCharacter(
+    x0: number,
+    y0: number,
+    data: number[][],
+    projectBackColorIndex: number,
+    patternSection: AssemblyFileSection,
+    colorSection: AssemblyFileSection
+  ): void {
+    for (let y = y0; y < y0 + 8; y++) {
+      const {foreColorIndex, backColorIndex, patternByte} =
+        this.getPatternByte(x0, y, data, undefined, undefined, projectBackColorIndex);
+      patternSection.write(patternByte);
+      const colorByte = (foreColorIndex << 4) | backColorIndex;
+      colorSection.write(colorByte);
+    }
+  }
+
   private createCharacterBasedAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
-    const patternSection = assemblyFile.createSection('patterns');
-    const colorSection = assemblyFile.createSection('colors');
+    const baseFilename = projectData.filename ? projectData.filename.split('.')[0] : '';
+    const patternSection = assemblyFile.createSection(baseFilename + '_patterns');
+    const colorSection = assemblyFile.createSection(baseFilename + '_colors');
     const data = projectData.data;
     const cols = Math.floor(projectData.width / 8);
     const rows = Math.floor(projectData.height / 8);
@@ -156,15 +186,19 @@ export class ExportService {
     backColorIndex: number,
     defaultBackColorIndex: number
   ): {foreColorIndex: number, backColorIndex: number, patternByte: number} {
-    let patternByte = 0;
-    let bit = 0x80;
     for (let x = x0; x < x0 + 8; x++) {
       const colorIndex = data[y0][x];
       if (foreColorIndex === undefined && colorIndex !== defaultBackColorIndex) {
         foreColorIndex = colorIndex;
-      } else if (backColorIndex === undefined) {
+      }
+      if (backColorIndex === undefined && colorIndex !== foreColorIndex) {
         backColorIndex = colorIndex;
       }
+    }
+    let patternByte = 0;
+    let bit = 0x80;
+    for (let x = x0; x < x0 + 8; x++) {
+      const colorIndex = data[y0][x];
       if (colorIndex === foreColorIndex) {
         patternByte |= bit;
       }

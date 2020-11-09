@@ -251,11 +251,8 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   onMouseClick(): void {
     switch (this.tool) {
       case Tool.DRAW:
-        break;
       case Tool.LINE:
-        break;
       case Tool.RECTANGLE:
-        break;
       case Tool.CIRCLE:
         break;
       case Tool.FLOOD_FILL:
@@ -284,15 +281,10 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         this.strokeEdit.addEdit(this.setGridColorIndex(this.cursorPosition, this.drawColorIndex));
         break;
       case Tool.LINE:
-        this.drawing = true;
-        this.anchorPosition = this.cursorPosition;
-        break;
       case Tool.RECTANGLE:
-        this.drawing = true;
-        this.anchorPosition = this.cursorPosition;
-        break;
       case Tool.CIRCLE:
         this.drawing = true;
+        this.drawColorIndex = evt.button === 0 ? this.foreColorIndex : this.backColorIndex;
         this.anchorPosition = this.cursorPosition;
         break;
       case Tool.FLOOD_FILL:
@@ -374,21 +366,21 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         this.drawing = false;
         this.clearSelectionLayer();
         this.undoManagerService.addEdit(
-          this.grid.drawLine(this.anchorPosition, newCursorPosition, this.foreColorIndex)
+          this.grid.drawLine(this.anchorPosition, newCursorPosition, this.drawColorIndex)
         );
         break;
       case Tool.RECTANGLE:
         this.drawing = false;
         this.clearSelectionLayer();
         this.undoManagerService.addEdit(
-          this.grid.drawRectangle(this.anchorPosition, newCursorPosition, this.foreColorIndex)
+          this.grid.drawRectangle(this.anchorPosition, newCursorPosition, this.drawColorIndex)
         );
         break;
       case Tool.CIRCLE:
         this.drawing = false;
         this.clearSelectionLayer();
         this.undoManagerService.addEdit(
-          this.grid.drawCircle(this.anchorPosition, newCursorPosition, this.foreColorIndex)
+          this.grid.drawCircle(this.anchorPosition, newCursorPosition, this.drawColorIndex)
         );
         break;
       case Tool.FLOOD_FILL:
@@ -411,6 +403,20 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   }
 
   onContextMenu(evt: MouseEvent): void {
+    switch (this.tool) {
+      case Tool.DRAW:
+      case Tool.LINE:
+      case Tool.RECTANGLE:
+      case Tool.CIRCLE:
+        break;
+      case Tool.FLOOD_FILL:
+        this.undoManagerService.addEdit(
+          this.grid.floodFill(this.cursorPosition, this.backColorIndex)
+        );
+        break;
+      case Tool.CLONE:
+        break;
+    }
     evt.preventDefault();
   }
 

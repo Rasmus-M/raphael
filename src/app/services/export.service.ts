@@ -111,7 +111,7 @@ export class ExportService {
   }
 
   private createBitmapColorAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
-    const baseFilename = projectData.filename ? projectData.filename.split('.')[0] : '';
+    const baseFilename = this.getBaseFilename(projectData);
     const patternSection = assemblyFile.createSection(baseFilename + '_patterns');
     const colorSection = assemblyFile.createSection(baseFilename + '_colors');
     const data = projectData.data;
@@ -154,7 +154,7 @@ export class ExportService {
   }
 
   private createCharacterBasedAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
-    const baseFilename = projectData.filename ? projectData.filename.split('.')[0] : '';
+    const baseFilename = this.getBaseFilename(projectData);
     const patternSection = assemblyFile.createSection(baseFilename + '_patterns');
     const colorSection = assemblyFile.createSection(baseFilename + '_colors');
     const data = projectData.data;
@@ -205,5 +205,9 @@ export class ExportService {
       bit >>>= 1;
     }
     return {foreColorIndex, backColorIndex, patternByte};
+  }
+
+  private getBaseFilename(projectData: ProjectData): string {
+    return projectData.filename ? projectData.filename.split('.')[0].replace(/[ -]/, '_') : '';
   }
 }

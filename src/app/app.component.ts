@@ -24,7 +24,7 @@ import {StorageService} from './services/storage.service';
 export class AppComponent {
 
   public static TITLE = 'Raphael';
-  public static VERSION_NO = '1.2.1';
+  public static VERSION_NO = '1.3.0';
 
   filename: string;
   palette: Palette;

@@ -298,7 +298,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
           if (evt.button === 0) {
             const rect = new Rect(this.cursorPosition.x, this.cursorPosition.y, this.cloneRect.width, this.cloneRect.height);
             this.undoManagerService.addEdit(
-              this.grid.setArea(rect, this.cloneData, true)
+              this.grid.setArea(rect, this.cloneData, evt.ctrlKey)
             );
           }
           if (!evt.shiftKey) {

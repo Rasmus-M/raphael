@@ -1,18 +1,25 @@
 .app {
   display: grid;
   --menuHeight: 36px;
-  --pixelGridHeight: calc(100vh - var(--menuHeight) - 8px);
-  grid-template-columns: var(--pixelGridHeight) 164px 1fr;
+  --pixelGridHeight: calc(100vh - var(--menuHeight) - 16px);
+  grid-template-columns: 164px 1fr;
   grid-template-rows: var(--menuHeight) calc(var(--pixelGridHeight)) 1fr;
   grid-template-areas:
-    "menu menu"
-    "pixel-grid side-panel";
-  grid-row-gap: 0;
+    "corner menu"
+    "side-panel pixel-grid";
+  grid-row-gap: 8px;
   grid-column-gap: 8px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+#corner {
+  grid-area: corner;
 }
 
 #menu {
   grid-area: menu;
+  background-color: #f0f0f0;
 }
 
 #pixel-grid {

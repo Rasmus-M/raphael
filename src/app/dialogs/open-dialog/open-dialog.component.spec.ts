@@ -1,14 +1,23 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {OpenDialogComponent} from './open-dialog.component';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 describe('OpenDialogComponent', () => {
   let component: OpenDialogComponent;
   let fixture: ComponentFixture<OpenDialogComponent>;
 
+  const mockDialogRef = {
+    close: jasmine.createSpy('close')
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OpenDialogComponent ]
+      declarations: [ OpenDialogComponent ],
+      providers: [
+        { provide: MatDialogRef, useValue: mockDialogRef },
+        { provide: MAT_DIALOG_DATA, useValue: {} }
+      ]
     })
     .compileComponents();
   }));

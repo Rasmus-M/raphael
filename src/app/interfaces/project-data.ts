@@ -7,4 +7,5 @@ export interface ProjectData extends NewProjectData {
   foreColorIndex: number;
   tool: number;
   zoom: number;
+  showGridLines: boolean;
 }

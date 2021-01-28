@@ -25,6 +25,7 @@ import {OpenDialogComponent} from './dialogs/open-dialog/open-dialog.component';
 import {AboutDialogComponent} from './dialogs/about-dialog/about-dialog.component';
 import {MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import {MatSelectModule} from '@angular/material/select';
     FormsModule,
     MatInputModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

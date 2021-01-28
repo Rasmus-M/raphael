@@ -35,6 +35,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   @Input() backColorIndex: number;
   @Input() foreColorIndex: number;
   @Input() tool: Tool;
+  @Input() showGridLines: boolean;
 
   private pixelCanvas: HTMLCanvasElement;
   private selectionCanvas: HTMLCanvasElement;
@@ -91,7 +92,14 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.initialized) {
-      if (changes.imageNumber || changes.pixelScaleX || changes.pixelScaleY || changes.basePixelSize || changes.zoom) {
+      if (
+        changes.imageNumber ||
+        changes.pixelScaleX ||
+        changes.pixelScaleY ||
+        changes.basePixelSize ||
+        changes.zoom ||
+        changes.showGridLines
+      ) {
         this.draw();
       }
       if (changes.tool) {
@@ -108,7 +116,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
 
   draw(): void {
     this.calculateSize([this.pixelCanvas, this.selectionCanvas, this.gridCanvas, this.cursorCanvas]);
-    this.drawGrid();
+    if (this.showGridLines) {
+      this.drawGrid();
+    }
     this.drawPixels();
   }
 

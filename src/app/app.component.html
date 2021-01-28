@@ -9,6 +9,7 @@
       (exportPNGClicked)="exportPNG()"
       (exportBinaryClicked)="exportBinary()"
       (exportAssemblyClicked)="exportAssembly($event)"
+      [(showGridLines)]="showGridLines"
       (aboutClicked)="about()"
     ></app-menu>
   </div>
@@ -23,6 +24,7 @@
         [tool]="tool"
         [backColorIndex]="backColorIndex"
         [foreColorIndex]="foreColorIndex"
+        [showGridLines]="showGridLines"
       ></app-pixel-grid>
   </div>
   <div id="side-panel">

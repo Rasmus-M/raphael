@@ -1,6 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MiniViewComponent } from './mini-view.component';
+import {MiniViewComponent} from './mini-view.component';
+import {Grid} from '../../classes/grid';
 
 describe('MiniViewComponent', () => {
   let component: MiniViewComponent;
@@ -16,7 +17,8 @@ describe('MiniViewComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MiniViewComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.grid = new Grid();
+    // fixture.detectChanges();
   });
 
   it('should create', () => {

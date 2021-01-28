@@ -1,6 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PaletteComponent } from './palette.component';
+import {PaletteComponent} from './palette.component';
+import {Palette} from '../../classes/palette';
 
 describe('PaletteComponent', () => {
   let component: PaletteComponent;
@@ -16,6 +17,7 @@ describe('PaletteComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PaletteComponent);
     component = fixture.componentInstance;
+    component.palette = new Palette();
     fixture.detectChanges();
   });
 

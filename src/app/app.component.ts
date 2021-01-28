@@ -24,7 +24,7 @@ import {StorageService} from './services/storage.service';
 export class AppComponent {
 
   public static TITLE = 'Raphael';
-  public static VERSION_NO = '1.3.0';
+  public static VERSION_NO = '1.4.0';
 
   filename: string;
   palette: Palette;
@@ -35,6 +35,7 @@ export class AppComponent {
   foreColorIndex: number;
   tool: Tool;
   zoom: number;
+  showGridLines = true;
   imageNumber = 0;
 
   constructor(
@@ -60,12 +61,13 @@ export class AppComponent {
         backColorIndex: 0,
         foreColorIndex: 15,
         tool: Tool.DRAW,
-        zoom: 5
+        zoom: 5,
+        showGridLines: true
       };
     }
     this.init(projectData);
     this.updateTitle();
-    window.addEventListener('beforeunload', () => { this.beforeUnload() });
+    window.addEventListener('beforeunload', () => { this.beforeUnload(); });
   }
 
   init(projectData: ProjectData): void {
@@ -81,6 +83,7 @@ export class AppComponent {
     this.foreColorIndex = projectData.foreColorIndex;
     this.tool = projectData.tool;
     this.zoom = projectData.zoom;
+    this.showGridLines = projectData.showGridLines;
     this.imageNumber++;
   }
 
@@ -157,7 +160,10 @@ export class AppComponent {
   }
 
   updateTitle(): void {
-    document.querySelector('#app-title').innerHTML = AppComponent.TITLE + (this.filename ? ' - ' + this.filename : '');
+    const title = document.querySelector('#app-title');
+    if (title) {
+      title.innerHTML = AppComponent.TITLE + (this.filename ? ' - ' + this.filename : '');
+    }
   }
 
   new(): void {
@@ -192,7 +198,8 @@ export class AppComponent {
           backColorIndex: 0,
           foreColorIndex: 15,
           tool: Tool.DRAW,
-          zoom: 5
+          zoom: 5,
+          showGridLines: true
         });
         this.updateTitle();
         this.storageService.saveNewProjectProjectData(newProjectData);
@@ -306,7 +313,8 @@ export class AppComponent {
       backColorIndex: this.backColorIndex,
       foreColorIndex: this.foreColorIndex,
       tool: this.tool,
-      zoom: this.zoom
+      zoom: this.zoom,
+      showGridLines: this.showGridLines
     };
   }
 

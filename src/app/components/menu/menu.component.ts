@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ExportOptions} from '../../services/export.service';
 
 @Component({
@@ -8,6 +8,8 @@ import {ExportOptions} from '../../services/export.service';
 })
 export class MenuComponent implements OnInit {
 
+  @Input() showGridLines: boolean;
+
   @Output() newClicked = new EventEmitter();
   @Output() openClicked = new EventEmitter();
   @Output() saveClicked = new EventEmitter();
@@ -15,6 +17,7 @@ export class MenuComponent implements OnInit {
   @Output() exportPNGClicked = new EventEmitter();
   @Output() exportBinaryClicked = new EventEmitter();
   @Output() exportAssemblyClicked = new EventEmitter<ExportOptions>();
+  @Output() showGridLinesChange = new EventEmitter<boolean>();
   @Output() aboutClicked = new EventEmitter();
 
   constructor() {
@@ -49,6 +52,10 @@ export class MenuComponent implements OnInit {
 
   exportAssembly(columns: boolean, unpack): void {
     this.exportAssemblyClicked.emit({columns, unpack});
+  }
+
+  toggleGridLines(): void {
+    this.showGridLinesChange.emit(this.showGridLines);
   }
 
   about(): void {

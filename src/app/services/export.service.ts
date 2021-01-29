@@ -122,7 +122,7 @@ export class ExportService {
         const x0 = col * 8;
         for (let row = 0; row < rows; row++) {
           const y0 = row * 8;
-          this.writeBitmapCharacter(x0, y0, data, projectData.backColorIndex, patternSection, colorSection);
+          this.writeBitmapCharacter(x0, y0, data, projectData.foreColorIndex, projectData.backColorIndex, patternSection, colorSection);
         }
       }
     } else {
@@ -130,7 +130,7 @@ export class ExportService {
         const y0 = row * 8;
         for (let col = 0; col < cols; col++) {
           const x0 = col * 8;
-          this.writeBitmapCharacter(x0, y0, data, projectData.backColorIndex, patternSection, colorSection);
+          this.writeBitmapCharacter(x0, y0, data, projectData.foreColorIndex, projectData.backColorIndex, patternSection, colorSection);
         }
       }
     }
@@ -140,13 +140,14 @@ export class ExportService {
     x0: number,
     y0: number,
     data: number[][],
+    projectForeColorIndex: number,
     projectBackColorIndex: number,
     patternSection: AssemblyFileSection,
     colorSection: AssemblyFileSection
   ): void {
     for (let y = y0; y < y0 + 8; y++) {
       const {foreColorIndex, backColorIndex, patternByte} =
-        this.getPatternByte(x0, y, data, undefined, undefined, projectBackColorIndex);
+        this.getPatternByte(x0, y, data, undefined, undefined, projectForeColorIndex, projectBackColorIndex);
       patternSection.write(patternByte);
       const colorByte = (foreColorIndex << 4) | backColorIndex;
       colorSection.write(colorByte);
@@ -167,7 +168,9 @@ export class ExportService {
         let foreColorIndex;
         let backColorIndex;
         for (let y = y0; y < y0 + 8; y++) {
-          const result = this.getPatternByte(x0, y, data, foreColorIndex, backColorIndex, projectData.backColorIndex);
+          const result = this.getPatternByte(
+            x0, y, data, foreColorIndex, backColorIndex, projectData.foreColorIndex, projectData.backColorIndex
+          );
           foreColorIndex = result.foreColorIndex;
           backColorIndex = result.backColorIndex;
           patternSection.write(result.patternByte);
@@ -184,6 +187,7 @@ export class ExportService {
     data: number[][],
     foreColorIndex: number,
     backColorIndex: number,
+    defaultForeColorIndex: number,
     defaultBackColorIndex: number
   ): {foreColorIndex: number, backColorIndex: number, patternByte: number} {
     for (let x = x0; x < x0 + 8; x++) {
@@ -194,6 +198,12 @@ export class ExportService {
       if (backColorIndex === undefined && colorIndex !== foreColorIndex) {
         backColorIndex = colorIndex;
       }
+    }
+    if (foreColorIndex === undefined) {
+      foreColorIndex = defaultForeColorIndex;
+    }
+    if (backColorIndex === undefined) {
+      backColorIndex = defaultBackColorIndex;
     }
     let patternByte = 0;
     let bit = 0x80;

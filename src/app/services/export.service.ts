@@ -18,7 +18,6 @@ export class ExportService {
 
   constructor() { }
 
-
   exportPNGFile(projectData: ProjectData, palette: Palette): ArrayBuffer {
     const png = new PNG({
       width: projectData.width,
@@ -40,6 +39,17 @@ export class ExportService {
   }
 
   exportBinaryFile(projectData: ProjectData, palette: Palette): ArrayBuffer {
+    switch (projectData.attributeMode) {
+      case AttributeMode.NONE:
+        return this.createLinearBinaryFile(projectData);
+      case AttributeMode.EIGHT_X_ONE:
+        return this.createBitmapColorBinaryFile(projectData);
+      case AttributeMode.EIGHT_X_EIGHT:
+        return this.createCharacterBasedBinaryFile(projectData);
+    }
+  }
+
+  private createLinearBinaryFile(projectData: ProjectData): ArrayBuffer {
     const arrayBuffer = new Uint8Array(projectData.width * projectData.height / 2);
     let i = 0;
     for (let y = 0; y < projectData.height; y++) {
@@ -48,6 +58,69 @@ export class ExportService {
       }
     }
     return arrayBuffer;
+  }
+
+  private createBitmapColorBinaryFile(projectData: ProjectData): ArrayBuffer {
+    const data = projectData.data;
+    const cols = Math.floor(projectData.width / 8);
+    const rows = Math.floor(projectData.height / 8);
+    const patternBuffer: number[] = [];
+    const colorBuffer: number[] = [];
+    for (let row = 0; row < rows; row++) {
+      const y0 = row * 8;
+      for (let col = 0; col < cols; col++) {
+        const x0 = col * 8;
+        this.writeBinaryBitmapCharacter(
+          x0, y0, data, projectData.foreColorIndex, projectData.backColorIndex, patternBuffer, colorBuffer
+        );
+      }
+    }
+    return new Uint8Array(patternBuffer.concat(colorBuffer));
+  }
+
+  private writeBinaryBitmapCharacter(
+    x0: number,
+    y0: number,
+    data: number[][],
+    projectForeColorIndex: number,
+    projectBackColorIndex: number,
+    patternBuffer: number[],
+    colorBuffer: number[]
+  ): void {
+    for (let y = y0; y < y0 + 8; y++) {
+      const {foreColorIndex, backColorIndex, patternByte} =
+        this.getPatternByte(x0, y, data, undefined, undefined, projectForeColorIndex, projectBackColorIndex);
+      patternBuffer.push(patternByte);
+      const colorByte = (foreColorIndex << 4) | backColorIndex;
+      colorBuffer.push(colorByte);
+    }
+  }
+
+  private createCharacterBasedBinaryFile(projectData: ProjectData): ArrayBuffer {
+    const data = projectData.data;
+    const cols = Math.floor(projectData.width / 8);
+    const rows = Math.floor(projectData.height / 8);
+    const patternBuffer: number[] = [];
+    const colorBuffer: number[] = [];
+    for (let row = 0; row < rows; row++) {
+      const y0 = row * 8;
+      for (let col = 0; col < cols; col++) {
+        const x0 = col * 8;
+        let foreColorIndex;
+        let backColorIndex;
+        for (let y = y0; y < y0 + 8; y++) {
+          const result = this.getPatternByte(
+            x0, y, data, foreColorIndex, backColorIndex, projectData.foreColorIndex, projectData.backColorIndex
+          );
+          foreColorIndex = result.foreColorIndex;
+          backColorIndex = result.backColorIndex;
+          patternBuffer.push(result.patternByte);
+        }
+        const colorByte = (foreColorIndex << 4) | backColorIndex;
+        colorBuffer.push(colorByte);
+      }
+    }
+    return new Uint8Array(patternBuffer.concat(colorBuffer));
   }
 
   exportAssemblyFile(projectData: ProjectData, options: ExportOptions): string {
@@ -122,7 +195,9 @@ export class ExportService {
         const x0 = col * 8;
         for (let row = 0; row < rows; row++) {
           const y0 = row * 8;
-          this.writeBitmapCharacter(x0, y0, data, projectData.foreColorIndex, projectData.backColorIndex, patternSection, colorSection);
+          this.writeAssemblyBitmapCharacter(
+            x0, y0, data, projectData.foreColorIndex, projectData.backColorIndex, patternSection, colorSection
+          );
         }
       }
     } else {
@@ -130,13 +205,15 @@ export class ExportService {
         const y0 = row * 8;
         for (let col = 0; col < cols; col++) {
           const x0 = col * 8;
-          this.writeBitmapCharacter(x0, y0, data, projectData.foreColorIndex, projectData.backColorIndex, patternSection, colorSection);
+          this.writeAssemblyBitmapCharacter(
+            x0, y0, data, projectData.foreColorIndex, projectData.backColorIndex, patternSection, colorSection
+          );
         }
       }
     }
   }
 
-  private writeBitmapCharacter(
+  private writeAssemblyBitmapCharacter(
     x0: number,
     y0: number,
     data: number[][],

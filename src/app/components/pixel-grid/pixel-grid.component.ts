@@ -276,6 +276,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   }
 
   onMouseDown(evt: MouseEvent): void {
+    if (this.drawing) {
+      return;
+    }
     this.cursorPosition = this.getMousePosition(evt);
     switch (this.tool) {
       case Tool.DRAW:

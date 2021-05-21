@@ -17,6 +17,7 @@ export class MenuComponent implements OnInit {
   @Output() exportPNGClicked = new EventEmitter();
   @Output() exportBinaryClicked = new EventEmitter();
   @Output() exportAssemblyClicked = new EventEmitter<ExportOptions>();
+  @Output() exportHexClicked = new EventEmitter();
   @Output() showGridLinesChange = new EventEmitter<boolean>();
   @Output() aboutClicked = new EventEmitter();
 
@@ -52,6 +53,10 @@ export class MenuComponent implements OnInit {
 
   exportAssembly(columns: boolean, unpack): void {
     this.exportAssemblyClicked.emit({columns, unpack});
+  }
+
+  exportHex(): void {
+    this.exportHexClicked.emit();
   }
 
   toggleGridLines(): void {

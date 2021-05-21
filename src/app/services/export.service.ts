@@ -294,6 +294,43 @@ export class ExportService {
     return {foreColorIndex, backColorIndex, patternByte};
   }
 
+  exportHexString(projectData: ProjectData): string {
+    let hex = '';
+    const cols = Math.floor(projectData.width / 8);
+    const rows = Math.floor(projectData.height / 8);
+    for (let row = 0; row < rows; row++) {
+      const y0 = row * 8;
+      for (let col = 0; col < cols; col++) {
+        const x0 = col * 8;
+        hex += this.getHexCharacter(x0, y0, projectData.data, projectData.foreColorIndex, projectData.backColorIndex) + '\n';
+      }
+    }
+    return hex;
+  }
+
+  private getHexCharacter(
+    x0: number,
+    y0: number,
+    data: number[][],
+    projectForeColorIndex: number,
+    projectBackColorIndex: number,
+  ): string {
+    let hex = '';
+    for (let y = y0; y < y0 + 8; y++) {
+      const result = this.getPatternByte(x0, y, data, undefined, undefined, projectForeColorIndex, projectBackColorIndex);
+      hex += this.getHexByte(result.patternByte);
+    }
+    return hex;
+  }
+
+  private getHexByte(b: number): string {
+    let hexByte = b.toString(16);
+    if (hexByte.length === 1) {
+      hexByte = '0' + hexByte;
+    }
+    return hexByte.toUpperCase();
+  }
+
   private getBaseFilename(projectData: ProjectData): string {
     return projectData.filename ? projectData.filename.split('.')[0].replace(/[ -]/, '_') : '';
   }

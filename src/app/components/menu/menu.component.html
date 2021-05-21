@@ -15,6 +15,7 @@
   <button mat-menu-item (click)="exportPNG()">PNG file</button>
   <button mat-menu-item (click)="exportBinary()">Binary file</button>
   <button mat-menu-item [matMenuTriggerFor]="exportAssemblyMenu">Assembly data</button>
+  <button mat-menu-item (click)="exportHex()">Hex string (1 bpp)</button>
 </mat-menu>
 <mat-menu #optionsMenu="matMenu">
   <mat-checkbox class="mat-menu-item" [(ngModel)]="showGridLines" (change)="toggleGridLines()">Show grid lines</mat-checkbox>

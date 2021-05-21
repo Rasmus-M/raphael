@@ -24,7 +24,7 @@ import {StorageService} from './services/storage.service';
 export class AppComponent {
 
   public static TITLE = 'Raphael';
-  public static VERSION_NO = '1.5.1';
+  public static VERSION_NO = '1.6.0';
 
   filename: string;
   palette: Palette;
@@ -288,6 +288,13 @@ export class AppComponent {
     this.fileService.saveTextFile(
       this.exportService.exportAssemblyFile(this.getProjectData(), options),
       (this.getBaseFilename() || 'export') + '.a99',
+    );
+  }
+
+  exportHex(): void {
+    this.fileService.saveTextFile(
+      this.exportService.exportHexString(this.getProjectData()),
+      (this.getBaseFilename() || 'export') + '.txt',
     );
   }
 

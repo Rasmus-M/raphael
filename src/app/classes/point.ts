@@ -8,7 +8,6 @@ export class Point {
     this._y = y;
   }
 
-
   get x(): number {
     return this._x;
   }
@@ -27,5 +26,9 @@ export class Point {
 
   equals(point: Point): boolean {
     return this.x === point.x && this.y === point.y;
+  }
+
+  toString(): string {
+    return '(' + this.x + ', '  + this.y + ')';
   }
 }

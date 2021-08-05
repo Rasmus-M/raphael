@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Point} from '../../classes/point';
 import {Rect} from '../../classes/rect';
 import {Grid} from '../../classes/grid';
@@ -36,6 +36,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   @Input() foreColorIndex: number;
   @Input() tool: Tool;
   @Input() showGridLines: boolean;
+  @Output() cursorPositionChanged = new EventEmitter<Point>();
 
   private pixelCanvas: HTMLCanvasElement;
   private selectionCanvas: HTMLCanvasElement;
@@ -328,6 +329,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
       this.eraseCursor(this.cursorPosition);
       this.drawCursor(newCursorPosition);
       this.cursorPosition = newCursorPosition;
+      this.cursorPositionChanged.emit(new Point(this.cursorPosition.x, this.cursorPosition.y));
     }
     switch (this.tool) {
       case Tool.DRAW:

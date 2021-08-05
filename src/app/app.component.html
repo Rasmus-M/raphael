@@ -1,5 +1,5 @@
 <div class="app">
-  <div id="corner"></div>
+  <div id="top-corner"></div>
   <div id="menu">
     <app-menu
       (newClicked)="new()"
@@ -26,7 +26,10 @@
         [backColorIndex]="backColorIndex"
         [foreColorIndex]="foreColorIndex"
         [showGridLines]="showGridLines"
+        (cursorPositionChanged)="cursorPositionChanged($event)"
       ></app-pixel-grid>
+      <div id="bottom-corner"></div>
+      <app-status-bar id="status-bar" [cursorPosition]="cursorPosition"></app-status-bar>
   </div>
   <div id="side-panel">
     <app-toolbox

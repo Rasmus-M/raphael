@@ -302,7 +302,8 @@ export class ExportService {
       const y0 = row * 8;
       for (let col = 0; col < cols; col++) {
         const x0 = col * 8;
-        hex += this.getHexCharacter(x0, y0, projectData.data, projectData.foreColorIndex, projectData.backColorIndex) + '\n';
+        const hexChar = this.getHexCharacter(x0, y0, projectData.data, projectData.foreColorIndex, projectData.backColorIndex);
+        hex += '"' + hexChar + '"' + (col < cols - 1 ? ',' : '\n');
       }
     }
     return hex;

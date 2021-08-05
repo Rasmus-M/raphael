@@ -1,20 +1,22 @@
 .app {
   display: grid;
   --menuHeight: 36px;
-  --pixelGridHeight: calc(100vh - var(--menuHeight) - 8px);
+  --statusBarHeight: 18px;
+  --pixelGridHeight: calc(100vh - var(--menuHeight) - var(--statusBarHeight) - 8px);
   grid-template-columns: 164px 1fr;
-  grid-template-rows: var(--menuHeight) calc(var(--pixelGridHeight)) 1fr;
+  grid-template-rows: var(--menuHeight) calc(var(--pixelGridHeight)) var(--statusBarHeight) 1fr;
   grid-template-areas:
-    "corner menu"
-    "side-panel pixel-grid";
+    "top-corner menu"
+    "side-panel pixel-grid"
+    "bottom-corner status-bar";
   grid-row-gap: 0px;
   grid-column-gap: 8px;
   margin-left: 8px;
   margin-right: 8px;
 }
 
-#corner {
-  grid-area: corner;
+#top-corner {
+  grid-area: top-corner;
 }
 
 #menu {
@@ -32,4 +34,12 @@
 
 #side-panel {
   grid-area: side-panel;
+}
+
+#bottom-corner {
+  grid-area: top-corner;
+}
+
+#status-bar {
+  grid-area: top-corner;
 }

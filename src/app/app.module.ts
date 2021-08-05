@@ -26,6 +26,7 @@ import {AboutDialogComponent} from './dialogs/about-dialog/about-dialog.componen
 import {MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {StatusBarComponent} from './components/status-bar/status-bar.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MiniViewComponent,
     NewDialogComponent,
     OpenDialogComponent,
-    AboutDialogComponent
+    AboutDialogComponent,
+    StatusBarComponent
   ],
   imports: [
     BrowserModule,

@@ -15,6 +15,7 @@ import {ExportOptions, ExportService} from './services/export.service';
 import {ImportService} from './services/import.service';
 import {Rect} from './classes/rect';
 import {StorageService} from './services/storage.service';
+import {Point} from './classes/point';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,7 @@ import {StorageService} from './services/storage.service';
 export class AppComponent {
 
   public static TITLE = 'Raphael';
-  public static VERSION_NO = '1.6.0';
+  public static VERSION_NO = '1.6.1';
 
   filename: string;
   palette: Palette;
@@ -37,6 +38,7 @@ export class AppComponent {
   zoom: number;
   showGridLines = true;
   imageNumber = 0;
+  cursorPosition: Point;
 
   constructor(
     public dialog: MatDialog,
@@ -149,6 +151,10 @@ export class AppComponent {
 
   toolChanged(tool: Tool): void {
     this.tool = tool;
+  }
+
+  cursorPositionChanged(cursorPosition: Point): void {
+    this.cursorPosition = cursorPosition;
   }
 
   setBackColorIndex(backColorIndex: number): void {

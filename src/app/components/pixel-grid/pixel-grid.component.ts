@@ -256,7 +256,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     if (this.getGridColorIndex(point) === value) {
       return null;
     }
-    return this.grid.setValue(point, value);
+    return this.grid.setValue(point, value, this.backColorIndex);
   }
 
   onMouseClick(): void {

@@ -91,7 +91,7 @@ export class Grid {
     return this.get(point);
   }
 
-  setValue(point: Point, value: number): UndoableEdit {
+  setValue(point: Point, value: number, backgroundValue: number): UndoableEdit {
     let undoableEdit: UndoableEdit;
     const oldValue = this.getValue(point);
     const pixelRect = new Rect(point.x, point.y, 1, 1);
@@ -112,12 +112,12 @@ export class Grid {
         const valueMap = this.getValueMap(rect);
         if (valueMap.size <= 2) {
           this.notifyChanges(new Rect(point.x, point.y, 1, 1));
-        // } else if (valueMap.get(oldValue) > 4) {
-        //   for (const key of valueMap.keys()) {
-        //     if (key !== value && key !== oldValue) {
-        //       this.change(rect, key, value);
-        //     }
-        //   }
+        } else if (oldValue === backgroundValue) {
+          for (const key of valueMap.keys()) {
+            if (key !== value && key !== backgroundValue) {
+              this.change(rect, key, value);
+            }
+          }
         } else {
           this.change(rect, oldValue, value);
         }
@@ -133,12 +133,12 @@ export class Grid {
         const valueMap = this.getValueMap(rect);
         if (valueMap.size <= 2) {
           this.notifyChanges(new Rect(point.x, point.y, 1, 1));
-        // } else if (valueMap.get(oldValue) > 32) {
-        //   for (const key of valueMap.keys()) {
-        //     if (key !== value && key !== oldValue) {
-        //       this.change(rect, key, value);
-        //     }
-        //   }
+        } else if (oldValue === backgroundValue) {
+          for (const key of valueMap.keys()) {
+            if (key !== value && key !== backgroundValue) {
+              this.change(rect, key, value);
+            }
+          }
         } else {
           this.change(rect, oldValue, value);
         }

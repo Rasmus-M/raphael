@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {AppComponent} from '../../app.component';
+import {TITLE, VERSION_NO} from '../../app.config';
 
 @Component({
   selector: 'app-about-dialog',
@@ -17,10 +17,10 @@ export class AboutDialogComponent implements OnInit {
   }
 
   getTitle(): string {
-    return 'About ' + AppComponent.TITLE;
+    return 'About ' + TITLE;
   }
 
   getVersion(): string {
-    return 'Version ' + AppComponent.VERSION_NO;
+    return 'Version ' + VERSION_NO;
   }
 }

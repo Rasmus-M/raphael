@@ -16,6 +16,7 @@ import {ImportService} from './services/import.service';
 import {Rect} from './classes/rect';
 import {StorageService} from './services/storage.service';
 import {Point} from './classes/point';
+import {TITLE} from './app.config';
 
 @Component({
   selector: 'app-root',
@@ -23,9 +24,6 @@ import {Point} from './classes/point';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent {
-
-  public static TITLE = 'Raphael';
-  public static VERSION_NO = '1.6.1';
 
   filename: string;
   palette: Palette;
@@ -168,7 +166,7 @@ export class AppComponent {
   updateTitle(): void {
     const title = document.querySelector('#app-title');
     if (title) {
-      title.innerHTML = AppComponent.TITLE + (this.filename ? ' - ' + this.filename : '');
+      title.innerHTML = TITLE + (this.filename ? ' - ' + this.filename : '');
     }
   }
 

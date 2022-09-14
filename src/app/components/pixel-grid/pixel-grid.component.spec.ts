@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {PixelGridComponent} from './pixel-grid.component';
 import {Grid} from '../../classes/grid';
@@ -7,7 +7,7 @@ describe('PixelGridComponent', () => {
   let component: PixelGridComponent;
   let fixture: ComponentFixture<PixelGridComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PixelGridComponent ]
     })

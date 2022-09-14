@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {AboutDialogComponent} from './about-dialog.component';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -11,7 +11,7 @@ describe('AboutDialogComponent', () => {
     close: jasmine.createSpy('close')
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AboutDialogComponent ],
       providers: [ { provide: MatDialogRef, useValue: mockDialogRef } ]

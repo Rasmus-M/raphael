@@ -27,6 +27,8 @@ import {MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {StatusBarComponent} from './components/status-bar/status-bar.component';
+import {PropertiesDialogComponent} from './dialogs/properties-dialog/properties-dialog.component';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import {StatusBarComponent} from './components/status-bar/status-bar.component';
     NewDialogComponent,
     OpenDialogComponent,
     AboutDialogComponent,
-    StatusBarComponent
+    StatusBarComponent,
+    PropertiesDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +61,8 @@ import {StatusBarComponent} from './components/status-bar/status-bar.component';
     MatInputModule,
     MatOptionModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDividerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

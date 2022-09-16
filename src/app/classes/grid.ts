@@ -62,6 +62,33 @@ export class Grid {
     }
   }
 
+  changeSize(width: number, height: number, initialValue: number): void {
+    if (width > this.width) {
+      for (const row of this.data) {
+        for (let x = this.width; x < width; x++) {
+          row[x] = initialValue;
+        }
+      }
+    } else if (width < this.width) {
+      for (const row of this.data) {
+        row.splice(width);
+      }
+    }
+    this._width = width;
+    if (height > this.height) {
+      for (let y = this.height; y < height; y++) {
+        const row = [];
+        for (let x = 0; x < width; x++) {
+          row[x] = initialValue;
+        }
+        this.data[y] = row;
+      }
+    } else if (height < this.height) {
+      this.data.splice(height);
+    }
+    this._height = height;
+  }
+
   getArea(rect: Rect): number[][] {
     const data: number[][] = [];
     for (let i = 0; i < rect.height; i++) {

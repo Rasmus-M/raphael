@@ -332,6 +332,25 @@ export class ExportService {
     return hexByte.toUpperCase();
   }
 
+  exportMonochromeLinearAssemblyFile(projectData: ProjectData): string {
+    const assemblyFile = new AssemblyFile();
+    const section = assemblyFile.createSection('');
+    for (let y = 0; y < projectData.height; y++) {
+      for (let x = 0; x < projectData.width; x += 8) {
+        let byte = 0;
+        let bit = 0x80;
+        for (let x1 = x; x1 < x + 8; x1++) {
+            if (projectData.data[y][x1] !== projectData.backColorIndex) {
+              byte |= bit;
+            }
+            bit >>>= 1;
+        }
+        section.write(byte);
+      }
+    }
+    return assemblyFile.toString();
+  }
+
   private getBaseFilename(projectData: ProjectData): string {
     return projectData.filename ? projectData.filename.split('.')[0].replace(/[ -]/, '_') : '';
   }

@@ -17,6 +17,7 @@ import {Rect} from './classes/rect';
 import {StorageService} from './services/storage.service';
 import {Point} from './classes/point';
 import {TITLE} from './app.config';
+import {PropertiesDialogComponent} from './dialogs/properties-dialog/properties-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -244,6 +245,21 @@ export class AppComponent {
     }
   }
 
+  properties(): void {
+    const dialogRef = this.dialog.open(PropertiesDialogComponent, {
+      width: '600px',
+      data: this.getProjectData()
+    });
+    dialogRef.afterClosed().subscribe((projectData: ProjectData) => {
+      if (projectData) {
+        this.filename = projectData.filename;
+        this.grid.changeSize(projectData.width, projectData.height, projectData.backColorIndex);
+        this.updateTitle();
+        this.imageNumber++;
+      }
+    });
+  }
+
   importPNG(): void {
     const dialogRef = this.dialog.open(OpenDialogComponent, {
       width: '600px',
@@ -291,6 +307,13 @@ export class AppComponent {
   exportAssembly(options: ExportOptions): void {
     this.fileService.saveTextFile(
       this.exportService.exportAssemblyFile(this.getProjectData(), options),
+      (this.getBaseFilename() || 'export') + '.a99',
+    );
+  }
+
+  exportMonochromeLinearAssembly(): void {
+    this.fileService.saveTextFile(
+      this.exportService.exportMonochromeLinearAssemblyFile(this.getProjectData()),
       (this.getBaseFilename() || 'export') + '.a99',
     );
   }

@@ -13,10 +13,12 @@ export class MenuComponent implements OnInit {
   @Output() newClicked = new EventEmitter();
   @Output() openClicked = new EventEmitter();
   @Output() saveClicked = new EventEmitter();
+  @Output() propertiesClicked = new EventEmitter();
   @Output() importPNGClicked = new EventEmitter();
   @Output() exportPNGClicked = new EventEmitter();
   @Output() exportBinaryClicked = new EventEmitter();
   @Output() exportAssemblyClicked = new EventEmitter<ExportOptions>();
+  @Output() exportMonochromeLinearAssemblyClicked = new EventEmitter();
   @Output() exportHexClicked = new EventEmitter();
   @Output() showGridLinesChange = new EventEmitter<boolean>();
   @Output() aboutClicked = new EventEmitter();
@@ -39,6 +41,10 @@ export class MenuComponent implements OnInit {
     this.saveClicked.emit();
   }
 
+  properties(): void {
+    this.propertiesClicked.emit();
+  }
+
   importPNG(): void {
     this.importPNGClicked.emit();
   }
@@ -53,6 +59,10 @@ export class MenuComponent implements OnInit {
 
   exportAssembly(columns: boolean, unpack): void {
     this.exportAssemblyClicked.emit({columns, unpack});
+  }
+
+  exportMonochromeLinearAssembly(): void {
+    this.exportMonochromeLinearAssemblyClicked.emit();
   }
 
   exportHex(): void {

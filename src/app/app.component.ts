@@ -254,6 +254,9 @@ export class AppComponent {
       if (projectData) {
         this.filename = projectData.filename;
         this.grid.changeSize(projectData.width, projectData.height, projectData.backColorIndex);
+        this.pixelScaleX = projectData.pixelScaleX;
+        this.pixelScaleY = projectData.pixelScaleY;
+        this.grid.attributeMode = projectData.attributeMode;
         this.updateTitle();
         this.imageNumber++;
       }

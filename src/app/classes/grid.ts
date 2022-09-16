@@ -34,7 +34,11 @@ export class Grid {
   }
 
   set attributeMode(attributeMode: AttributeMode) {
+    const apply = attributeMode > this._attributeMode;
     this._attributeMode = attributeMode;
+    if (apply) {
+      this.applyAttributeMode();
+    }
   }
 
   getData(): number[][] {
@@ -351,14 +355,14 @@ export class Grid {
         break;
       case AttributeMode.EIGHT_X_ONE:
         for (let y = 0; y < this.height; y++) {
-          for (let x = 0; x < this.width; x += 8) {
+          for (let x = 0; x <= this.width - 8; x += 8) {
             this.applyAttributeModeTo(new Rect(x, y, 8, 1));
           }
         }
         break;
       case AttributeMode.EIGHT_X_EIGHT:
-        for (let y = 0; y < this.height; y += 8) {
-          for (let x = 0; x < this.width; x += 8) {
+        for (let y = 0; y <= this.height - 8; y += 8) {
+          for (let x = 0; x <= this.width - 8; x += 8) {
             this.applyAttributeModeTo(new Rect(x, y, 8, 8));
           }
         }

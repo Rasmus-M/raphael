@@ -27,8 +27,9 @@
 </mat-menu>
 
 <mat-menu #exportAssemblyMenu="matMenu">
-  <button mat-menu-item (click)="exportAssembly(false, false)">Characters by row</button>
-  <button mat-menu-item (click)="exportAssembly(true, false)">Characters by column</button>
-  <button mat-menu-item (click)="exportAssembly(true, true)">Characters by column (unpacked)</button>
+  <button mat-menu-item (click)="exportAssembly(false)">By row</button>
+  <button mat-menu-item (click)="exportAssembly(true)">By column</button>
+  <button mat-menu-item [disabled]="!isAttributeMode1x1()" (click)="exportAssembly(true, '8_BBP')">By column 8 bbp</button>
+  <button mat-menu-item [disabled]="!isAttributeMode1x1()" (click)="exportAssembly(true, '16_BBP')">By column 16 bbp</button>
   <button mat-menu-item (click)="exportMonochromeLinearAssembly()">Monochrome linear</button>
 </mat-menu>

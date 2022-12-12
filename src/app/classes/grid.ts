@@ -10,7 +10,7 @@ export class Grid {
 
   private _width: number;
   private _height: number;
-  private _attributeMode = AttributeMode.NONE;
+  private _attributeMode = AttributeMode.ONE_X_ONE;
 
   private data: number[][];
 
@@ -127,7 +127,7 @@ export class Grid {
     const oldValue = this.getValue(point);
     const pixelRect = new Rect(point.x, point.y, 1, 1);
     switch (this.attributeMode) {
-      case AttributeMode.NONE: {
+      case AttributeMode.ONE_X_ONE: {
         const oldData = this.getArea(pixelRect);
         this.set(point, value);
         this.notifyChanges(new Rect(point.x, point.y, 1, 1));
@@ -267,7 +267,7 @@ export class Grid {
       const firstCell = row.shift();
       row.push(firstCell);
     }
-    if (this.attributeMode !== AttributeMode.NONE) {
+    if (this.attributeMode !== AttributeMode.ONE_X_ONE) {
       this.applyAttributeMode();
     }
     this.notifyChanges(this.getSize());
@@ -281,7 +281,7 @@ export class Grid {
       const lastCell = row.pop();
       row.unshift(lastCell);
     }
-    if (this.attributeMode !== AttributeMode.NONE) {
+    if (this.attributeMode !== AttributeMode.ONE_X_ONE) {
       this.applyAttributeMode();
     }
     this.notifyChanges(this.getSize());
@@ -351,7 +351,7 @@ export class Grid {
 
   private applyAttributeMode(): void {
     switch (this.attributeMode) {
-      case AttributeMode.NONE:
+      case AttributeMode.ONE_X_ONE:
         break;
       case AttributeMode.EIGHT_X_ONE:
         for (let y = 0; y < this.height; y++) {

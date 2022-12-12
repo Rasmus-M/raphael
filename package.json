@@ -1,6 +1,6 @@
 {
   "name": "raphael",
-  "version": "1.5.1",
+  "version": "1.8.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

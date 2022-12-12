@@ -57,7 +57,7 @@ export class AppComponent {
         height: 64,
         pixelScaleX: this.pixelScaleX,
         pixelScaleY: this.pixelScaleY,
-        attributeMode: AttributeMode.NONE,
+        attributeMode: AttributeMode.ONE_X_ONE,
         data: null,
         backColorIndex: 0,
         foreColorIndex: 15,
@@ -182,7 +182,7 @@ export class AppComponent {
         height: 64,
         pixelScaleX: 1,
         pixelScaleY: 1,
-        attributeMode: AttributeMode.NONE
+        attributeMode: AttributeMode.ONE_X_ONE
       };
     }
     const dialogRef = this.dialog.open(NewDialogComponent, {

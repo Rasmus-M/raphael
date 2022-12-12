@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ExportOptions} from '../../services/export.service';
+import {ExportOptions, PixelPacking} from '../../services/export.service';
+import {AttributeMode} from '../../enums/attribute-mode';
 
 @Component({
   selector: 'app-menu',
@@ -9,6 +10,7 @@ import {ExportOptions} from '../../services/export.service';
 export class MenuComponent implements OnInit {
 
   @Input() showGridLines: boolean;
+  @Input() attributeMode: AttributeMode;
 
   @Output() newClicked = new EventEmitter();
   @Output() openClicked = new EventEmitter();
@@ -57,8 +59,11 @@ export class MenuComponent implements OnInit {
     this.exportBinaryClicked.emit();
   }
 
-  exportAssembly(columns: boolean, unpack): void {
-    this.exportAssemblyClicked.emit({columns, unpack});
+  exportAssembly(columns: boolean, packing?: PixelPacking): void {
+    if (!packing) {
+      packing = this.isAttributeMode1x1() ? '4_BPP' : '1_BBP';
+    }
+    this.exportAssemblyClicked.emit({columns, packing});
   }
 
   exportMonochromeLinearAssembly(): void {
@@ -75,5 +80,17 @@ export class MenuComponent implements OnInit {
 
   about(): void {
     this.aboutClicked.emit();
+  }
+
+  isAttributeMode1x1(): boolean {
+    return this.attributeMode === AttributeMode.ONE_X_ONE;
+  }
+
+  isAttributeMode8x1(): boolean {
+    return this.attributeMode === AttributeMode.EIGHT_X_ONE;
+  }
+
+  isAttributeMode8x8(): boolean {
+    return this.attributeMode === AttributeMode.EIGHT_X_EIGHT;
   }
 }

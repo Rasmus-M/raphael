@@ -6,9 +6,11 @@ import {PNG} from 'pngjs/browser';
 import {Palette} from '../classes/palette';
 import {AssemblyFileSection} from '../classes/assemblyFileSection';
 
+export type PixelPacking = '1_BBP' | '4_BPP' | '8_BBP' | '16_BBP';
+
 export interface ExportOptions {
   columns: boolean;
-  unpack: boolean;
+  packing: PixelPacking;
 }
 
 @Injectable({
@@ -40,16 +42,16 @@ export class ExportService {
 
   exportBinaryFile(projectData: ProjectData, palette: Palette): ArrayBuffer {
     switch (projectData.attributeMode) {
-      case AttributeMode.NONE:
-        return this.createLinearBinaryFile(projectData);
+      case AttributeMode.ONE_X_ONE:
+        return this.create1x1BinaryFile(projectData);
       case AttributeMode.EIGHT_X_ONE:
-        return this.createBitmapColorBinaryFile(projectData);
+        return this.create8x1BinaryFile(projectData);
       case AttributeMode.EIGHT_X_EIGHT:
-        return this.createCharacterBasedBinaryFile(projectData);
+        return this.create8x8BinaryFile(projectData);
     }
   }
 
-  private createLinearBinaryFile(projectData: ProjectData): ArrayBuffer {
+  private create1x1BinaryFile(projectData: ProjectData): ArrayBuffer {
     const arrayBuffer = new Uint8Array(projectData.width * projectData.height / 2);
     let i = 0;
     for (let y = 0; y < projectData.height; y++) {
@@ -60,7 +62,7 @@ export class ExportService {
     return arrayBuffer;
   }
 
-  private createBitmapColorBinaryFile(projectData: ProjectData): ArrayBuffer {
+  private create8x1BinaryFile(projectData: ProjectData): ArrayBuffer {
     const data = projectData.data;
     const cols = Math.floor(projectData.width / 8);
     const rows = Math.floor(projectData.height / 8);
@@ -70,7 +72,7 @@ export class ExportService {
       const y0 = row * 8;
       for (let col = 0; col < cols; col++) {
         const x0 = col * 8;
-        this.writeBinaryBitmapCharacter(
+        this.writeBinary8x1Character(
           x0, y0, data, projectData.foreColorIndex, projectData.backColorIndex, patternBuffer, colorBuffer
         );
       }
@@ -78,7 +80,7 @@ export class ExportService {
     return new Uint8Array(patternBuffer.concat(colorBuffer));
   }
 
-  private writeBinaryBitmapCharacter(
+  private writeBinary8x1Character(
     x0: number,
     y0: number,
     data: number[][],
@@ -96,7 +98,7 @@ export class ExportService {
     }
   }
 
-  private createCharacterBasedBinaryFile(projectData: ProjectData): ArrayBuffer {
+  private create8x8BinaryFile(projectData: ProjectData): ArrayBuffer {
     const data = projectData.data;
     const cols = Math.floor(projectData.width / 8);
     const rows = Math.floor(projectData.height / 8);
@@ -126,64 +128,75 @@ export class ExportService {
   exportAssemblyFile(projectData: ProjectData, options: ExportOptions): string {
     const assemblyFile = new AssemblyFile();
     switch (projectData.attributeMode) {
-      case AttributeMode.NONE:
-        this.createLinearAssemblyFile(projectData, options, assemblyFile);
+      case AttributeMode.ONE_X_ONE:
+        if (options.packing === '1_BBP') {
+          return;
+        }
+        this.create1x1AssemblyFile(projectData, options, assemblyFile);
         break;
       case AttributeMode.EIGHT_X_ONE:
-        if (options.unpack) {
+        if (options.packing !== '1_BBP') {
           return;
         }
-        this.createBitmapColorAssemblyFile(projectData, options, assemblyFile);
+        this.create8x1AssemblyFile(projectData, options, assemblyFile);
         break;
       case AttributeMode.EIGHT_X_EIGHT:
-        if (options.unpack) {
+        if (options.packing !== '1_BBP') {
           return;
         }
-        this.createCharacterBasedAssemblyFile(projectData, options, assemblyFile);
+        this.create8x8AssemblyFile(projectData, options, assemblyFile);
         break;
     }
     return assemblyFile.toString();
   }
 
-  private createLinearAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
+  private create1x1AssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
     const section = assemblyFile.createSection('');
-    if (options.unpack) {
-      const section2 = assemblyFile.createSection('');
-      if (options.columns) {
-        for (let x = 0; x < projectData.width; x++) {
-          for (let y = 0; y < projectData.height; y++) {
-            const byte = projectData.data[y][x];
-            section.write(byte << 4);
-            section2.write(byte);
-          }
-        }
-      } else {
+    const section2 = options.packing === '16_BBP' ? assemblyFile.createSection('') : undefined;
+    if (options.columns) {
+      for (let x = 0; x < projectData.width; x++) {
         for (let y = 0; y < projectData.height; y++) {
-          for (let x = 0; x < projectData.width; x++) {
-            const byte = projectData.data[y][x];
-            section.write(byte << 4);
-            section2.write(byte);
+          const byte = projectData.data[y][x];
+          switch (options.packing) {
+            case '4_BPP':
+              if (x % 2 === 0) {
+                section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
+              }
+              break;
+            case '8_BBP':
+              section.write(byte);
+              break;
+            case '16_BBP':
+              section.write(byte << 4);
+              section2.write(byte);
+              break;
           }
         }
       }
     } else {
-      if (options.columns) {
-        for (let x = 0; x < projectData.width; x += 2) {
-          for (let y = 0; y < projectData.height; y++) {
-            section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
-          }
-        }
-      } else {
-        for (let y = 0; y < projectData.height; y++) {
-          for (let x = 0; x < projectData.width; x += 2) {
-            section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
+      for (let y = 0; y < projectData.height; y++) {
+        for (let x = 0; x < projectData.width; x++) {
+          const byte = projectData.data[y][x];
+          switch (options.packing) {
+            case '4_BPP':
+              if (x % 2 === 0) {
+                section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
+              }
+              break;
+            case '8_BBP':
+              section.write(byte);
+              break;
+            case '16_BBP':
+              section.write(byte << 4);
+              section2.write(byte);
+              break;
           }
         }
       }
     }
   }
 
-  private createBitmapColorAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
+  private create8x1AssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
     const baseFilename = this.getBaseFilename(projectData);
     const patternSection = assemblyFile.createSection(baseFilename + '_patterns');
     const colorSection = assemblyFile.createSection(baseFilename + '_colors');
@@ -195,7 +208,7 @@ export class ExportService {
         const x0 = col * 8;
         for (let row = 0; row < rows; row++) {
           const y0 = row * 8;
-          this.writeAssemblyBitmapCharacter(
+          this.writeAssembly8x1Character(
             x0, y0, data, projectData.foreColorIndex, projectData.backColorIndex, patternSection, colorSection
           );
         }
@@ -205,7 +218,7 @@ export class ExportService {
         const y0 = row * 8;
         for (let col = 0; col < cols; col++) {
           const x0 = col * 8;
-          this.writeAssemblyBitmapCharacter(
+          this.writeAssembly8x1Character(
             x0, y0, data, projectData.foreColorIndex, projectData.backColorIndex, patternSection, colorSection
           );
         }
@@ -213,7 +226,7 @@ export class ExportService {
     }
   }
 
-  private writeAssemblyBitmapCharacter(
+  private writeAssembly8x1Character(
     x0: number,
     y0: number,
     data: number[][],
@@ -231,7 +244,7 @@ export class ExportService {
     }
   }
 
-  private createCharacterBasedAssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
+  private create8x8AssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
     const baseFilename = this.getBaseFilename(projectData);
     const patternSection = assemblyFile.createSection(baseFilename + '_patterns');
     const colorSection = assemblyFile.createSection(baseFilename + '_colors');

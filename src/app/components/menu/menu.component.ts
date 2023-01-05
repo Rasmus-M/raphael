@@ -18,7 +18,7 @@ export class MenuComponent implements OnInit {
   @Output() propertiesClicked = new EventEmitter();
   @Output() importPNGClicked = new EventEmitter();
   @Output() exportPNGClicked = new EventEmitter();
-  @Output() exportBinaryClicked = new EventEmitter();
+  @Output() exportBinaryClicked = new EventEmitter<ExportOptions>();
   @Output() exportAssemblyClicked = new EventEmitter<ExportOptions>();
   @Output() exportMonochromeLinearAssemblyClicked = new EventEmitter();
   @Output() exportHexClicked = new EventEmitter();
@@ -55,13 +55,16 @@ export class MenuComponent implements OnInit {
     this.exportPNGClicked.emit();
   }
 
-  exportBinary(): void {
-    this.exportBinaryClicked.emit();
+  exportBinary(columns: boolean, packing?: PixelPacking): void {
+    if (!packing) {
+      packing = this.isAttributeMode1x1() ? '4_BPP' : '1_BPP';
+    }
+    this.exportBinaryClicked.emit({columns, packing});
   }
 
   exportAssembly(columns: boolean, packing?: PixelPacking): void {
     if (!packing) {
-      packing = this.isAttributeMode1x1() ? '4_BPP' : '1_BBP';
+      packing = this.isAttributeMode1x1() ? '4_BPP' : '1_BPP';
     }
     this.exportAssemblyClicked.emit({columns, packing});
   }

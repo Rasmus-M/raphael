@@ -15,7 +15,7 @@
 </mat-menu>
 <mat-menu #exportMenu="matMenu">
   <button mat-menu-item (click)="exportPNG()">PNG file</button>
-  <button mat-menu-item (click)="exportBinary()">Binary file</button>
+  <button mat-menu-item [matMenuTriggerFor]="exportBinaryMenu">Binary file</button>
   <button mat-menu-item [matMenuTriggerFor]="exportAssemblyMenu">Assembly data</button>
   <button mat-menu-item (click)="exportHex()">Hex string (1 bpp)</button>
 </mat-menu>
@@ -26,10 +26,18 @@
   <button mat-menu-item (click)="about()">About</button>
 </mat-menu>
 
+<mat-menu #exportBinaryMenu="matMenu">
+  <button mat-menu-item [disabled]="isAttributeMode1x1()" (click)="exportBinary(false)">By character</button>
+  <button mat-menu-item [disabled]="!isAttributeMode1x1()" (click)="exportBinary(false)">By row</button>
+  <button mat-menu-item [disabled]="!isAttributeMode1x1()" (click)="exportBinary(true)">By column</button>
+  <button mat-menu-item [disabled]="!isAttributeMode1x1()" (click)="exportBinary(true, '8_BPP')">By column 8 bbp</button>
+  <button mat-menu-item [disabled]="!isAttributeMode1x1()" (click)="exportBinary(true, '16_BPP')">By column 16 bbp</button>
+</mat-menu>
+
 <mat-menu #exportAssemblyMenu="matMenu">
   <button mat-menu-item (click)="exportAssembly(false)">By row</button>
   <button mat-menu-item (click)="exportAssembly(true)">By column</button>
-  <button mat-menu-item [disabled]="!isAttributeMode1x1()" (click)="exportAssembly(true, '8_BBP')">By column 8 bbp</button>
-  <button mat-menu-item [disabled]="!isAttributeMode1x1()" (click)="exportAssembly(true, '16_BBP')">By column 16 bbp</button>
+  <button mat-menu-item [disabled]="!isAttributeMode1x1()" (click)="exportAssembly(true, '8_BPP')">By column 8 bbp</button>
+  <button mat-menu-item [disabled]="!isAttributeMode1x1()" (click)="exportAssembly(true, '16_BPP')">By column 16 bbp</button>
   <button mat-menu-item (click)="exportMonochromeLinearAssembly()">Monochrome linear</button>
 </mat-menu>

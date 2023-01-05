@@ -6,7 +6,7 @@ import {PNG} from 'pngjs/browser';
 import {Palette} from '../classes/palette';
 import {AssemblyFileSection} from '../classes/assemblyFileSection';
 
-export type PixelPacking = '1_BBP' | '4_BPP' | '8_BBP' | '16_BBP';
+export type PixelPacking = '1_BPP' | '4_BPP' | '8_BPP' | '16_BPP';
 
 export interface ExportOptions {
   columns: boolean;
@@ -40,10 +40,10 @@ export class ExportService {
     return PNG.sync.write(png);
   }
 
-  exportBinaryFile(projectData: ProjectData, palette: Palette): ArrayBuffer {
+  exportBinaryFile(projectData: ProjectData, options: ExportOptions): ArrayBuffer {
     switch (projectData.attributeMode) {
       case AttributeMode.ONE_X_ONE:
-        return this.create1x1BinaryFile(projectData);
+        return this.create1x1BinaryFile(projectData, options);
       case AttributeMode.EIGHT_X_ONE:
         return this.create8x1BinaryFile(projectData);
       case AttributeMode.EIGHT_X_EIGHT:
@@ -51,12 +51,50 @@ export class ExportService {
     }
   }
 
-  private create1x1BinaryFile(projectData: ProjectData): ArrayBuffer {
-    const arrayBuffer = new Uint8Array(projectData.width * projectData.height / 2);
+  private create1x1BinaryFile(projectData: ProjectData, options: ExportOptions): ArrayBuffer {
+    const arrayBuffer = new Uint8Array(projectData.width * projectData.height * (options.packing === '4_BPP' ? 0.5 : (options.packing === '8_BPP' ? 1 : 2)));
     let i = 0;
-    for (let y = 0; y < projectData.height; y++) {
-      for (let x = 0; x < projectData.width; x += 2) {
-        arrayBuffer[i++] = (projectData.data[y][x] << 4) | projectData.data[y][x + 1];
+    if (options.columns) {
+      for (let x = 0; x < projectData.width; x++) {
+        for (let y = 0; y < projectData.height; y++) {
+          const byte = projectData.data[y][x];
+          switch (options.packing) {
+            case '4_BPP':
+              if (x % 2 === 0) {
+                const nextByte = projectData.data[y][x + 1];
+                arrayBuffer[i++] = (byte << 4) | nextByte;
+              }
+              break;
+            case '8_BPP':
+              arrayBuffer[i++] = byte;
+              break;
+            case '16_BPP':
+              arrayBuffer[i++] = byte << 4;
+              arrayBuffer[i++] = byte;
+              break;
+          }
+        }
+      }
+    } else {
+      for (let y = 0; y < projectData.height; y++) {
+        for (let x = 0; x < projectData.width; x++) {
+          const byte = projectData.data[y][x];
+          switch (options.packing) {
+            case '4_BPP':
+              if (x % 2 === 0) {
+                const nextByte = projectData.data[y][x + 1];
+                arrayBuffer[i++] = (byte << 4) | nextByte;
+              }
+              break;
+            case '8_BPP':
+              arrayBuffer[i++] = byte;
+              break;
+            case '16_BPP':
+              arrayBuffer[i++] = byte << 4;
+              arrayBuffer[i++] = byte;
+              break;
+          }
+        }
       }
     }
     return arrayBuffer;
@@ -129,19 +167,19 @@ export class ExportService {
     const assemblyFile = new AssemblyFile();
     switch (projectData.attributeMode) {
       case AttributeMode.ONE_X_ONE:
-        if (options.packing === '1_BBP') {
+        if (options.packing === '1_BPP') {
           return;
         }
         this.create1x1AssemblyFile(projectData, options, assemblyFile);
         break;
       case AttributeMode.EIGHT_X_ONE:
-        if (options.packing !== '1_BBP') {
+        if (options.packing !== '1_BPP') {
           return;
         }
         this.create8x1AssemblyFile(projectData, options, assemblyFile);
         break;
       case AttributeMode.EIGHT_X_EIGHT:
-        if (options.packing !== '1_BBP') {
+        if (options.packing !== '1_BPP') {
           return;
         }
         this.create8x8AssemblyFile(projectData, options, assemblyFile);
@@ -152,7 +190,7 @@ export class ExportService {
 
   private create1x1AssemblyFile(projectData: ProjectData, options: ExportOptions, assemblyFile: AssemblyFile): void {
     const section = assemblyFile.createSection('');
-    const section2 = options.packing === '16_BBP' ? assemblyFile.createSection('') : undefined;
+    const section2 = options.packing === '16_BPP' ? assemblyFile.createSection('') : undefined;
     if (options.columns) {
       for (let x = 0; x < projectData.width; x++) {
         for (let y = 0; y < projectData.height; y++) {
@@ -160,13 +198,14 @@ export class ExportService {
           switch (options.packing) {
             case '4_BPP':
               if (x % 2 === 0) {
-                section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
+                const nextByte = projectData.data[y][x + 1];
+                section.write((byte << 4) | nextByte);
               }
               break;
-            case '8_BBP':
+            case '8_BPP':
               section.write(byte);
               break;
-            case '16_BBP':
+            case '16_BPP':
               section.write(byte << 4);
               section2.write(byte);
               break;
@@ -180,13 +219,14 @@ export class ExportService {
           switch (options.packing) {
             case '4_BPP':
               if (x % 2 === 0) {
-                section.write((projectData.data[y][x] << 4) | projectData.data[y][x + 1]);
+                const nextByte = projectData.data[y][x + 1];
+                section.write((byte << 4) | nextByte);
               }
               break;
-            case '8_BBP':
+            case '8_BPP':
               section.write(byte);
               break;
-            case '16_BBP':
+            case '16_BPP':
               section.write(byte << 4);
               section2.write(byte);
               break;

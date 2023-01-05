@@ -299,9 +299,9 @@ export class AppComponent {
     );
   }
 
-  exportBinary(): void {
+  exportBinary(options: ExportOptions): void {
     this.fileService.saveBinaryFile(
-      this.exportService.exportBinaryFile(this.getProjectData(), this.palette),
+      this.exportService.exportBinaryFile(this.getProjectData(), options),
       (this.getBaseFilename() || 'export') + '.bin',
       'application/octet-stream'
     );

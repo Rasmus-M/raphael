@@ -1,10 +1,18 @@
 export class Util {
 
-  static hexByte(n: number): string {
-    let s = n.toString(16);
-    if (s.length === 1) {
-      s = '0' + s;
+  public static hexByte(n: number): string {
+    return Util.hexString(n , 2, true);
+  }
+
+  public static hexWord(n: number): string {
+    return Util.hexString(n , 2, true);
+  }
+
+  static hexString(n: number, length: number, prefix: boolean): string {
+    let hex = n.toString(16);
+    while (hex.length < length) {
+      hex = '0' + hex;
     }
-    return s;
+    return (prefix ? '>' : '') + hex;
   }
 }

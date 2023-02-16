@@ -26,7 +26,7 @@ export class Color {
   }
 
   getHexString(): string {
-    return '#' + Util.hexByte(this._red) + Util.hexByte(this._green) + Util.hexByte(this._blue);
+    return '#' + Util.hexString(this._red, 2, false) + Util.hexString(this._green, 2, false) + Util.hexString(this._blue, 2, false);
   }
 
   colorDistance(color: Color): number {

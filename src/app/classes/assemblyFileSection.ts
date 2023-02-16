@@ -1,3 +1,5 @@
+import {Util} from './util';
+
 export class AssemblyFileSection {
 
   private label: string;
@@ -5,22 +7,6 @@ export class AssemblyFileSection {
   private itemsPerLine: number;
   private buffer: number[];
   private indent = '       ';
-
-  private static hexString(n: number, length: number): string {
-    let hex = n.toString(16);
-    while (hex.length < length) {
-      hex = '0' + hex;
-    }
-    return '>' + hex;
-  }
-
-  private static spaces(n: number): string {
-    let s = '';
-    for (let i = n; i > 0; i--) {
-      s += ' ';
-    }
-    return s;
-  }
 
   constructor(label: string, useBytes?: boolean, itemsPerLine?: number) {
     this.label = label;
@@ -44,8 +30,8 @@ export class AssemblyFileSection {
       if (i % items === 0) {
         result += this.indent + (this.useBytes ? 'byte ' : 'data ');
       }
-      result += AssemblyFileSection.hexString(this.buffer[i], this.useBytes ? 2 : 4);
-      result += (i % items === items - 1) ? '\n' : ',';
+      result += this.useBytes ? Util.hexByte(this.buffer[i]) : Util.hexWord(this.buffer[i]);
+      result += (i % items === items - 1 || i === this.buffer.length - 1) ? '\n' : ',';
     }
     return result;
   }

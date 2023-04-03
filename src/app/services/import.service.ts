@@ -20,10 +20,9 @@ export class ImportService {
     for (let y = 0; y < png.height; y++) {
       const row = [];
       for (let x = 0; x < png.width; x++) {
-        row.push(palette.getClosestColorIndex(
-          new Color(data.readUInt8(n++), data.readUInt8(n++), data.readUInt8(n++))
-        ));
-        n++;
+        const color = new Color(data.readUInt8(n++), data.readUInt8(n++), data.readUInt8(n++));
+        const alpha = data.readUInt8(n++);
+        row.push(alpha === 0 ? 0 : palette.getClosestColorIndex(color));
       }
       grid.push(row);
     }

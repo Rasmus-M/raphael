@@ -1,54 +1,39 @@
 <div class="app">
-  <div id="top-corner"></div>
-  <div id="menu">
-    <app-menu
-      [attributeMode]="grid.attributeMode"
-      (newClicked)="new()"
-      (openClicked)="open()"
-      (saveClicked)="save()"
-      (propertiesClicked)="properties()"
-      (importPNGClicked)="importPNG()"
-      (exportPNGClicked)="exportPNG()"
-      (exportBinaryClicked)="exportBinary($event)"
-      (exportAssemblyClicked)="exportAssembly($event)"
-      (exportMonochromeLinearAssemblyClicked)="exportMonochromeLinearAssembly()"
-      (exportHexClicked)="exportHex()"
-      [(showGridLines)]="showGridLines"
-      (aboutClicked)="about()"
-    ></app-menu>
-  </div>
-  <div id="pixel-grid">
-      <app-pixel-grid
-        [imageNumber]="imageNumber"
-        [grid]="grid"
-        [pixelScaleX]="pixelScaleX"
-        [pixelScaleY]="pixelScaleY"
-        [zoom]="zoom"
-        [palette]="palette"
+  <div id="toolbar">
+    <mat-toolbar>
+      <app-menu
+        [attributeMode]="grid.attributeMode"
+        (newClicked)="new()"
+        (openClicked)="open()"
+        (saveClicked)="save()"
+        (propertiesClicked)="properties()"
+        (importPNGClicked)="importPNG()"
+        (exportPNGClicked)="exportPNG()"
+        (exportBinaryClicked)="exportBinary($event)"
+        (exportAssemblyClicked)="exportAssembly($event)"
+        (exportMonochromeLinearAssemblyClicked)="exportMonochromeLinearAssembly()"
+        (exportHexClicked)="exportHex()"
+        [(showGridLines)]="showGridLines"
+        (aboutClicked)="about()"
+      ></app-menu>
+      <span id="toolbar-spacer"></span>
+      <app-toolbox
         [tool]="tool"
-        [backColorIndex]="backColorIndex"
-        [foreColorIndex]="foreColorIndex"
-        [showGridLines]="showGridLines"
-        (cursorPositionChanged)="cursorPositionChanged($event)"
-      ></app-pixel-grid>
-      <div id="bottom-corner"></div>
-      <app-status-bar id="status-bar" [cursorPosition]="cursorPosition"></app-status-bar>
+        (zoomInClicked)="zoomIn()"
+        (zoomOutClicked)="zoomOut()"
+        (shiftLeftClicked)="shiftLeft()"
+        (shiftRightClicked)="shiftRight()"
+        (shiftUpClicked)="shiftUp()"
+        (shiftDownClicked)="shiftDown()"
+        (fillClicked)="fill()"
+        (clearClicked)="clear()"
+        (flipHorizontalClicked)="flipHorizontal()"
+        (flipVerticalClicked)="flipVertical()"
+        (toolChanged)="toolChanged($event)"
+      ></app-toolbox>
+    </mat-toolbar>
   </div>
   <div id="side-panel">
-    <app-toolbox
-      [tool]="tool"
-      (zoomInClicked)="zoomIn()"
-      (zoomOutClicked)="zoomOut()"
-      (shiftLeftClicked)="shiftLeft()"
-      (shiftRightClicked)="shiftRight()"
-      (shiftUpClicked)="shiftUp()"
-      (shiftDownClicked)="shiftDown()"
-      (fillClicked)="fill()"
-      (clearClicked)="clear()"
-      (flipHorizontalClicked)="flipHorizontal()"
-      (flipVerticalClicked)="flipVertical()"
-      (toolChanged)="toolChanged($event)"
-    ></app-toolbox>
     <div id="palette">
       <app-palette
         [palette]="palette"
@@ -67,5 +52,22 @@
         [palette]="palette"
       ></app-mini-view>
     </div>
+  </div>
+  <div id="pixel-grid">
+    <app-pixel-grid
+      [imageNumber]="imageNumber"
+      [grid]="grid"
+      [pixelScaleX]="pixelScaleX"
+      [pixelScaleY]="pixelScaleY"
+      [zoom]="zoom"
+      [palette]="palette"
+      [tool]="tool"
+      [backColorIndex]="backColorIndex"
+      [foreColorIndex]="foreColorIndex"
+      [showGridLines]="showGridLines"
+      (cursorPositionChanged)="cursorPositionChanged($event)"
+    ></app-pixel-grid>
+    <div id="bottom-corner"></div>
+    <app-status-bar id="status-bar" [cursorPosition]="cursorPosition"></app-status-bar>
   </div>
 </div>

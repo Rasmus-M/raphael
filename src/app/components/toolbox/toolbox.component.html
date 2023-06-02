@@ -1,74 +1,46 @@
-<mat-grid-list class="toolbox" cols="4" rowHeight="48">
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Undo" matTooltipShowDelay="1000" (click)="undo()" [disabled]="!canUndo">
-      <fa-icon [icon]="undoIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Redo" matTooltipShowDelay="1000" (click)="redo()" [disabled]="!canRedo">
-      <fa-icon [icon]="redoIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Zoom in" matTooltipShowDelay="1000" (click)="zoomIn()">
-      <fa-icon [icon]="zoomInIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Zoom out" matTooltipShowDelay="1000" (click)="zoomOut()">
-      <fa-icon [icon]="zoomOutIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Shift left" matTooltipShowDelay="1000" (click)="shiftLeft()">
-      <fa-icon [icon]="shiftLeftIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Shift right" matTooltipShowDelay="1000" (click)="shiftRight()">
-      <fa-icon [icon]="shiftRightIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Shift up" matTooltipShowDelay="1000" (click)="shiftUp()">
-      <fa-icon [icon]="shiftUpIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Shift down" matTooltipShowDelay="1000" (click)="shiftDown()">
-      <fa-icon [icon]="shiftDownIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Fill all" matTooltipShowDelay="1000" (click)="fill()">
-      <fa-icon [icon]="fillIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Clear all" matTooltipShowDelay="1000" (click)="clear()">
-      <fa-icon [icon]="clearIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Flip horizontally" matTooltipShowDelay="1000" (click)="flipHorizontal()">
-      <fa-icon [icon]="flipHorizontalIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <button mat-icon-button matTooltip="Flip vertically" matTooltipShowDelay="1000" (click)="flipVertical()">
-      <fa-icon [icon]="flipVerticalIcon" size="lg"></fa-icon>
-    </button>
-  </mat-grid-tile>
-  <mat-grid-tile [colspan]="4" [rowspan]="3">
-    <mat-button-toggle-group name="tool" aria-label="Tool" [value]="tool" (change)="changeTool($event)">
-      <mat-button-toggle [value]="toolEnum.DRAW" matTooltip="Draw" matTooltipShowDelay="1000" class="right-border bottom-border"><fa-icon [icon]="drawIcon"></fa-icon></mat-button-toggle>
-      <mat-button-toggle [value]="toolEnum.LINE" matTooltip="Line" matTooltipShowDelay="1000" class="right-border bottom-border"><fa-icon [icon]="lineIcon"></fa-icon></mat-button-toggle>
-      <mat-button-toggle [value]="toolEnum.RECTANGLE" matTooltip="Rectangle" matTooltipShowDelay="1000" class="right-border bottom-border"><fa-icon [icon]="rectangleIcon"></fa-icon></mat-button-toggle>
-      <mat-button-toggle [value]="toolEnum.CIRCLE" matTooltip="Ellipse" matTooltipShowDelay="1000" class="bottom-border"><fa-icon [icon]="circleIcon"></fa-icon></mat-button-toggle>
-      <mat-button-toggle [value]="toolEnum.FLOOD_FILL" matTooltip="Flood fill" matTooltipShowDelay="1000" class="right-border"><fa-icon [icon]="floodFillIcon"></fa-icon></mat-button-toggle>
-      <mat-button-toggle [value]="toolEnum.CLONE" matTooltip="Clone area" matTooltipShowDelay="1000" class="right-border"><fa-icon [icon]="cloneIcon"></fa-icon></mat-button-toggle>
-      <mat-button-toggle [value]="toolEnum.UNUSED_1" matTooltip="Unused 1" matTooltipShowDelay="1000"></mat-button-toggle>
-      <mat-button-toggle [value]="toolEnum.UNUSED_2" matTooltip="Unused 2" matTooltipShowDelay="1000"></mat-button-toggle>
-    </mat-button-toggle-group>
-  </mat-grid-tile>
-</mat-grid-list>
+<mat-button-toggle-group name="tool" aria-label="Tool" [value]="tool" (change)="changeTool($event)">
+  <mat-button-toggle [value]="toolEnum.DRAW" matTooltip="Draw" matTooltipShowDelay="1000" class="right-border bottom-border"><fa-icon [icon]="drawIcon"></fa-icon></mat-button-toggle>
+  <mat-button-toggle [value]="toolEnum.LINE" matTooltip="Line" matTooltipShowDelay="1000" class="right-border bottom-border"><fa-icon [icon]="lineIcon"></fa-icon></mat-button-toggle>
+  <mat-button-toggle [value]="toolEnum.RECTANGLE" matTooltip="Rectangle" matTooltipShowDelay="1000" class="right-border bottom-border"><fa-icon [icon]="rectangleIcon"></fa-icon></mat-button-toggle>
+  <mat-button-toggle [value]="toolEnum.CIRCLE" matTooltip="Ellipse" matTooltipShowDelay="1000" class="bottom-border"><fa-icon [icon]="circleIcon"></fa-icon></mat-button-toggle>
+  <mat-button-toggle [value]="toolEnum.FLOOD_FILL" matTooltip="Flood fill" matTooltipShowDelay="1000" class="right-border"><fa-icon [icon]="floodFillIcon"></fa-icon></mat-button-toggle>
+  <mat-button-toggle [value]="toolEnum.CLONE" matTooltip="Clone area" matTooltipShowDelay="1000" class="right-border"><fa-icon [icon]="cloneIcon"></fa-icon></mat-button-toggle>
+</mat-button-toggle-group>
+<span class="spacer"></span>
+<button mat-icon-button matTooltip="Undo" matTooltipShowDelay="1000" (click)="undo()" [disabled]="!canUndo">
+  <fa-icon [icon]="undoIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Redo" matTooltipShowDelay="1000" (click)="redo()" [disabled]="!canRedo">
+  <fa-icon [icon]="redoIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Zoom in" matTooltipShowDelay="1000" (click)="zoomIn()">
+  <fa-icon [icon]="zoomInIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Zoom out" matTooltipShowDelay="1000" (click)="zoomOut()">
+  <fa-icon [icon]="zoomOutIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Shift left" matTooltipShowDelay="1000" (click)="shiftLeft()">
+  <fa-icon [icon]="shiftLeftIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Shift right" matTooltipShowDelay="1000" (click)="shiftRight()">
+  <fa-icon [icon]="shiftRightIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Shift up" matTooltipShowDelay="1000" (click)="shiftUp()">
+  <fa-icon [icon]="shiftUpIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Shift down" matTooltipShowDelay="1000" (click)="shiftDown()">
+  <fa-icon [icon]="shiftDownIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Fill all" matTooltipShowDelay="1000" (click)="fill()">
+  <fa-icon [icon]="fillIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Clear all" matTooltipShowDelay="1000" (click)="clear()">
+  <fa-icon [icon]="clearIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Flip horizontally" matTooltipShowDelay="1000" (click)="flipHorizontal()">
+  <fa-icon [icon]="flipHorizontalIcon" size="lg"></fa-icon>
+</button>
+<button mat-icon-button matTooltip="Flip vertically" matTooltipShowDelay="1000" (click)="flipVertical()">
+  <fa-icon [icon]="flipVerticalIcon" size="lg"></fa-icon>
+</button>
+

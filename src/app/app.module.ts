@@ -29,6 +29,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {StatusBarComponent} from './components/status-bar/status-bar.component';
 import {PropertiesDialogComponent} from './dialogs/properties-dialog/properties-dialog.component';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
@@ -45,25 +46,26 @@ import {MatDividerModule} from '@angular/material/divider';
     StatusBarComponent,
     PropertiesDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatGridListModule,
-    MatIconModule,
-    MatButtonModule,
-    FontAwesomeModule,
-    MatTooltipModule,
-    MatMenuModule,
-    MatButtonToggleModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    FormsModule,
-    MatInputModule,
-    MatOptionModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatDividerModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatGridListModule,
+        MatIconModule,
+        MatButtonModule,
+        FontAwesomeModule,
+        MatTooltipModule,
+        MatMenuModule,
+        MatButtonToggleModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        FormsModule,
+        MatInputModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatDividerModule,
+        MatToolbarModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -1,2 +1,2 @@
 export const TITLE = 'Raphael';
-export const VERSION_NO = '1.8.3';
+export const VERSION_NO = '2.0.0';

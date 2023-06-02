@@ -1,13 +1,13 @@
 .app {
   display: grid;
-  --menuHeight: 36px;
+  --toolbarHeight: 72px;
   --statusBarHeight: 18px;
-  --pixelGridHeight: calc(100vh - var(--menuHeight) - var(--statusBarHeight) - 8px);
-  grid-template-columns: 164px 1fr;
-  grid-template-rows: var(--menuHeight) calc(var(--pixelGridHeight)) var(--statusBarHeight) 1fr;
+  --pixelGridHeight: calc(100vh - var(--toolbarHeight) - var(--statusBarHeight) - 8px);
+  grid-template-columns: 1fr 164px;
+  grid-template-rows: var(--toolbarHeight) calc(var(--pixelGridHeight)) var(--statusBarHeight) 1fr;
   grid-template-areas:
-    "top-corner menu"
-    "side-panel pixel-grid"
+    "toolbar toolbar"
+    "pixel-grid side-panel"
     "bottom-corner status-bar";
   grid-row-gap: 0px;
   grid-column-gap: 8px;
@@ -15,12 +15,16 @@
   margin-right: 8px;
 }
 
-#top-corner {
-  grid-area: top-corner;
-}
-
 #menu {
   grid-area: menu;
+}
+
+#toolbar {
+  grid-area: toolbar;
+}
+
+#toolbar-spacer {
+  margin-left: 32px;
 }
 
 #pixel-grid {

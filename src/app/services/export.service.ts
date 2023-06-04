@@ -344,6 +344,9 @@ export class ExportService {
       }
       bit >>>= 1;
     }
+    if (patternByte === 0) {
+      foreColorIndex = backColorIndex;
+    }
     return {foreColorIndex, backColorIndex, patternByte};
   }
 

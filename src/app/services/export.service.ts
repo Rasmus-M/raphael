@@ -408,6 +408,6 @@ export class ExportService {
   }
 
   private getBaseFilename(projectData: ProjectData): string {
-    return projectData.filename ? projectData.filename.split('.')[0].replace(/[ -]/, '_') : '';
+    return projectData.filename ? projectData.filename.split('.')[0].replace(/[ -]/g, '_') : '';
   }
 }

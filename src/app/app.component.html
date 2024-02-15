@@ -41,6 +41,7 @@
         [foreColorIndex]="foreColorIndex"
         (backColorChanged)="setBackColorIndex($event)"
         (foreColorChanged)="setForeColorIndex($event)"
+        (paletteChanged)="redrawGrid()"
       ></app-palette>
     </div>
     <div id="mini-view">

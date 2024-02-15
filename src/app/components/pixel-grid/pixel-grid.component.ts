@@ -219,7 +219,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
 
   drawSelectionRectangle(point1: Point, point2: Point): void {
     const context = this.selectionCanvasContext;
-    PixelRenderer.drawRectangle(point1, point2, (point: Point) => {
+    PixelRenderer.drawRectangle(point1, point2, false, (point: Point) => {
       this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
     });
   }
@@ -231,9 +231,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  drawSelectionCircle(point1: Point, point2: Point): void {
+  drawSelectionEllipse(point1: Point, point2: Point): void {
     const context = this.selectionCanvasContext;
-    PixelRenderer.drawEllipse(point1, point2, (point: Point) => {
+    PixelRenderer.drawEllipse(point1, point2, false, (point: Point) => {
       this.drawCell(context, point, PixelGridComponent.SELECTION_COLOR);
     });
   }
@@ -264,7 +264,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
       case Tool.DRAW:
       case Tool.LINE:
       case Tool.RECTANGLE:
-      case Tool.CIRCLE:
+      case Tool.FILLED_RECTANGLE:
+      case Tool.ELLIPSE:
+      case Tool.FILLED_ELLIPSE:
         break;
       case Tool.FLOOD_FILL:
         this.undoManagerService.addEdit(
@@ -296,7 +298,9 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         break;
       case Tool.LINE:
       case Tool.RECTANGLE:
-      case Tool.CIRCLE:
+      case Tool.FILLED_RECTANGLE:
+      case Tool.ELLIPSE:
+      case Tool.FILLED_ELLIPSE:
         this.drawing = true;
         this.drawColorIndex = evt.button === 0 ? this.foreColorIndex : this.backColorIndex;
         this.anchorPosition = this.cursorPosition;
@@ -344,15 +348,17 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         }
         break;
       case Tool.RECTANGLE:
+      case Tool.FILLED_RECTANGLE:
         if (this.drawing) {
           this.clearSelectionLayer();
           this.drawSelectionRectangle(this.anchorPosition, this.cursorPosition);
         }
         break;
-      case Tool.CIRCLE:
+      case Tool.ELLIPSE:
+      case Tool.FILLED_ELLIPSE:
         if (this.drawing) {
           this.clearSelectionLayer();
-          this.drawSelectionCircle(this.anchorPosition, this.cursorPosition);
+          this.drawSelectionEllipse(this.anchorPosition, this.cursorPosition);
         }
         break;
       case Tool.FLOOD_FILL:
@@ -391,11 +397,25 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
           this.grid.drawRectangle(this.anchorPosition, newCursorPosition, this.drawColorIndex)
         );
         break;
-      case Tool.CIRCLE:
+      case Tool.FILLED_RECTANGLE:
         this.drawing = false;
         this.clearSelectionLayer();
         this.undoManagerService.addEdit(
-          this.grid.drawCircle(this.anchorPosition, newCursorPosition, this.drawColorIndex)
+            this.grid.drawFilledRectangle(this.anchorPosition, newCursorPosition, this.drawColorIndex)
+        );
+        break;
+      case Tool.ELLIPSE:
+        this.drawing = false;
+        this.clearSelectionLayer();
+        this.undoManagerService.addEdit(
+          this.grid.drawEllipse(this.anchorPosition, newCursorPosition, this.drawColorIndex)
+        );
+        break;
+      case Tool.FILLED_ELLIPSE:
+        this.drawing = false;
+        this.clearSelectionLayer();
+        this.undoManagerService.addEdit(
+            this.grid.drawFilledEllipse(this.anchorPosition, newCursorPosition, this.drawColorIndex)
         );
         break;
       case Tool.FLOOD_FILL:
@@ -422,7 +442,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
       case Tool.DRAW:
       case Tool.LINE:
       case Tool.RECTANGLE:
-      case Tool.CIRCLE:
+      case Tool.ELLIPSE:
         break;
       case Tool.FLOOD_FILL:
         this.undoManagerService.addEdit(

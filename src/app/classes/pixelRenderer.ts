@@ -2,19 +2,21 @@ import {Point} from './point';
 
 export class PixelRenderer {
 
-  public static drawRectangle(point1: Point, point2: Point, drawPixel: (point: Point) => void): void {
+  public static drawRectangle(point1: Point, point2: Point, filled: boolean, drawPixel: (point: Point) => void): void {
     const x1 = Math.min(point1.x, point2.x);
     const y1 = Math.min(point1.y, point2.y);
     const x2 = Math.max(point1.x, point2.x);
     const y2 = Math.max(point1.y, point2.y);
-    for (let x = x1; x <= x2; x++) {
-      drawPixel(new Point(x, y1));
-      drawPixel(new Point(x, y2));
+    this.drawHorizontalLine(x1, x2, y1, drawPixel);
+    for (let y = y1 + 1; y <= y2 - 1; y++) {
+      if (filled) {
+        this.drawHorizontalLine(x1, x2, y, drawPixel);
+      } else {
+        drawPixel(new Point(x1, y));
+        drawPixel(new Point(x2, y));
+      }
     }
-    for (let y = y1; y <= y2; y++) {
-      drawPixel(new Point(x1, y));
-      drawPixel(new Point(x2, y));
-    }
+    this.drawHorizontalLine(x1, x2, y2, drawPixel);
   }
 
   public static drawLine(point1: Point, point2: Point, drawPixel: (point: Point) => void): void {
@@ -78,7 +80,7 @@ export class PixelRenderer {
     drawPixel(new Point(xc - y, yc - x));
   }
 
-  static drawEllipse(point1: Point, point2: Point, drawPixel: (point: Point) => void): void {
+  static drawEllipse(point1: Point, point2: Point, filled: boolean, drawPixel: (point: Point) => void): void {
 
     const xc = Math.floor((point1.x + point2.x) / 2);
     const yc = Math.floor((point1.y + point2.y) / 2);
@@ -101,7 +103,7 @@ export class PixelRenderer {
     while (dx < dy) {
 
       // Print points based on 4-way symmetry
-      this.drawEllipsePoints(xc, yc, x, y, xAdd, yAdd, drawPixel);
+      this.drawEllipsePoints(xc, yc, x, y, xAdd, yAdd, filled, drawPixel);
 
       // Checking and updating value of decision parameter based on algorithm
       if (d1 < 0) {
@@ -124,7 +126,7 @@ export class PixelRenderer {
     while (y >= 0) {
 
       // Print points based on 4-way symmetry
-      this.drawEllipsePoints(xc, yc, x, y, xAdd, yAdd, drawPixel);
+      this.drawEllipsePoints(xc, yc, x, y, xAdd, yAdd, filled, drawPixel);
 
       // Checking and updating parameter value based on algorithm
       if (d2 > 0) {
@@ -142,12 +144,23 @@ export class PixelRenderer {
   }
 
   static drawEllipsePoints(
-    xc: number, yc: number, x: number, y: number, xAdd: number, yAdd: number, drawPixel: (point: Point) => void
+    xc: number, yc: number, x: number, y: number, xAdd: number, yAdd: number, filled: boolean, drawPixel: (point: Point) => void
   ): void {
-    drawPixel(new Point(xc + x + xAdd, yc + y + yAdd));
-    drawPixel(new Point(xc - x, yc + y + yAdd));
-    drawPixel(new Point(xc + x + xAdd, yc - y));
-    drawPixel(new Point(xc - x, yc - y));
+    if (filled) {
+      this.drawHorizontalLine(xc - x, xc + x + xAdd, yc + y + yAdd, drawPixel);
+      this.drawHorizontalLine(xc - x, xc + x + xAdd, yc - y, drawPixel);
+    } else {
+      drawPixel(new Point(xc + x + xAdd, yc + y + yAdd));
+      drawPixel(new Point(xc - x, yc + y + yAdd));
+      drawPixel(new Point(xc + x + xAdd, yc - y));
+      drawPixel(new Point(xc - x, yc - y));
+    }
+  }
+
+  private static drawHorizontalLine(x1: number, x2: number, y: number, drawPixel: (point: Point) => void): void {
+    for (let x = x1; x <= x2; x++) {
+      drawPixel(new Point(x, y));
+    }
   }
 }
 

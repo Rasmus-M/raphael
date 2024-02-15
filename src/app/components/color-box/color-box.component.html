@@ -1,5 +1,8 @@
 <div class="color-box"
+     [ngStyle]="{color: foregroundColor, backgroundColor: color.getHexString()}"
      (click)="click()"
-     (contextmenu)="context($event)">
+     (contextmenu)="context($event)"
+     (dblclick)="dblClick()"
+>
   {{label}}
 </div>

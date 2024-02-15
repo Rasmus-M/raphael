@@ -192,7 +192,9 @@ export class Grid {
   floodFill(point: Point, newValue: number): UndoableEdit {
     const oldData = this.getArea(this.getSize());
     const oldValue = this.getValue(point);
-    this.floodFillValue(point.x, point.y, newValue, oldValue);
+    if (newValue !== oldValue) {
+      this.floodFillValue(point, newValue, oldValue);
+    }
     this.applyAttributeMode();
     this.notifyChanges(this.getSize());
     return new GridUndoableEdit(this, this.getSize(), oldData);
@@ -212,7 +214,7 @@ export class Grid {
   drawRectangle(point1: Point, point2: Point, value: number): UndoableEdit {
     const rect = Rect.fromPoints(point1, point2);
     const oldData = this.getArea(rect);
-    PixelRenderer.drawRectangle(point1, point2, (point: Point) => {
+    PixelRenderer.drawRectangle(point1, point2, false, (point: Point) => {
       this.set(point, value);
     });
     this.applyAttributeMode();
@@ -220,10 +222,32 @@ export class Grid {
     return new GridUndoableEdit(this, rect, oldData);
   }
 
-  drawCircle(point1: Point, point2: Point, value: number): UndoableEdit {
+  drawFilledRectangle(point1: Point, point2: Point, value: number): UndoableEdit {
     const rect = Rect.fromPoints(point1, point2);
     const oldData = this.getArea(rect);
-    PixelRenderer.drawEllipse(point1, point2, (point: Point) => {
+    PixelRenderer.drawRectangle(point1, point2, true, (point: Point) => {
+      this.set(point, value);
+    });
+    this.applyAttributeMode();
+    this.notifyChanges(rect);
+    return new GridUndoableEdit(this, rect, oldData);
+  }
+
+  drawEllipse(point1: Point, point2: Point, value: number): UndoableEdit {
+    const rect = Rect.fromPoints(point1, point2);
+    const oldData = this.getArea(rect);
+    PixelRenderer.drawEllipse(point1, point2, false, (point: Point) => {
+      this.set(point, value);
+    });
+    this.applyAttributeMode();
+    this.notifyChanges(rect);
+    return new GridUndoableEdit(this, rect, oldData);
+  }
+
+  drawFilledEllipse(point1: Point, point2: Point, value: number): UndoableEdit {
+    const rect = Rect.fromPoints(point1, point2);
+    const oldData = this.getArea(rect);
+    PixelRenderer.drawEllipse(point1, point2, true, (point: Point) => {
       this.set(point, value);
     });
     this.applyAttributeMode();
@@ -310,6 +334,10 @@ export class Grid {
     return new GridUndoableEdit(this, this.getSize(), oldData);
   }
 
+  redraw(): void {
+    this.notifyChanges(this.getSize());
+  }
+
   subscribeToChanges(handler: (Rect) => void): Subscription {
     return this.changeObservable.subscribe(handler);
   }
@@ -326,18 +354,24 @@ export class Grid {
     this.data[point.y][point.x] = value;
   }
 
-  private floodFillValue(x: number, y: number, newValue: number, oldValue: number): void {
-    if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
+  private floodFillValue(point: Point, newValue: number, oldValue: number): void {
+    const stack: Point[] = [];
+    this.floodFillPoint(point, newValue, oldValue, stack);
+    while (stack.length > 0) {
+      this.floodFillPoint(stack.pop(), newValue, oldValue, stack);
+      console.log(stack.length);
+    }
+  }
+
+  private floodFillPoint(point: Point, newValue: number, oldValue: number, stack: Point[]): void {
+    if (point.x < 0 || point.x >= this.width || point.y < 0 || point.y >= this.height || this.get(point) !== oldValue) {
       return;
     }
-    const point = new Point(x, y);
-    if (this.get(point) === oldValue) {
-      this.set(point, newValue);
-      this.floodFillValue(x - 1, y, newValue, oldValue);
-      this.floodFillValue(x + 1, y, newValue, oldValue);
-      this.floodFillValue(x, y - 1, newValue, oldValue);
-      this.floodFillValue(x, y + 1, newValue, oldValue);
-    }
+    this.set(point, newValue);
+    stack.push(new Point(point.x - 1, point.y));
+    stack.push(new Point(point.x + 1, point.y));
+    stack.push(new Point(point.x, point.y - 1));
+    stack.push(new Point(point.x, point.y + 1));
   }
 
   private getValueMap(rect: Rect): Map<number, number> {

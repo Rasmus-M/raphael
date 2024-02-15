@@ -1,23 +1,28 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {
-  faArrowDown,
-  faArrowLeft,
-  faArrowRight,
-  faArrowsAltH,
-  faArrowsAltV,
-  faArrowUp,
-  faClone,
-  faEraser,
-  faFill,
-  faFillDrip,
-  faPencilAlt,
-  faRedo,
-  faSearchMinus,
-  faSearchPlus,
-  faSlash,
-  faUndo
+    faArrowDown,
+    faArrowLeft,
+    faArrowRight,
+    faArrowsAltH,
+    faArrowsAltV,
+    faArrowUp,
+    faCircle as faCircleSolid,
+    faClone,
+    faEraser,
+    faFill,
+    faFillDrip,
+    faPencilAlt,
+    faRedo,
+    faSearchMinus,
+    faSearchPlus,
+    faSlash,
+    faSquare as faSquareSolid,
+    faUndo
 } from '@fortawesome/free-solid-svg-icons';
-import {faCircle, faSquare} from '@fortawesome/free-regular-svg-icons';
+import {
+  faCircle,
+  faSquare
+} from '@fortawesome/free-regular-svg-icons';
 import {UndoManagerService, UndoManagerStatus} from '../../services/undo-manager.service';
 import {Tool} from '../../enums/tool';
 
@@ -58,7 +63,9 @@ export class ToolboxComponent implements OnInit {
   lineIcon = faSlash;
   cloneIcon = faClone;
   rectangleIcon = faSquare;
+  filledRectangleIcon = faSquareSolid;
   circleIcon = faCircle;
+  filledCircleIcon = faCircleSolid;
 
   canUndo = false;
   canRedo = false;

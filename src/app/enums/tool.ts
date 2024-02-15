@@ -2,9 +2,10 @@ export enum Tool {
   DRAW,
   LINE,
   RECTANGLE,
-  CIRCLE,
+  FILLED_RECTANGLE,
+  ELLIPSE,
+  FILLED_ELLIPSE,
   FLOOD_FILL,
-  CLONE,
-  UNUSED_1,
-  UNUSED_2
+  CLONE
 }
+

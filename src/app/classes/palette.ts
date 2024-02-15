@@ -21,8 +21,7 @@ export class Palette {
     new Color(255, 255, 255)
   ];
 
-  constructor() {
-  }
+  constructor() {}
 
   getSize(): number {
     return this.colors.length;
@@ -34,6 +33,16 @@ export class Palette {
 
   getColors(): Color[] {
     return this.colors;
+  }
+
+  getHexColors(): string[] {
+    return this.colors.map(color => color.getHexString());
+  }
+
+  setHexColors(hexColors: string[]): void {
+    for (let i = 0; i < this.colors.length; i++) {
+      this.colors[i].setHexString(hexColors[i]);
+    }
   }
 
   getClosestColorIndex(otherColor: Color): number {

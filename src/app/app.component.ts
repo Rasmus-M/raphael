@@ -59,6 +59,7 @@ export class AppComponent {
         pixelScaleY: this.pixelScaleY,
         attributeMode: AttributeMode.ONE_X_ONE,
         data: null,
+        palette: null,
         backColorIndex: 0,
         foreColorIndex: 15,
         tool: Tool.DRAW,
@@ -79,6 +80,9 @@ export class AppComponent {
     this.grid.setSize(projectData.width, projectData.height, projectData.backColorIndex);
     if (projectData.data) {
       this.grid.setData(projectData.data);
+    }
+    if (projectData.palette) {
+      this.palette.setHexColors(projectData.palette);
     }
     this.backColorIndex = projectData.backColorIndex;
     this.foreColorIndex = projectData.foreColorIndex;
@@ -164,6 +168,10 @@ export class AppComponent {
     this.foreColorIndex = foreColorIndex;
   }
 
+  redrawGrid(): void {
+    this.grid.redraw();
+  }
+
   updateTitle(): void {
     const title = document.querySelector('#app-title');
     if (title) {
@@ -200,6 +208,7 @@ export class AppComponent {
           pixelScaleY: newProjectData.pixelScaleY,
           attributeMode: newProjectData.attributeMode,
           data: null,
+          palette: new Palette().getHexColors(),
           backColorIndex: 0,
           foreColorIndex: 15,
           tool: Tool.DRAW,
@@ -225,6 +234,9 @@ export class AppComponent {
       if (result) {
         this.fileService.openProject(result.file).subscribe(
           (projectData: ProjectData) => {
+            if (!projectData.palette) {
+              projectData.palette = new Palette().getHexColors();
+            }
             this.init(projectData);
             this.filename = result.file.name;
             this.updateTitle();
@@ -347,6 +359,7 @@ export class AppComponent {
       pixelScaleY: this.pixelScaleY,
       attributeMode: this.grid.attributeMode,
       data: this.grid.getData(),
+      palette: this.palette.getHexColors(),
       backColorIndex: this.backColorIndex,
       foreColorIndex: this.foreColorIndex,
       tool: this.tool,

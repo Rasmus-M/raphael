@@ -24,7 +24,7 @@ export class ExportService {
     const png = new PNG({
       width: projectData.width,
       height: projectData.height,
-      colorType: 6
+      colorType: projectData.transparentColor0 ? 6 : 2
     });
     let i = 0;
     for (let y = 0; y < projectData.height; y++) {
@@ -34,7 +34,7 @@ export class ExportService {
         png.data[i++] = color.red;
         png.data[i++] = color.green;
         png.data[i++] = color.blue;
-        png.data[i++] = colorIndex === 0 ? 0 : 255;
+        png.data[i++] = colorIndex === 0 && projectData.transparentColor0 ? 0 : 255;
       }
     }
     return PNG.sync.write(png);

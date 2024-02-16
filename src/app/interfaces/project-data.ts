@@ -9,4 +9,5 @@ export interface ProjectData extends NewProjectData {
   tool: number;
   zoom: number;
   showGridLines: boolean;
+  transparentColor0: boolean;
 }

@@ -36,6 +36,7 @@ export class AppComponent {
   tool: Tool;
   zoom: number;
   showGridLines = true;
+  transparentColor0 = true;
   imageNumber = 0;
   cursorPosition: Point;
 
@@ -64,7 +65,8 @@ export class AppComponent {
         foreColorIndex: 15,
         tool: Tool.DRAW,
         zoom: 5,
-        showGridLines: true
+        showGridLines: true,
+        transparentColor0: true
       };
     }
     this.init(projectData);
@@ -89,6 +91,7 @@ export class AppComponent {
     this.tool = projectData.tool;
     this.zoom = projectData.zoom;
     this.showGridLines = projectData.showGridLines;
+    this.transparentColor0 = projectData.transparentColor0 !== false;
     this.imageNumber++;
   }
 
@@ -213,7 +216,8 @@ export class AppComponent {
           foreColorIndex: 15,
           tool: Tool.DRAW,
           zoom: 5,
-          showGridLines: true
+          showGridLines: true,
+          transparentColor0: true
         });
         this.updateTitle();
         this.storageService.saveNewProjectProjectData(newProjectData);
@@ -364,7 +368,8 @@ export class AppComponent {
       foreColorIndex: this.foreColorIndex,
       tool: this.tool,
       zoom: this.zoom,
-      showGridLines: this.showGridLines
+      showGridLines: this.showGridLines,
+      transparentColor0: this.transparentColor0
     };
   }
 

@@ -36,6 +36,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   @Input() foreColorIndex: number;
   @Input() tool: Tool;
   @Input() showGridLines: boolean;
+  @Input() transparentColor0: boolean;
   @Output() cursorPositionChanged = new EventEmitter<Point>();
 
   private pixelCanvas: HTMLCanvasElement;
@@ -99,7 +100,8 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
         changes.pixelScaleY ||
         changes.basePixelSize ||
         changes.zoom ||
-        changes.showGridLines
+        changes.showGridLines ||
+        changes.transparentColor0
       ) {
         this.draw();
       }
@@ -118,7 +120,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
   draw(): void {
     this.calculateSize([this.pixelCanvas, this.selectionCanvas, this.gridCanvas, this.cursorCanvas]);
     if (this.showGridLines) {
-      this.drawGrid();
+      this.drawGridLines();
     }
     this.drawPixels();
   }
@@ -135,7 +137,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  drawGrid(): void {
+  drawGridLines(): void {
     const context = this.gridCanvasContext;
     context.clearRect(0, 0, this.width, this.height);
     context.strokeStyle = PixelGridComponent.GRID_COLOR;
@@ -171,7 +173,7 @@ export class PixelGridComponent implements AfterViewInit, OnChanges {
 
   drawPixel(point: Point, colorIndex: number): void {
     const context = this.pixelCanvasContext;
-    if (colorIndex > 0) {
+    if (colorIndex > 0 || !this.transparentColor0) {
       this.drawCell(context, point, this.palette.getColor(colorIndex).getHexString());
     } else {
       const rect = this.getCellRect(point);

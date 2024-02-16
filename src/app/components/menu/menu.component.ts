@@ -10,6 +10,7 @@ import {AttributeMode} from '../../enums/attribute-mode';
 export class MenuComponent implements OnInit {
 
   @Input() showGridLines: boolean;
+  @Input() transparentColor0: boolean;
   @Input() attributeMode: AttributeMode;
 
   @Output() newClicked = new EventEmitter();
@@ -23,6 +24,7 @@ export class MenuComponent implements OnInit {
   @Output() exportMonochromeLinearAssemblyClicked = new EventEmitter();
   @Output() exportHexClicked = new EventEmitter();
   @Output() showGridLinesChange = new EventEmitter<boolean>();
+  @Output() transparentColor0Change = new EventEmitter<boolean>();
   @Output() aboutClicked = new EventEmitter();
 
   constructor() {
@@ -79,6 +81,10 @@ export class MenuComponent implements OnInit {
 
   toggleGridLines(): void {
     this.showGridLinesChange.emit(this.showGridLines);
+  }
+
+  toggleTransparentColor0(): void {
+    this.transparentColor0Change.emit(this.transparentColor0);
   }
 
   about(): void {

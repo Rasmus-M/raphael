@@ -21,6 +21,7 @@
 </mat-menu>
 <mat-menu #optionsMenu="matMenu">
   <mat-checkbox class="mat-menu-item" [(ngModel)]="showGridLines" (change)="toggleGridLines()">Show grid lines</mat-checkbox>
+  <mat-checkbox class="mat-menu-item" [(ngModel)]="transparentColor0" (change)="toggleTransparentColor0()">Transparent color 0</mat-checkbox>
 </mat-menu>
 <mat-menu #helpMenu="matMenu">
   <button mat-menu-item (click)="about()">About</button>

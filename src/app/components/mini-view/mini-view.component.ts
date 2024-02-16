@@ -16,6 +16,8 @@ export class MiniViewComponent implements AfterViewInit, OnChanges {
   @Input() pixelScaleX: number;
   @Input() pixelScaleY: number;
   @Input() palette: Palette;
+  @Input() transparentColor0: boolean;
+  @Input() backColorIndex: number;
 
   private container: HTMLDivElement;
   private canvas: HTMLCanvasElement;
@@ -40,13 +42,16 @@ export class MiniViewComponent implements AfterViewInit, OnChanges {
       if (changes.imageNumber) {
         this.init();
       }
+      if (changes.transparentColor0 || changes.backColorIndex) {
+        this.redraw();
+      }
     }
   }
 
   init(): void {
     this.canvas.width = this.grid.width * this.pixelScaleX;
     this.canvas.height = this.grid.height * this.pixelScaleY;
-    this.draw(new Rect(0, 0, this.grid.width, this.grid.height));
+    this.redraw();
     this.resize();
   }
 
@@ -60,6 +65,10 @@ export class MiniViewComponent implements AfterViewInit, OnChanges {
     this.draw(changes);
   }
 
+  redraw(): void {
+    this.draw(new Rect(0, 0, this.grid.width, this.grid.height));
+  }
+
   draw(rect: Rect): void {
     const imageData = this.context.createImageData(rect.width * this.pixelScaleX, rect.height * this.pixelScaleY);
     const data = imageData.data;
@@ -68,7 +77,7 @@ export class MiniViewComponent implements AfterViewInit, OnChanges {
       for (let ys = 0; ys < this.pixelScaleY; ys++) {
         for (let x = rect.x; x < rect.x + rect.width; x++) {
           const colorIndex = this.grid.getValue(new Point(x, y));
-          const color = this.palette.getColor(colorIndex);
+          const color = this.palette.getColor(colorIndex > 0 || !this.transparentColor0  ? colorIndex : this.backColorIndex);
           for (let xs = 0; xs < this.pixelScaleX; xs++) {
             data[i++] = color.red;
             data[i++] = color.green;

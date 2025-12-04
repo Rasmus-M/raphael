@@ -54,7 +54,7 @@ export class FileService {
     FileSaver.saveAs(blob, filename);
   }
 
-  saveBinaryFile(arrayBuffer: ArrayBuffer, filename: string, mimeType: string): void {
+  saveBinaryFile(arrayBuffer: Uint8Array<ArrayBuffer>, filename: string, mimeType: string): void {
     const blob = new Blob([arrayBuffer], { type: mimeType } );
     FileSaver.saveAs(blob, filename);
   }

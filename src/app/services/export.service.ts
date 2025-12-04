@@ -20,7 +20,7 @@ export class ExportService {
 
   constructor() { }
 
-  exportPNGFile(projectData: ProjectData, palette: Palette): ArrayBuffer {
+  exportPNGFile(projectData: ProjectData, palette: Palette): Uint8Array<ArrayBuffer> {
     const png = new PNG({
       width: projectData.width,
       height: projectData.height,
@@ -40,7 +40,7 @@ export class ExportService {
     return PNG.sync.write(png);
   }
 
-  exportBinaryFile(projectData: ProjectData, options: ExportOptions): ArrayBuffer {
+  exportBinaryFile(projectData: ProjectData, options: ExportOptions): Uint8Array<ArrayBuffer> {
     switch (projectData.attributeMode) {
       case AttributeMode.ONE_X_ONE:
         return this.create1x1BinaryFile(projectData, options);
@@ -51,7 +51,7 @@ export class ExportService {
     }
   }
 
-  private create1x1BinaryFile(projectData: ProjectData, options: ExportOptions): ArrayBuffer {
+  private create1x1BinaryFile(projectData: ProjectData, options: ExportOptions): Uint8Array<ArrayBuffer> {
     const arrayBuffer = new Uint8Array(projectData.width * projectData.height * (options.packing === '4_BPP' ? 0.5 : (options.packing === '8_BPP' ? 1 : 2)));
     let i = 0;
     if (options.columns) {
@@ -100,7 +100,7 @@ export class ExportService {
     return arrayBuffer;
   }
 
-  private create8x1BinaryFile(projectData: ProjectData): ArrayBuffer {
+  private create8x1BinaryFile(projectData: ProjectData): Uint8Array<ArrayBuffer> {
     const data = projectData.data;
     const cols = Math.floor(projectData.width / 8);
     const rows = Math.floor(projectData.height / 8);
@@ -136,7 +136,7 @@ export class ExportService {
     }
   }
 
-  private create8x8BinaryFile(projectData: ProjectData): ArrayBuffer {
+  private create8x8BinaryFile(projectData: ProjectData): Uint8Array<ArrayBuffer> {
     const data = projectData.data;
     const cols = Math.floor(projectData.width / 8);
     const rows = Math.floor(projectData.height / 8);

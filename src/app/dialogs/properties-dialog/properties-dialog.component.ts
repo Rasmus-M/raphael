@@ -6,7 +6,8 @@ import {ProjectData} from '../../interfaces/project-data';
 @Component({
   selector: 'app-properties-dialog',
   templateUrl: './properties-dialog.component.html',
-  styleUrls: ['./properties-dialog.component.less']
+  styleUrls: ['./properties-dialog.component.less'],
+  standalone: false
 })
 export class PropertiesDialogComponent {
 

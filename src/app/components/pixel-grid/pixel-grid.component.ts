@@ -12,7 +12,8 @@ import {PixelRenderer} from '../../classes/pixelRenderer';
 @Component({
   selector: 'app-pixel-grid',
   templateUrl: './pixel-grid.component.html',
-  styleUrls: ['./pixel-grid.component.less']
+  styleUrls: ['./pixel-grid.component.less'],
+  standalone: false
 })
 export class PixelGridComponent implements AfterViewInit, OnChanges {
 

@@ -5,7 +5,8 @@ import {TITLE, VERSION_NO} from '../../app.config';
 @Component({
   selector: 'app-about-dialog',
   templateUrl: './about-dialog.component.html',
-  styleUrls: ['./about-dialog.component.less']
+  styleUrls: ['./about-dialog.component.less'],
+  standalone: false
 })
 export class AboutDialogComponent implements OnInit {
 

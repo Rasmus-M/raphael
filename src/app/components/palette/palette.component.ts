@@ -15,7 +15,8 @@ import {Palette} from '../../classes/palette';
 @Component({
   selector: 'app-palette',
   templateUrl: './palette.component.html',
-  styleUrls: ['./palette.component.less']
+  styleUrls: ['./palette.component.less'],
+  standalone: false
 })
 export class PaletteComponent implements OnInit, AfterViewInit, OnChanges {
 

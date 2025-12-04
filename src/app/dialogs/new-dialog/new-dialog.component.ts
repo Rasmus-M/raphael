@@ -6,7 +6,8 @@ import {NewProjectData} from '../../interfaces/new-project-data';
 @Component({
   selector: 'app-new-dialog',
   templateUrl: './new-dialog.component.html',
-  styleUrls: ['./new-dialog.component.less']
+  styleUrls: ['./new-dialog.component.less'],
+  standalone: false
 })
 export class NewDialogComponent {
 

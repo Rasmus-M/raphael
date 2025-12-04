@@ -5,7 +5,8 @@ import {AttributeMode} from '../../enums/attribute-mode';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.less']
+  styleUrls: ['./menu.component.less'],
+  standalone: false
 })
 export class MenuComponent implements OnInit {
 

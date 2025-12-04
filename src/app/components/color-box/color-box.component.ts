@@ -4,7 +4,8 @@ import {Color} from '../../classes/color';
 @Component({
   selector: 'app-color-box',
   templateUrl: './color-box.component.html',
-  styleUrls: ['./color-box.component.less']
+  styleUrls: ['./color-box.component.less'],
+  standalone: false
 })
 export class ColorBoxComponent implements OnInit {
 

@@ -7,7 +7,8 @@ import {Point} from '../../classes/point';
 @Component({
   selector: 'app-mini-view',
   templateUrl: './mini-view.component.html',
-  styleUrls: ['./mini-view.component.less']
+  styleUrls: ['./mini-view.component.less'],
+  standalone: false
 })
 export class MiniViewComponent implements AfterViewInit, OnChanges {
 

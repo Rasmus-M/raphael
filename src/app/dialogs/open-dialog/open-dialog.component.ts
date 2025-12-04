@@ -11,7 +11,8 @@ export interface OpenDialogData {
 @Component({
   selector: 'app-open-dialog',
   templateUrl: './open-dialog.component.html',
-  styleUrls: ['./open-dialog.component.less']
+  styleUrls: ['./open-dialog.component.less'],
+  standalone: false
 })
 export class OpenDialogComponent implements OnInit {
 

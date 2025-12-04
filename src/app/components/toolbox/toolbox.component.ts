@@ -29,7 +29,8 @@ import {Tool} from '../../enums/tool';
 @Component({
   selector: 'app-toolbox',
   templateUrl: './toolbox.component.html',
-  styleUrls: ['./toolbox.component.less']
+  styleUrls: ['./toolbox.component.less'],
+  standalone: false
 })
 export class ToolboxComponent implements OnInit {
 

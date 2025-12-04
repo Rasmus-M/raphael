@@ -4,7 +4,8 @@ import {Point} from '../../classes/point';
 @Component({
   selector: 'app-status-bar',
   templateUrl: './status-bar.component.html',
-  styleUrls: ['./status-bar.component.less']
+  styleUrls: ['./status-bar.component.less'],
+  standalone: false
 })
 export class StatusBarComponent implements OnInit {
 

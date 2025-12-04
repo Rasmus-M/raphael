@@ -4,7 +4,7 @@ import {AttributeMode} from './enums/attribute-mode';
 import {Palette} from './classes/palette';
 import {UndoManagerService} from './services/undo-manager.service';
 import {Tool} from './enums/tool';
-import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {NewDialogComponent} from './dialogs/new-dialog/new-dialog.component';
 import {FileService} from './services/file.service';
 import {OpenDialogComponent, OpenDialogData} from './dialogs/open-dialog/open-dialog.component';

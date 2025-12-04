@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog';
+import {MatDialogRef} from '@angular/material/dialog';
 import {TITLE, VERSION_NO} from '../../app.config';
 
 @Component({

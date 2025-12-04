@@ -1,4 +1,4 @@
-<mat-button-toggle-group name="tool" aria-label="Tool" [value]="tool" (change)="changeTool($event)">
+<mat-button-toggle-group name="tool" aria-label="Tool" [hideSingleSelectionIndicator]="true" [value]="tool" (change)="changeTool($event)">
   <mat-button-toggle [value]="toolEnum.DRAW" matTooltip="Draw" matTooltipShowDelay="1000" class="right-border bottom-border"><fa-icon [icon]="drawIcon"></fa-icon></mat-button-toggle>
   <mat-button-toggle [value]="toolEnum.LINE" matTooltip="Line" matTooltipShowDelay="1000" class="right-border bottom-border"><fa-icon [icon]="lineIcon"></fa-icon></mat-button-toggle>
   <mat-button-toggle [value]="toolEnum.RECTANGLE" matTooltip="Rectangle" matTooltipShowDelay="1000" class="right-border bottom-border"><fa-icon [icon]="rectangleIcon"></fa-icon></mat-button-toggle>

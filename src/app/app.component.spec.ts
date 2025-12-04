@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import {AppComponent} from './app.component';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatLegacyDialog as MatDialog, MatLegacyDialogModule as MatDialogModule} from '@angular/material/legacy-dialog';
 import {Overlay} from '@angular/cdk/overlay';
 
 describe('AppComponent', () => {

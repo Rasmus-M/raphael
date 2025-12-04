@@ -1,12 +1,14 @@
 <mat-grid-list class="palette" cols="4" rowHeight="40">
-  <mat-grid-tile *ngFor="let color of palette.getColors(); let i=index;">
-    <app-color-box
-      [color]="color"
-      [label]="labels[i]"
-      (clicked)="setForeColor(i)"
-      (rightClicked)="setBackColor(i)"
-      (doubleClicked)="setPaletteColor(i)"
-    ></app-color-box>
-  </mat-grid-tile>
+  @for (color of palette.getColors(); track color; let i = $index) {
+    <mat-grid-tile>
+      <app-color-box
+        [color]="color"
+        [label]="labels[i]"
+        (clicked)="setForeColor(i)"
+        (rightClicked)="setBackColor(i)"
+        (doubleClicked)="setPaletteColor(i)"
+      ></app-color-box>
+    </mat-grid-tile>
+  }
   <input class="color-input" #colorInput type="color"/>
 </mat-grid-list>
